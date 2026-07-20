@@ -264,7 +264,6 @@
     background:linear-gradient(135deg, var(--accent-light), var(--gold));
     box-shadow:0 8px 20px -8px var(--accent-ring), inset 0 1px 0 rgba(255,255,255,.4);color:var(--btn-onaccent);}
   .brand h1{font-size:19px;margin:0;font-weight:700;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .brand p{font-size:12.5px;color:var(--muted2);margin:3px 0 0;}
   .header-controls{display:flex;align-items:center;gap:8px;flex-shrink:0;}
   .theme-group{display:inline-flex;gap:2px;padding:4px;border-radius:var(--r-pill);background:var(--input-bg);border:1px solid var(--input-border);}
   .theme-icon{border:none;background:transparent;color:var(--muted);height:32px;width:32px;border-radius:var(--r-pill);display:flex;align-items:center;justify-content:center;transition:.2s;}
@@ -558,7 +557,7 @@ function icon(name, size=16, cls=''){
 let lang = 'ar';
 const I18N = {
   ar:{
-    appName:'بيان جهات متعاقدة', appTagline:'إدارة دقيقة وسلسة لبيانات الجهات المتعاقدة',
+    appName:'بيان جهات متعاقدة',
     tab_entry:'إدخال البيانات', tab_import:'الاستيراد', tab_dashboard:'لوحة التحكم', tab_hospitals:'الجهات',
     sync_notConfigured:'المزامنة غير مُعدّة — اضغط على الإعدادات', sync_notConnected:'غير متصل بـ Google Sheets',
     sync_waiting:'متصل — بانتظار أول مزامنة', sync_syncing:'جارٍ المزامنة...', sync_failedPrefix:'فشلت آخر مزامنة: ',
@@ -624,7 +623,7 @@ const I18N = {
     backup_imported:'تم استيراد {n} سجل من النسخة الاحتياطية', backup_importError:'ملف النسخة الاحتياطية غير صالح',
   },
   en:{
-    appName:'Contracted Entities Statement', appTagline:'Precise, seamless management of contracted-entity data',
+    appName:'Contracted Entities Statement',
     tab_entry:'Data Entry', tab_import:'Import', tab_dashboard:'Dashboard', tab_hospitals:'Entities',
     sync_notConfigured:'Sync not configured — open settings', sync_notConnected:'Not connected to Google Sheets',
     sync_waiting:'Connected — awaiting first sync', sync_syncing:'Syncing...', sync_failedPrefix:'Last sync failed: ',
@@ -918,7 +917,6 @@ function renderHeader(){
       <div class="brand-icon">${icon('sparkle',18)}</div>
       <div style="min-width:0;">
         <h1>${esc(t('appName'))}</h1>
-        <p>${esc(t('appTagline'))}</p>
       </div>
     </div>
     <div class="header-controls">
