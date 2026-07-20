@@ -16,6 +16,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore-compat.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root{
@@ -271,6 +274,12 @@
   .theme-icon:not(.active):hover{color:var(--fg);background:var(--icon-btn-hover-bg);}
   .lang-toggle{border:1px solid var(--input-border);background:var(--input-bg);color:var(--ink-8);border-radius:var(--r-pill);padding:8px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;transition:.2s;}
   .lang-toggle:hover{border-color:var(--accent-ring);background:var(--glass-bg);}
+  .fb-status{border:1px solid var(--input-border);background:var(--input-bg);color:var(--muted2);height:32px;width:32px;border-radius:var(--r-pill);display:flex;align-items:center;justify-content:center;transition:.2s;position:relative;flex-shrink:0;}
+  .fb-status.connecting{color:var(--muted2);}
+  .fb-status.syncing{color:var(--accent);}
+  .fb-status.connected{color:var(--good);}
+  .fb-status.error{color:var(--bad);}
+  .fb-status::after{content:"";position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 2px var(--input-bg);}
 
   .syncbar{margin-bottom:18px;padding:12px 16px;}
   .sync-left{display:flex;align-items:center;gap:10px;min-width:0;}
@@ -385,6 +394,24 @@
   @keyframes spotlightItemIn{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
   .spotlight-item.spotlight-enter{animation:spotlightItemIn .18s ease backwards;}
 
+  .dialog-backdrop{position:fixed;inset:0;z-index:1300;background:radial-gradient(120% 100% at 50% 0%, var(--scrim-near), var(--scrim-far));
+    backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;
+    opacity:0;pointer-events:none;transition:opacity .2s ease;}
+  .dialog-backdrop.open{opacity:1;pointer-events:auto;}
+  .dialog-modal{position:relative;isolation:isolate;overflow:hidden;width:min(400px,92vw);border-radius:var(--r-lg);
+    border:1px solid var(--glass-border);background:var(--glass-bg);
+    backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);
+    box-shadow:0 40px 90px -24px var(--shadow-ambient),0 10px 30px -14px var(--shadow-contact),inset 0 1px 0 var(--shadow-inset-top);
+    transform:translateY(-10px) scale(.97);transition:transform .2s cubic-bezier(.2,.8,.2,1);padding:22px;}
+  .dialog-backdrop.open .dialog-modal{transform:translateY(0) scale(1);}
+  .dialog-modal::before{content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:1.3px;pointer-events:none;
+    background:linear-gradient(155deg, var(--glass-rim-bright), var(--glass-rim-mid) 26%, transparent 50%, var(--glass-rim-edge) 100%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;}
+  .dialog-modal > *{position:relative;z-index:1;}
+  .dialog-title{font-size:16px;font-weight:700;color:var(--fg);margin:0 0 8px;display:flex;align-items:center;gap:9px;}
+  .dialog-msg{font-size:13.5px;color:var(--muted);line-height:1.6;margin:0 0 20px;}
+  .dialog-actions{display:flex;gap:10px;justify-content:flex-end;}
+
   .pill-row{display:flex;gap:8px;flex-wrap:wrap;}
   .budget-pill{flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:var(--r-md);
     border:1px solid var(--input-border);background:var(--input-bg);color:var(--muted);
@@ -405,6 +432,8 @@
   .btn-ghost:hover{border-color:var(--accent-ring);background:var(--glass-bg);}
   .btn-ghost:disabled{opacity:.5;cursor:not-allowed;}
   .btn-accent{background:var(--accent-soft);color:var(--accent-light);border:1px solid var(--accent-ring);}
+  .btn-danger{background:var(--bad-soft);color:var(--bad);border:1px solid var(--bad);}
+  .btn-danger:hover{background:var(--bad-soft);border-color:var(--bad);filter:brightness(1.08);}
   .link-btn{background:none;border:none;color:var(--muted);font-size:13px;display:flex;align-items:center;gap:4px;}
   .link-btn:hover{color:var(--fg);}
   .seg{display:inline-flex;gap:2px;padding:4px;border-radius:var(--r-md);background:var(--input-bg);border:1px solid var(--input-border);}
@@ -560,6 +589,7 @@ const I18N = {
     appName:'بيان جهات متعاقدة',
     tab_entry:'إدخال البيانات', tab_import:'الاستيراد', tab_dashboard:'لوحة التحكم', tab_hospitals:'الجهات',
     sync_notConfigured:'المزامنة غير مُعدّة — اضغط على الإعدادات', sync_notConnected:'غير متصل بـ Google Sheets',
+    fb_connecting:'جارٍ الاتصال بالسحابة...', fb_syncing:'جارٍ الحفظ في السحابة...', fb_connected:'متصل بالسحابة — محفوظ', fb_error:'تعذّر الاتصال بالسحابة',
     sync_waiting:'متصل — بانتظار أول مزامنة', sync_syncing:'جارٍ المزامنة...', sync_failedPrefix:'فشلت آخر مزامنة: ',
     sync_lastPrefix:'آخر مزامنة: ', sync_nowBtn:'مزامنة الآن', sync_gearTitle:'إعدادات المزامنة',
     settings_title:'الإعدادات', settings_generalTitle:'إعدادات عامة', settings_syncTitle:'مزامنة Google Sheets',
@@ -580,6 +610,10 @@ const I18N = {
     field_budget:'الموازنة', field_month:'الشهر', field_year:'السنة', field_before:'المبلغ قبل المراجعة', field_after:'المبلغ بعد المراجعة',
     entry_save:'حفظ السجل', entry_variance:'الفرق بعد المراجعة', entry_recent:'أحدث الإدخالات', entry_recordsSuffix:'سجل',
     entry_empty:'لا توجد سجلات بعد', entry_nameRequired:'يرجى إدخال الاسم', entry_added:'تمت الإضافة بنجاح', currency:'ر.س',
+    entry_invalidNumber:'قيمة الميزانية غير صالحة', entry_negativeNumber:'لا يمكن أن تكون الميزانية سالبة',
+    dup_title:'سجل مشابه موجود بالفعل', dup_msg:'يوجد سجل بنفس الاسم والشهر والسنة. هل تريد الإضافة رغم ذلك؟',
+    dup_confirmBtn:'إضافة رغم ذلك', dup_cancelBtn:'إلغاء',
+    del_title:'حذف السجل؟', del_msg:'لا يمكن التراجع عن هذا الإجراء.', del_confirmBtn:'حذف', del_cancelBtn:'إلغاء',
     import_tabular:'جدولي', import_freeform:'غير جدولي',
     import_tabularHint:'الملف يطابق ترتيب أعمدة القالب مباشرة', import_freeformHint:'أي ملف بأي ترتيب أعمدة — حدد كل عمود يدويًا',
     import_tabularTitle:'استيراد جدولي', import_tabularSub:'الملف يطابق القالب الجاهز بترتيب الأعمدة نفسه',
@@ -626,6 +660,7 @@ const I18N = {
     appName:'Contracted Entities Statement',
     tab_entry:'Data Entry', tab_import:'Import', tab_dashboard:'Dashboard', tab_hospitals:'Entities',
     sync_notConfigured:'Sync not configured — open settings', sync_notConnected:'Not connected to Google Sheets',
+    fb_connecting:'Connecting to cloud...', fb_syncing:'Saving to cloud...', fb_connected:'Connected — saved to cloud', fb_error:'Could not reach cloud',
     sync_waiting:'Connected — awaiting first sync', sync_syncing:'Syncing...', sync_failedPrefix:'Last sync failed: ',
     sync_lastPrefix:'Last sync: ', sync_nowBtn:'Sync now', sync_gearTitle:'Sync settings',
     settings_title:'Settings', settings_generalTitle:'General settings', settings_syncTitle:'Google Sheets sync',
@@ -646,6 +681,10 @@ const I18N = {
     field_budget:'Budget type', field_month:'Month', field_year:'Year', field_before:'Amount before review', field_after:'Amount after review',
     entry_save:'Save record', entry_variance:'Difference after review', entry_recent:'Recent entries', entry_recordsSuffix:'records',
     entry_empty:'No records yet', entry_nameRequired:'Please enter a name', entry_added:'Added successfully', currency:'SAR',
+    entry_invalidNumber:'Budget value is invalid', entry_negativeNumber:'Budget cannot be negative',
+    dup_title:'A similar record already exists', dup_msg:'A record with the same name, month, and year exists. Add it anyway?',
+    dup_confirmBtn:'Add anyway', dup_cancelBtn:'Cancel',
+    del_title:'Delete this record?', del_msg:'This action cannot be undone.', del_confirmBtn:'Delete', del_cancelBtn:'Cancel',
     import_tabular:'Tabular', import_freeform:'Non-tabular',
     import_tabularHint:'File columns match the template order exactly', import_freeformHint:'Any file, any column order — map each column yourself',
     import_tabularTitle:'Tabular import', import_tabularSub:'The file matches the ready-made template column order',
@@ -740,6 +779,45 @@ function getColumnValue(row, fieldKey){
 const uid = () => Math.random().toString(36).slice(2,10);
 const fmt = (n) => new Intl.NumberFormat('en-US').format(Math.round(n||0));
 const esc = (s) => String(s??"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function confirmDialog({title, message, confirmLabel, cancelLabel, danger}){
+  return new Promise(resolve=>{
+    let el = document.getElementById('dialogBackdrop');
+    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
+    el.innerHTML = `
+      <div class="dialog-modal">
+        <div class="dialog-title">${icon('alert',18)} ${esc(title)}</div>
+        <p class="dialog-msg">${esc(message)}</p>
+        <div class="dialog-actions">
+          <button class="btn-ghost" id="dlgCancel">${esc(cancelLabel)}</button>
+          <button class="btn-ghost ${danger?'btn-danger':'btn-accent'}" id="dlgConfirm">${esc(confirmLabel)}</button>
+        </div>
+      </div>`;
+    requestAnimationFrame(()=> el.classList.add('open'));
+    function close(result){
+      el.classList.remove('open');
+      document.removeEventListener('keydown', onKey);
+      setTimeout(()=>{ el.innerHTML=''; }, 200);
+      resolve(result);
+    }
+    function onKey(e){ if(e.key==='Escape') close(false); else if(e.key==='Enter') close(true); }
+    document.addEventListener('keydown', onKey);
+    el.onclick = (e)=>{ if(e.target===el) close(false); };
+    el.querySelector('#dlgCancel').addEventListener('click', ()=> close(false));
+    el.querySelector('#dlgConfirm').addEventListener('click', ()=> close(true));
+  });
+}
+function parseAmount(raw){
+  const v = String(raw ?? '').trim();
+  if(v === '') return 0;
+  const n = Number(v);
+  if(!Number.isFinite(n)) return NaN;
+  return n;
+}
+function findDuplicateRecord(name, month, year, excludeId){
+  const n = normalizeText(name);
+  return state.records.find(r => r.id!==excludeId && normalizeText(r.name)===n && r.month===month && r.year===year);
+}
 
 function normalizeText(s){
   return String(s||'')
@@ -921,6 +999,7 @@ function renderHeader(){
     </div>
     <div class="header-controls">
       <button class="spotlight-trigger-btn" id="spotlightTriggerBtn" type="button">${icon('search',14)} <span class="spotlight-kbd">${/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent)?'⌘K':'Ctrl+K'}</span></button>
+      <button class="fb-status connecting" id="fbStatusBtn" type="button" title="${esc(t('fb_connecting'))}" aria-label="${esc(t('fb_connecting'))}">${icon('cloud',15)}</button>
       <div class="theme-group" id="themeSeg">
         <button class="theme-icon ${theme==='system'?'active':''}" data-theme="system" title="${esc(t('theme_system'))}" aria-label="${esc(t('theme_system'))}">${icon('monitor',14)}</button>
         <button class="theme-icon ${theme==='light'?'active':''}" data-theme="light" title="${esc(t('theme_light'))}" aria-label="${esc(t('theme_light'))}">${icon('sun',14)}</button>
@@ -940,6 +1019,7 @@ function renderHeader(){
     saveCache();
     renderHeader(); renderSyncBar(); renderTabbar(); renderMain();
   });
+  renderFbStatus();
 }
 
 let appSettings = { currencyUnit: '' };
@@ -1135,6 +1215,67 @@ function renderSyncBar(){
   });
 }
 function updateSyncBar(){ renderSyncBar(); }
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA04U-mi_6hb9VbPFWFqRhjRtZiAB0jLRY",
+  authDomain: "entity-tracker-556a9.firebaseapp.com",
+  projectId: "entity-tracker-556a9",
+  storageBucket: "entity-tracker-556a9.firebasestorage.app",
+  messagingSenderId: "126876375989",
+  appId: "1:126876375989:web:9b69b66856dd29b86297fc",
+};
+let fb = { app:null, auth:null, db:null, uid:null, status:'connecting', unsub:null, saveTimer:null, initialLoadDone:false };
+function renderFbStatus(){
+  const btn = document.getElementById('fbStatusBtn');
+  if(!btn) return;
+  btn.className = 'fb-status ' + fb.status;
+  const label = t('fb_' + fb.status);
+  btn.title = label; btn.setAttribute('aria-label', label);
+}
+function fbDocRef(){ return fb.db.collection('entityData').doc(fb.uid); }
+function fbInit(){
+  try{
+    fb.app = firebase.initializeApp(firebaseConfig);
+    fb.auth = firebase.auth();
+    fb.db = firebase.firestore();
+    fb.auth.onAuthStateChanged(user=>{
+      if(user){ fb.uid = user.uid; fbAttachListener(); }
+    });
+    fb.auth.signInAnonymously().catch(()=>{ fb.status = 'error'; renderFbStatus(); });
+  }catch(e){ fb.status = 'error'; renderFbStatus(); }
+}
+function fbAttachListener(){
+  if(fb.unsub) fb.unsub();
+  fb.status = 'syncing'; renderFbStatus();
+  fb.unsub = fbDocRef().onSnapshot(snap=>{
+    if(snap.metadata.hasPendingWrites && fb.initialLoadDone){ fb.status = 'connected'; renderFbStatus(); return; }
+    if(snap.exists){
+      const data = snap.data();
+      if(Array.isArray(data.records)){
+        state.records = data.records;
+        saveCache();
+        if(fb.initialLoadDone){ renderTabbar(); renderMain(); }
+      }
+    } else if(!fb.initialLoadDone){
+      fbPush();
+    }
+    fb.initialLoadDone = true;
+    fb.status = 'connected'; renderFbStatus();
+  }, ()=>{ fb.status = 'error'; renderFbStatus(); });
+}
+function scheduleFirestoreSync(){
+  if(!fb.uid) return;
+  clearTimeout(fb.saveTimer);
+  fb.saveTimer = setTimeout(fbPush, 900);
+}
+function fbPush(){
+  if(!fb.uid) return;
+  fb.status = 'syncing'; renderFbStatus();
+  fbDocRef().set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
+    .then(()=>{ fb.status = 'connected'; renderFbStatus(); })
+    .catch(()=>{ fb.status = 'error'; renderFbStatus(); });
+}
+function afterRecordsChanged(){ scheduleAutoSync(); scheduleFirestoreSync(); }
 
 const CACHE_KEY = 'entitiesStatementApp:cache:v1';
 function saveCache(){
@@ -1357,22 +1498,31 @@ function renderEntryTab(main){
 
   main.querySelector('#goImportBtn').addEventListener('click', ()=> switchTab('import'));
 
-  main.querySelector('#entryForm').addEventListener('submit', (e)=>{
+  main.querySelector('#entryForm').addEventListener('submit', async (e)=>{
     e.preventDefault();
     const nameI = main.querySelector('#f-name');
     if(!nameI.value.trim()){ toast(t('entry_nameRequired'), 'err'); nameI.focus(); return; }
+    const before = parseAmount(beforeI.value), after = parseAmount(afterI.value);
+    if(Number.isNaN(before) || Number.isNaN(after)){ toast(t('entry_invalidNumber'), 'err'); (Number.isNaN(before)?beforeI:afterI).focus(); return; }
+    if(before < 0 || after < 0){ toast(t('entry_negativeNumber'), 'err'); (before<0?beforeI:afterI).focus(); return; }
+    const name = nameI.value.trim();
+    const year = Number(main.querySelector('#f-year').value) || new Date().getFullYear();
+    if(findDuplicateRecord(name, selectedMonth, year, null)){
+      const ok = await confirmDialog({ title:t('dup_title'), message:t('dup_msg'), confirmLabel:t('dup_confirmBtn'), cancelLabel:t('dup_cancelBtn') });
+      if(!ok) return;
+    }
+    const now = new Date().toISOString();
     const rec = {
-      id: uid(), name: nameI.value.trim(), category: main.querySelector('#f-category').value.trim(),
-      budgetType: selectedKey, month: selectedMonth,
-      year: Number(main.querySelector('#f-year').value) || new Date().getFullYear(),
-      before: Number(beforeI.value) || 0, after: Number(afterI.value) || 0,
+      id: uid(), name, category: main.querySelector('#f-category').value.trim(),
+      budgetType: selectedKey, month: selectedMonth, year, before, after,
+      createdAt: now, updatedAt: now,
     };
     state.records.unshift(rec);
     toast(t('entry_added'));
     nameI.value = ''; main.querySelector('#f-category').value = '';
     beforeI.value = ''; afterI.value = ''; varBox.innerHTML='';
     renderRecentList();
-    scheduleAutoSync();
+    afterRecordsChanged();
     nameI.focus();
   });
 }
@@ -1408,6 +1558,7 @@ function exportRecords(records){
 function normalizeRow(row){
   const budgetType = budgetKeyFromLabel(getColumnValue(row,'budgetType'));
   const month = monthIndexFromLabel(getColumnValue(row,'month'));
+  const now = new Date().toISOString();
   return {
     id: uid(),
     name: String(getColumnValue(row,'name')||'').trim(),
@@ -1416,6 +1567,7 @@ function normalizeRow(row){
     year: Number(getColumnValue(row,'year')) || new Date().getFullYear(),
     before: Number(getColumnValue(row,'before')) || 0,
     after: Number(getColumnValue(row,'after')) || 0,
+    createdAt: now, updatedAt: now,
   };
 }
 function readWorkbookGrid(file){
@@ -1582,7 +1734,7 @@ function renderTabularImport(root){
       state.records = [...chosen, ...state.records];
       toast(t('import_imported',{n:chosen.length}));
       pendingPreview = null; tabularIncluded=null; tabularColsOn=null; fileStatus.innerHTML=''; renderPreview();
-      scheduleAutoSync();
+      afterRecordsChanged();
     });
   }
 
@@ -1784,7 +1936,7 @@ function renderFreeformImport(root){
       toast(t('import_imported',{n:chosen.length}));
       freeGrid = null; freeMapping = []; freeHeaderRow = 1; freeIncluded=null; freeColsOn=null;
       mapArea.innerHTML = ''; freeStatus.innerHTML='';
-      scheduleAutoSync();
+      afterRecordsChanged();
     });
   }
 }
@@ -2085,7 +2237,7 @@ function renderHospitalsTab(main){
     });
   }
 
-  main.querySelector('#tbody').addEventListener('click', (e)=>{
+  main.querySelector('#tbody').addEventListener('click', async (e)=>{
     const btn = e.target.closest('[data-action]');
     if(!btn) return;
     const tr = btn.closest('tr');
@@ -2093,20 +2245,33 @@ function renderHospitalsTab(main){
     const action = btn.dataset.action;
     if(action==='edit'){ editingId = id; updateTable(); }
     else if(action==='cancel'){ editingId = null; updateTable(); }
-    else if(action==='delete'){ state.records = state.records.filter(r=>r.id!==id); toast(t('hosp_deleted'),'err'); updateTable(); scheduleAutoSync(); }
+    else if(action==='delete'){
+      const ok = await confirmDialog({ title:t('del_title'), message:t('del_msg'), confirmLabel:t('del_confirmBtn'), cancelLabel:t('del_cancelBtn'), danger:true });
+      if(!ok) return;
+      state.records = state.records.filter(r=>r.id!==id); toast(t('hosp_deleted'),'err'); updateTable(); afterRecordsChanged();
+    }
     else if(action==='save'){
       const idx = state.records.findIndex(r=>r.id===id);
+      const name = tr.querySelector('.e-name').value.trim();
+      if(!name){ toast(t('entry_nameRequired'), 'err'); return; }
+      const before = parseAmount(tr.querySelector('.e-before').value);
+      const after = parseAmount(tr.querySelector('.e-after').value);
+      if(Number.isNaN(before) || Number.isNaN(after)){ toast(t('entry_invalidNumber'), 'err'); return; }
+      if(before < 0 || after < 0){ toast(t('entry_negativeNumber'), 'err'); return; }
+      const month = Number((cselRegistry['editMonth-'+id] && cselRegistry['editMonth-'+id].value) ?? state.records[idx].month);
+      const year = Number(tr.querySelector('.e-year').value)||state.records[idx].year;
+      if(findDuplicateRecord(name, month, year, id)){
+        const ok = await confirmDialog({ title:t('dup_title'), message:t('dup_msg'), confirmLabel:t('dup_confirmBtn'), cancelLabel:t('dup_cancelBtn') });
+        if(!ok) return;
+      }
       state.records[idx] = {
         ...state.records[idx],
-        name: tr.querySelector('.e-name').value.trim(),
-        category: tr.querySelector('.e-category').value.trim(),
+        name, category: tr.querySelector('.e-category').value.trim(),
         budgetType: (cselRegistry['editBudget-'+id] && cselRegistry['editBudget-'+id].value) || state.records[idx].budgetType,
-        month: Number((cselRegistry['editMonth-'+id] && cselRegistry['editMonth-'+id].value) ?? state.records[idx].month),
-        year: Number(tr.querySelector('.e-year').value)||state.records[idx].year,
-        before: Number(tr.querySelector('.e-before').value)||0,
-        after: Number(tr.querySelector('.e-after').value)||0,
+        month, year, before, after,
+        updatedAt: new Date().toISOString(),
       };
-      editingId = null; toast(t('hosp_updated')); updateTable(); scheduleAutoSync();
+      editingId = null; toast(t('hosp_updated')); updateTable(); afterRecordsChanged();
     }
   });
 
@@ -2312,6 +2477,7 @@ renderHeader();
 renderSyncBar();
 renderTabbar();
 renderMain();
+fbInit();
 </script>
 </body>
 </html>
