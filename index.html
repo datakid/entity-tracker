@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function(){
+  var m = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.setAttribute('data-theme', m ? 'dark' : 'light');
+})();
+</script>
+<title>بيان جهات متعاقدة</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='64' y2='64' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23123846'/%3E%3Cstop offset='0.55' stop-color='%231c6b83'/%3E%3Cstop offset='1' stop-color='%232f93b0'/%3E%3C/linearGradient%3E%3ClinearGradient id='mark' x1='16' y1='16' x2='48' y2='48' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%23f1f2f2'/%3E%3Cstop offset='1' stop-color='%238fd4ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='62' height='62' rx='17' fill='url(%23bg)'/%3E%3Crect x='1' y='1' width='62' height='62' rx='17' fill='none' stroke='%238fd4ea' stroke-opacity='0.18' stroke-width='1'/%3E%3Crect x='18' y='19' width='28' height='26' rx='6' fill='none' stroke='url(%23mark)' stroke-width='3.4'/%3E%3Ccircle cx='27' cy='30' r='3.6' fill='url(%23mark)'/%3E%3Cpath d='M22.5 40.5c0-3.6 3-5.6 4.5-5.6s4.5 2 4.5 5.6' fill='none' stroke='url(%23mark)' stroke-width='3' stroke-linecap='round'/%3E%3Cline x1='36' y1='28' x2='41.5' y2='28' stroke='url(%23mark)' stroke-width='2.6' stroke-linecap='round'/%3E%3Cline x1='36' y1='34' x2='41.5' y2='34' stroke='url(%23mark)' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root{
+    color-scheme: dark;
+    /* calm teal as the primary accent, warm gold reserved as a restrained secondary accent */
+    --bg:#0a0d0d;
+    --accent-light:#8fd4ea;
+    --accent:#2f93b0;
+    --accent-strong:#1c6b83;
+    --accent-soft:rgba(47,147,176,.16);
+    --accent-ring:rgba(47,147,176,.44);
+
+    --gold-light:#e8ce9c;
+    --gold:#cda15c;
+    --gold-strong:#a97d3c;
+    --gold-soft:rgba(205,161,92,.16);
+
+    --good:#34d399; --good-soft:rgba(52,211,153,.15);
+    --bad:#f87171;  --bad-soft:rgba(248,113,113,.15);
+
+    --r-lg:28px; --r-md:18px; --r-sm:13px; --r-pill:999px;
+
+    --fg:#f1f2f2;
+    --muted:rgba(241,242,242,.56);
+    --muted2:rgba(241,242,242,.37);
+
+    --ink-solid:#fff;
+    --ink-9:rgba(255,255,255,.92); --ink-85:rgba(255,255,255,.85); --ink-8:rgba(255,255,255,.8);
+    --ink-78:rgba(255,255,255,.78); --ink-75:rgba(255,255,255,.75); --ink-6:rgba(255,255,255,.62);
+    --ink-55:rgba(255,255,255,.55); --ink-5:rgba(255,255,255,.5);  --ink-32:rgba(255,255,255,.34);
+    --ink-3:rgba(255,255,255,.32);  --ink-2:rgba(255,255,255,.22); --ink-12:rgba(255,255,255,.14);
+
+    --vignette-edge:rgba(10,13,13,.64);
+    --blob-opacity:.85;
+
+    --glass-bg:rgba(255,255,255,.045);
+    --glass-border:rgba(255,255,255,.09);
+    --glass-rim-bright:rgba(255,255,255,.58);
+    --glass-rim-mid:rgba(255,255,255,.08);
+    --glass-rim-edge:rgba(255,255,255,.13);
+    --shadow-ambient:rgba(0,0,0,.68);
+    --shadow-contact:rgba(0,0,0,.48);
+    --shadow-inset-top:rgba(255,255,255,.12);
+
+    --divider:rgba(255,255,255,.09);
+    --divider-soft:rgba(255,255,255,.055);
+
+    --input-bg:rgba(255,255,255,.05);
+    --input-border:rgba(255,255,255,.13);
+    --input-shadow:rgba(255,255,255,.06);
+    --placeholder:rgba(255,255,255,.32);
+    --scrollbar:rgba(255,255,255,.16);
+
+    --btn-ghost-bg:rgba(255,255,255,.045);
+    --btn-ghost-border:rgba(255,255,255,.13);
+    --btn-ghost-text:rgba(255,255,255,.8);
+    --btn-onaccent:#06181c;
+
+    --row-card-bg:rgba(255,255,255,.04);
+    --row-card-border:rgba(255,255,255,.08);
+    --row-card-border-hover:rgba(255,255,255,.2);
+
+    --dropzone-bg:rgba(255,255,255,.02);
+    --dropzone-border:rgba(255,255,255,.15);
+
+    --icon-btn-color:rgba(255,255,255,.62);
+    --icon-btn-hover-bg:rgba(255,255,255,.1);
+
+    --mini-inp-bg:rgba(255,255,255,.065);
+    --mini-inp-border:rgba(255,255,255,.15);
+
+    --bar-track-bg:rgba(255,255,255,.07);
+
+    --toast-border:rgba(255,255,255,.16);
+    --toast-shadow:rgba(0,0,0,.72);
+    --toast-inset:rgba(255,255,255,.2);
+
+    --grain-opacity:.035;
+    --dot-badge-bg:rgba(255,255,255,.055);
+    --group-head-bg:rgba(255,255,255,.035);
+  }
+
+  html[data-theme="light"]{
+    color-scheme: light;
+    --bg:#f6f4ee;
+    --accent-light:#5fb8d6;
+    --accent:#1f7a97;
+    --accent-strong:#14566c;
+    --accent-soft:rgba(31,122,151,.1);
+    --accent-ring:rgba(31,122,151,.36);
+    --gold-light:#e0bd82;
+    --gold:#a97d3c;
+    --gold-strong:#87602b;
+    --gold-soft:rgba(169,125,60,.14);
+
+    --fg:#191a18;
+    --muted:rgba(25,26,24,.58);
+    --muted2:rgba(25,26,24,.4);
+
+    --ink-solid:#131412;
+    --ink-9:rgba(19,20,18,.9); --ink-85:rgba(19,20,18,.85); --ink-8:rgba(19,20,18,.8);
+    --ink-78:rgba(19,20,18,.78); --ink-75:rgba(19,20,18,.75); --ink-6:rgba(19,20,18,.64);
+    --ink-55:rgba(19,20,18,.58); --ink-5:rgba(19,20,18,.55); --ink-32:rgba(19,20,18,.44);
+    --ink-3:rgba(19,20,18,.42); --ink-2:rgba(19,20,18,.3); --ink-12:rgba(19,20,18,.22);
+
+    --vignette-edge:rgba(246,244,238,.8);
+    --blob-opacity:.45;
+
+    --glass-bg:rgba(255,255,255,.56);
+    --glass-border:rgba(255,255,255,.78);
+    --glass-rim-bright:rgba(255,255,255,.96);
+    --glass-rim-mid:rgba(255,255,255,.32);
+    --glass-rim-edge:rgba(255,255,255,.5);
+    --shadow-ambient:rgba(30,28,18,.14);
+    --shadow-contact:rgba(30,28,18,.09);
+    --shadow-inset-top:rgba(255,255,255,.7);
+
+    --divider:rgba(25,26,24,.09);
+    --divider-soft:rgba(25,26,24,.06);
+
+    --input-bg:rgba(255,255,255,.64);
+    --input-border:rgba(25,26,24,.13);
+    --input-shadow:rgba(255,255,255,.6);
+    --placeholder:rgba(25,26,24,.36);
+    --scrollbar:rgba(25,26,24,.2);
+
+    --btn-ghost-bg:rgba(255,255,255,.52);
+    --btn-ghost-border:rgba(25,26,24,.12);
+    --btn-ghost-text:rgba(25,26,24,.8);
+    --btn-onaccent:#fbfaf6;
+
+    --row-card-bg:rgba(255,255,255,.54);
+    --row-card-border:rgba(25,26,24,.08);
+    --row-card-border-hover:rgba(25,26,24,.2);
+
+    --dropzone-bg:rgba(255,255,255,.4);
+    --dropzone-border:rgba(25,26,24,.16);
+
+    --icon-btn-color:rgba(25,26,24,.6);
+    --icon-btn-hover-bg:rgba(25,26,24,.08);
+
+    --mini-inp-bg:rgba(255,255,255,.8);
+    --mini-inp-border:rgba(25,26,24,.16);
+
+    --bar-track-bg:rgba(25,26,24,.09);
+
+    --toast-border:rgba(25,26,24,.12);
+    --toast-shadow:rgba(25,26,24,.2);
+    --toast-inset:rgba(255,255,255,.7);
+
+    --grain-opacity:.022;
+    --dot-badge-bg:rgba(25,26,24,.045);
+    --group-head-bg:rgba(25,26,24,.03);
+  }
+
+  @media (prefers-color-scheme: light){
+    html[data-theme="system"]{
+      color-scheme: light;
+      --bg:#f6f4ee;
+      --accent-light:#5fb8d6; --accent:#1f7a97; --accent-strong:#14566c;
+      --accent-soft:rgba(31,122,151,.1); --accent-ring:rgba(31,122,151,.36);
+      --gold-light:#e0bd82; --gold:#a97d3c; --gold-strong:#87602b; --gold-soft:rgba(169,125,60,.14);
+      --fg:#191a18; --muted:rgba(25,26,24,.58); --muted2:rgba(25,26,24,.4);
+      --ink-solid:#131412;
+      --ink-9:rgba(19,20,18,.9); --ink-85:rgba(19,20,18,.85); --ink-8:rgba(19,20,18,.8);
+      --ink-78:rgba(19,20,18,.78); --ink-75:rgba(19,20,18,.75); --ink-6:rgba(19,20,18,.64);
+      --ink-55:rgba(19,20,18,.58); --ink-5:rgba(19,20,18,.55); --ink-32:rgba(19,20,18,.44);
+      --ink-3:rgba(19,20,18,.42); --ink-2:rgba(19,20,18,.3); --ink-12:rgba(19,20,18,.22);
+      --vignette-edge:rgba(246,244,238,.8); --blob-opacity:.45;
+      --glass-bg:rgba(255,255,255,.56); --glass-border:rgba(255,255,255,.78);
+      --glass-rim-bright:rgba(255,255,255,.96); --glass-rim-mid:rgba(255,255,255,.32); --glass-rim-edge:rgba(255,255,255,.5);
+      --shadow-ambient:rgba(30,28,18,.14); --shadow-contact:rgba(30,28,18,.09); --shadow-inset-top:rgba(255,255,255,.7);
+      --divider:rgba(25,26,24,.09); --divider-soft:rgba(25,26,24,.06);
+      --input-bg:rgba(255,255,255,.64); --input-border:rgba(25,26,24,.13); --input-shadow:rgba(255,255,255,.6); --placeholder:rgba(25,26,24,.36); --scrollbar:rgba(25,26,24,.2);
+      --btn-ghost-bg:rgba(255,255,255,.52); --btn-ghost-border:rgba(25,26,24,.12); --btn-ghost-text:rgba(25,26,24,.8);
+      --row-card-bg:rgba(255,255,255,.54); --row-card-border:rgba(25,26,24,.08); --row-card-border-hover:rgba(25,26,24,.2);
+      --dropzone-bg:rgba(255,255,255,.4); --dropzone-border:rgba(25,26,24,.16);
+      --icon-btn-color:rgba(25,26,24,.6); --icon-btn-hover-bg:rgba(25,26,24,.08);
+      --mini-inp-bg:rgba(255,255,255,.8); --mini-inp-border:rgba(25,26,24,.16);
+      --bar-track-bg:rgba(25,26,24,.09);
+      --toast-border:rgba(25,26,24,.12); --toast-shadow:rgba(25,26,24,.2); --toast-inset:rgba(255,255,255,.7);
+      --grain-opacity:.022; --dot-badge-bg:rgba(25,26,24,.045); --group-head-bg:rgba(25,26,24,.03);
+    }
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans Arabic','Inter',sans-serif;
+    font-size:15px;line-height:1.65;font-variant-numeric:tabular-nums;letter-spacing:0;
+    transition:background .3s ease, color .3s ease;}
+  html[lang="en"], html[lang="en"] body{font-family:'Inter','IBM Plex Sans Arabic',sans-serif;}
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:10px;}
+  a,button,input,select{font-family:inherit;letter-spacing:0;}
+  button{cursor:pointer;}
+  h1,h2,h3{line-height:1.3;letter-spacing:0;}
+  :focus-visible{outline:2px solid var(--accent-ring);outline-offset:2px;}
+
+  svg.defs{position:absolute;width:0;height:0;overflow:hidden;}
+
+  .bg-blob{position:fixed;border-radius:50%;z-index:-2;pointer-events:none;opacity:var(--blob-opacity);transition:opacity .4s ease;}
+  .blob-a{width:640px;height:640px;top:-160px;inset-inline-end:-180px;background:radial-gradient(circle at 30% 30%, rgba(201,111,74,.3), transparent 65%);filter:blur(90px);animation:driftA 42s ease-in-out infinite;}
+  .blob-b{width:560px;height:560px;bottom:-180px;inset-inline-start:-160px;background:radial-gradient(circle at 60% 60%, rgba(224,169,110,.24), transparent 65%);filter:blur(90px);animation:driftB 48s ease-in-out infinite;}
+  .blob-c{width:460px;height:460px;top:14%;inset-inline-start:8%;background:radial-gradient(circle, rgba(156,79,48,.18), transparent 70%);filter:blur(95px);animation:driftC 46s ease-in-out infinite;}
+  .vignette{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 0%, transparent 35%, var(--vignette-edge) 100%);}
+  .grain{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:var(--grain-opacity);mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  @keyframes driftA{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-22px,26px) scale(1.04);}}
+  @keyframes driftB{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(22px,-22px) scale(1.03);}}
+  @keyframes driftC{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(14px,14px) scale(1.05);}}
+  @keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes grow{from{width:0;}}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,-12px);}to{opacity:1;transform:translate(-50%,0);}}
+
+  /* ---------------- liquid glass: layered depth, crisp center, lensed rim ---------------- */
+  .glass{
+    position:relative;isolation:isolate;overflow:hidden;border-radius:var(--r-lg);
+    border:1px solid var(--glass-border);background:var(--glass-bg);
+    backdrop-filter:blur(20px) saturate(165%);-webkit-backdrop-filter:blur(20px) saturate(165%);
+    box-shadow:0 30px 60px -26px var(--shadow-ambient),0 9px 22px -12px var(--shadow-contact),inset 0 1px 0 var(--shadow-inset-top),inset 0 -22px 34px -30px var(--shadow-contact);
+    transition:box-shadow .4s ease, background .3s ease, border-color .3s ease;
+  }
+  /* thin material variant for chrome (tab bar / sync bar) — less opaque, more transparent */
+  .glass.thin{backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);background:color-mix(in srgb, var(--glass-bg) 60%, transparent);}
+  .glass::before{
+    content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:20px;
+    backdrop-filter:blur(12px) saturate(185%) brightness(1.06);-webkit-backdrop-filter:blur(12px) saturate(185%) brightness(1.06);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+  }
+  html.supports-distort .glass::before{ backdrop-filter:url(#liquid-refraction) blur(12px) saturate(195%) brightness(1.08); }
+  .glass::after{
+    content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:1.3px;
+    background:linear-gradient(155deg, var(--glass-rim-bright), var(--glass-rim-mid) 28%, transparent 52%, var(--glass-rim-edge) 100%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+  }
+  .glass > *{position:relative;z-index:1;}
+  .glass:hover{box-shadow:0 36px 68px -22px var(--shadow-ambient), inset 0 1px 0 var(--shadow-inset-top);}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:26px 20px 60px;}
+  header.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:14px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0;}
+  .brand-icon{height:44px;width:44px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;border:1px solid var(--accent-ring);flex-shrink:0;
+    background:linear-gradient(135deg, var(--accent-light), var(--gold));
+    box-shadow:0 8px 20px -8px var(--accent-ring), inset 0 1px 0 rgba(255,255,255,.4);color:var(--btn-onaccent);}
+  .brand h1{font-size:19px;margin:0;font-weight:700;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .brand p{font-size:12.5px;color:var(--muted2);margin:3px 0 0;}
+  .header-controls{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .theme-group{display:inline-flex;gap:2px;padding:4px;border-radius:var(--r-pill);background:var(--input-bg);border:1px solid var(--input-border);}
+  .theme-icon{border:none;background:transparent;color:var(--muted);height:32px;width:32px;border-radius:var(--r-pill);display:flex;align-items:center;justify-content:center;transition:.2s;}
+  .theme-icon.active{background:var(--accent-soft);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent-ring);}
+  .theme-icon:not(.active):hover{color:var(--fg);background:var(--icon-btn-hover-bg);}
+  .lang-toggle{border:1px solid var(--input-border);background:var(--input-bg);color:var(--ink-8);border-radius:var(--r-pill);padding:8px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;transition:.2s;}
+  .lang-toggle:hover{border-color:var(--accent-ring);background:var(--glass-bg);}
+
+  .syncbar{margin-bottom:18px;padding:12px 16px;}
+  .sync-left{display:flex;align-items:center;gap:10px;min-width:0;}
+  .sync-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .sync-text{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sync-actions{display:flex;align-items:center;gap:8px;}
+  .sync-panel{margin-top:14px;padding-top:14px;border-top:1px solid var(--divider);display:none;}
+  .sync-panel.open{display:block;}
+  .sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:700px){.sync-grid{grid-template-columns:1fr;}}
+  .switch{position:relative;width:40px;height:23px;border-radius:99px;background:var(--input-bg);border:1px solid var(--input-border);transition:.2s;flex-shrink:0;}
+  .switch::after{content:"";position:absolute;top:2px;inset-inline-start:2px;width:17px;height:17px;border-radius:50%;background:var(--muted2);transition:inset-inline-start .25s, background .25s;}
+  .switch.on{background:var(--accent);border-color:var(--accent);}
+  .switch.on::after{inset-inline-start:21px;background:#fff;}
+
+  nav.tabs{margin-bottom:22px;}
+  .tabbar{position:relative;display:inline-flex;gap:2px;padding:6px;flex-wrap:wrap;}
+  #tabIndicator{position:absolute;top:6px;bottom:6px;left:0;border-radius:var(--r-sm);
+    background:linear-gradient(135deg,var(--accent),var(--accent-strong));
+    box-shadow:0 8px 22px -8px var(--accent-ring), inset 0 1px 0 rgba(255,255,255,.4);
+    transition:transform .45s cubic-bezier(.22,1,.36,1), width .45s cubic-bezier(.22,1,.36,1);z-index:0;}
+  .tab-btn{position:relative;z-index:1;display:flex;align-items:center;gap:8px;border:none;background:transparent;color:var(--muted);
+    border-radius:var(--r-sm);padding:10px 18px;font-size:14px;font-weight:500;transition:color .3s;}
+  .tab-btn.active{color:var(--btn-onaccent);}
+  .tab-btn:not(.active):hover{color:var(--fg);}
+
+  .grid{display:grid;gap:20px;}
+  .grid-5{grid-template-columns:repeat(5,1fr);}
+  .col-2{grid-column:span 2;}
+  .col-3{grid-column:span 3;}
+  .col-5{grid-column:span 5;}
+  @media (max-width:980px){.grid-5{grid-template-columns:1fr;}.col-2,.col-3,.col-5{grid-column:span 1;}}
+
+  .p{padding:24px;}
+  h2.card-title{margin:0;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;color:var(--fg);}
+  h3.card-title{margin:0;font-size:15px;font-weight:700;color:var(--ink-85);}
+  .card-sub{font-size:12.5px;color:var(--muted2);margin:6px 0 0;margin-inline-start:42px;}
+
+  label.field{display:flex;flex-direction:column;gap:6px;margin-bottom:15px;}
+  label.field span{font-size:12.5px;font-weight:600;color:var(--muted);}
+  .inp{width:100%;border-radius:var(--r-md);border:1px solid var(--input-border);background:var(--input-bg);
+    padding:12px 14px;font-size:14.5px;color:var(--fg);outline:none;transition:.25s;box-shadow:inset 0 1px 0 var(--input-shadow);}
+  .inp::placeholder{color:var(--placeholder);}
+  .inp:focus{border-color:var(--accent-ring);box-shadow:0 0 0 4px var(--accent-soft), inset 0 1px 0 var(--input-shadow);}
+
+  /* ---------------- custom dropdown (fully custom, not a styled native <select>) ---------------- */
+  .csel{position:relative;}
+  .csel-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;
+    border-radius:var(--r-md);border:1px solid var(--input-border);background:var(--input-bg);
+    padding:12px 14px;font-size:14.5px;color:var(--fg);cursor:pointer;transition:border-color .2s, box-shadow .2s;
+    text-align:start;box-shadow:inset 0 1px 0 var(--input-shadow);font-family:inherit;}
+  .csel-trigger:hover{border-color:var(--accent-ring);}
+  .csel-trigger.csel-active{border-color:var(--accent-ring);box-shadow:0 0 0 4px var(--accent-soft), inset 0 1px 0 var(--input-shadow);}
+  .csel-trigger .csel-chev{color:var(--muted2);transition:transform .2s;flex-shrink:0;}
+  .csel-trigger.csel-active .csel-chev{transform:rotate(180deg);}
+  .csel-value{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .csel.mini .csel-trigger{border-radius:10px;padding:7px 9px;font-size:12.5px;background:var(--mini-inp-bg);border-color:var(--mini-inp-border);}
+  #cselPortal{
+    position:fixed;z-index:1000;max-height:264px;overflow-y:auto;
+    border-radius:var(--r-md);border:1px solid var(--glass-border);
+    background:var(--glass-bg);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);
+    box-shadow:0 24px 50px -18px var(--shadow-ambient), inset 0 1px 0 var(--shadow-inset-top);
+    padding:6px;opacity:0;transform:translateY(-6px) scale(.97);transform-origin:top center;
+    transition:opacity .15s ease, transform .15s ease;pointer-events:none;
+  }
+  #cselPortal.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+  .csel-option{padding:9px 12px;border-radius:calc(var(--r-md) - 6px);font-size:13.5px;color:var(--ink-8);cursor:pointer;transition:background .15s;}
+  .csel-option:hover, .csel-option.hl{background:var(--icon-btn-hover-bg);}
+  .csel-option.sel{background:var(--accent-soft);color:var(--accent);font-weight:600;}
+
+  /* ---------------- spotlight (Ctrl/Cmd+K) ---------------- */
+  .spotlight-trigger-btn{border:1px solid var(--input-border);background:var(--input-bg);color:var(--ink-8);
+    border-radius:var(--r-pill);padding:8px 13px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:7px;
+    transition:.2s;font-family:inherit;cursor:pointer;}
+  .spotlight-trigger-btn:hover{border-color:var(--accent-ring);color:var(--fg);box-shadow:0 0 0 4px var(--accent-soft);}
+  .spotlight-kbd{font-size:10.5px;color:var(--muted2);border:1px solid var(--divider);border-radius:5px;padding:1px 5px;flex-shrink:0;}
+  .spotlight-backdrop{position:fixed;inset:0;z-index:1200;background:radial-gradient(120% 100% at 50% 0%, rgba(10,13,13,.5), rgba(4,6,6,.72));
+    backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+    display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;
+    opacity:0;pointer-events:none;transition:opacity .2s ease;}
+  .spotlight-backdrop.open{opacity:1;pointer-events:auto;}
+  .spotlight-modal{position:relative;isolation:isolate;overflow:hidden;width:min(560px,92vw);max-height:64vh;display:flex;flex-direction:column;
+    border-radius:var(--r-lg);border:1px solid var(--glass-border);background:var(--glass-bg);
+    backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);
+    box-shadow:0 40px 90px -24px var(--shadow-ambient),0 10px 30px -14px var(--shadow-contact),
+      inset 0 1px 0 var(--shadow-inset-top), 0 0 0 1px rgba(0,0,0,.02);
+    transform:translateY(-14px) scale(.97);transition:transform .22s cubic-bezier(.2,.8,.2,1), opacity .2s ease;}
+  .spotlight-backdrop.open .spotlight-modal{transform:translateY(0) scale(1);}
+  .spotlight-modal::before{content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:1.3px;pointer-events:none;
+    background:linear-gradient(155deg, var(--glass-rim-bright), var(--glass-rim-mid) 26%, transparent 50%, var(--glass-rim-edge) 100%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;}
+  .spotlight-modal::after{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;z-index:1;pointer-events:none;
+    background:linear-gradient(90deg, transparent, var(--accent-ring), transparent);opacity:.7;}
+  .spotlight-modal > *{position:relative;z-index:1;}
+  .spotlight-input-wrap{display:flex;align-items:center;gap:11px;padding:17px 20px;border-bottom:1px solid var(--divider-soft);flex-shrink:0;color:var(--accent-light);}
+  .spotlight-input{flex:1;border:none;background:transparent;outline:none;font-size:16px;color:var(--fg);font-family:inherit;letter-spacing:.01em;}
+  .spotlight-input::placeholder{color:var(--placeholder);}
+  .spotlight-results{overflow-y:auto;padding:9px;}
+  .spotlight-section-label{font-size:10.5px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;padding:12px 11px 5px;}
+  .spotlight-item{display:flex;align-items:center;gap:12px;padding:9px 11px;border-radius:var(--r-sm);cursor:pointer;
+    transition:background .15s ease, transform .15s ease;}
+  .spotlight-item:hover, .spotlight-item.hl{background:var(--icon-btn-hover-bg);}
+  .spotlight-item.hl{box-shadow:inset 0 0 0 1px var(--accent-ring);}
+  .spotlight-item-icon{height:32px;width:32px;border-radius:10px;background:var(--accent-soft);color:var(--accent-light);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s ease, color .15s ease;}
+  .spotlight-item:hover .spotlight-item-icon, .spotlight-item.hl .spotlight-item-icon{background:var(--accent);color:var(--ink-solid);}
+  .spotlight-item-title{font-size:14px;font-weight:600;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .spotlight-item-sub{font-size:12px;color:var(--muted2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;}
+  .spotlight-empty{padding:38px 16px;text-align:center;color:var(--muted2);font-size:13px;}
+
+  .pill-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .budget-pill{flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:var(--r-md);
+    border:1px solid var(--input-border);background:var(--input-bg);color:var(--muted);
+    padding:12px;font-size:13.5px;font-weight:500;transition:all .3s cubic-bezier(.22,1,.36,1);}
+  .budget-pill:hover{background:var(--glass-bg);}
+  .budget-pill.sel{transform:translateY(-2px);}
+
+  .btn-primary{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;border:none;
+    border-radius:var(--r-md);padding:14px;font-size:15px;font-weight:700;color:var(--btn-onaccent);
+    background:linear-gradient(135deg,var(--accent),var(--accent-strong));
+    box-shadow:0 12px 28px -12px var(--accent-ring), inset 0 1px 0 rgba(255,255,255,.4);
+    width:100%;transition:transform .2s, box-shadow .2s;}
+  .btn-primary:hover{transform:translateY(-1px);}
+  .btn-primary:active{transform:scale(.98);}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+  .btn-ghost{position:relative;display:flex;align-items:center;gap:6px;border:1px solid var(--btn-ghost-border);background:var(--btn-ghost-bg);
+    color:var(--btn-ghost-text);border-radius:var(--r-md);padding:10px 15px;font-size:13px;font-weight:500;transition:.25s;white-space:nowrap;}
+  .btn-ghost:hover{border-color:var(--accent-ring);background:var(--glass-bg);}
+  .btn-ghost:disabled{opacity:.5;cursor:not-allowed;}
+  .btn-accent{background:var(--accent-soft);color:var(--accent-light);border:1px solid var(--accent-ring);}
+  .link-btn{background:none;border:none;color:var(--muted);font-size:13px;display:flex;align-items:center;gap:4px;}
+  .link-btn:hover{color:var(--fg);}
+  .seg{display:inline-flex;gap:2px;padding:4px;border-radius:var(--r-md);background:var(--input-bg);border:1px solid var(--input-border);}
+  .seg-btn{border:none;background:transparent;color:var(--muted);padding:8px 14px;border-radius:calc(var(--r-md) - 4px);font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;transition:.2s;}
+  .seg-btn.active{background:var(--accent-soft);color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent-ring);}
+  .seg-btn.icon-only{padding:8px 10px;}
+
+  .badge{display:inline-flex;align-items:center;border-radius:var(--r-pill);border:1px solid var(--divider);background:var(--divider-soft);
+    padding:4px 11px;font-size:12px;color:var(--muted);white-space:nowrap;}
+  .tag{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);padding:4px 11px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--dot-badge-bg);color:var(--ink-8);}
+  .var-tag{display:inline-flex;align-items:center;gap:3px;border-radius:var(--r-pill);padding:3px 9px;font-size:12px;font-weight:700;}
+  .col-chip{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);padding:6px 12px;font-size:12.5px;font-weight:600;border:1px solid var(--input-border);background:var(--input-bg);color:var(--muted);cursor:pointer;transition:.2s;user-select:none;}
+  .col-chip.on{background:var(--accent-soft);border-color:var(--accent-ring);color:var(--accent-light);}
+  .col-chip.off{opacity:.5;text-decoration:line-through;}
+
+  .row-card{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:var(--r-md);
+    border:1px solid var(--row-card-border);background:var(--row-card-bg);padding:14px 16px;
+    transition:.3s cubic-bezier(.22,1,.36,1);margin-bottom:10px;}
+  .row-card:hover{border-color:var(--row-card-border-hover);transform:translateY(-2px);box-shadow:0 12px 24px -16px var(--shadow-ambient);}
+
+  .dropzone{position:relative;cursor:pointer;border-radius:var(--r-lg);background:var(--dropzone-bg);
+    border:2px dashed var(--dropzone-border);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;gap:12px;padding:40px 16px;transition:.25s;}
+  .dropzone.drag{border-color:var(--accent-ring);background:var(--accent-soft);}
+  .dz-icon{height:50px;width:50px;border-radius:var(--r-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;
+    color:var(--accent-light);box-shadow:0 0 0 1px var(--accent-ring), 0 10px 22px -10px var(--accent-ring);}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{text-align:start;font-weight:600;color:var(--muted);padding:12px;white-space:nowrap;cursor:pointer;user-select:none;font-size:12.5px;border-bottom:1px solid var(--divider);}
+  td{padding:13px 12px;white-space:nowrap;border-bottom:1px solid var(--divider-soft);color:var(--ink-75);}
+  tbody tr{transition:.15s;}
+  tbody tr:hover{background:var(--glass-bg);}
+  tr.group-header td{background:var(--group-head-bg);color:var(--ink-9);font-weight:700;cursor:pointer;border-bottom:1px solid var(--divider);}
+  .tbl-actions{display:flex;gap:6px;opacity:.6;}
+  .tbl-actions:hover{opacity:1;}
+  .icon-btn{height:30px;width:30px;border:none;border-radius:var(--r-sm);background:transparent;display:flex;align-items:center;justify-content:center;color:var(--icon-btn-color);}
+  .icon-btn:hover{background:var(--icon-btn-hover-bg);}
+  .icon-btn.danger:hover{background:var(--bad-soft);color:var(--bad);}
+  .icon-btn.ok{background:var(--good-soft);color:var(--good);}
+  .icon-btn.cancel{background:var(--icon-btn-hover-bg);color:var(--muted);}
+  .mini-inp{width:100%;border-radius:10px;border:1px solid var(--mini-inp-border);background:var(--mini-inp-bg);padding:7px 9px;font-size:12.5px;color:var(--fg);outline:none;}
+
+  .stat-card{display:flex;align-items:center;gap:16px;padding:20px;flex:1;min-width:210px;transition:transform .3s cubic-bezier(.22,1,.36,1);}
+  .stat-card:hover{transform:translateY(-3px);}
+  .stat-icon{height:46px;width:46px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.22);}
+  .stat-label{font-size:12.5px;color:var(--muted2);}
+  .stat-value{font-size:27px;font-weight:800;letter-spacing:-.01em;color:var(--fg);margin-top:2px;}
+  .stat-sub{font-size:12px;color:var(--muted2);margin-top:3px;}
+  .stats-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px;}
+
+  .legend-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;padding:5px 0;color:var(--muted);}
+  .dot{height:9px;width:9px;border-radius:50%;display:inline-block;margin-inline-end:8px;flex-shrink:0;}
+
+  .bar-item{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .bar-rank{width:24px;font-size:12px;color:var(--muted2);font-variant-numeric:tabular-nums;}
+  .bar-track{height:8px;border-radius:99px;background:var(--bar-track-bg);overflow:hidden;margin-top:6px;}
+  .bar-fill{height:100%;border-radius:99px;animation:grow 1s ease both;background:linear-gradient(90deg,var(--accent),var(--accent-light));}
+
+  .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:999;display:flex;align-items:center;gap:8px;border-radius:16px;
+    border:1px solid var(--toast-border);padding:13px 22px;font-size:14px;font-weight:600;
+    box-shadow:0 22px 46px -20px var(--toast-shadow), inset 0 1px 0 var(--toast-inset);
+    backdrop-filter:blur(22px) saturate(165%);-webkit-backdrop-filter:blur(22px) saturate(165%);
+    animation:toastIn .35s cubic-bezier(.22,1,.36,1) both;}
+  .toast.ok{background:var(--good-soft);color:var(--good);}
+  .toast.err{background:var(--bad-soft);color:var(--bad);}
+
+  .empty{text-align:center;padding:56px 0;color:var(--muted2);font-size:13.5px;}
+  .search-wrap{position:relative;}
+  .search-wrap svg{position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);color:var(--muted2);}
+  .search-wrap input{padding-inline-start:34px;width:220px;}
+  .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+
+  .gauge-wrap{display:flex;gap:32px;justify-content:center;}
+  .scroll-list{max-height:520px;overflow-y:auto;padding-inline-start:4px;}
+  .map-row{display:grid;grid-template-columns:28px 1fr 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--divider-soft);}
+  .map-row:last-child{border-bottom:none;}
+  .helper-note{font-size:12px;color:var(--muted2);line-height:1.7;background:var(--divider-soft);border:1px solid var(--divider);border-radius:12px;padding:10px 14px;}
+  .attn-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--divider-soft);}
+  .attn-item:last-child{border-bottom:none;}
+  input[type="checkbox"]{accent-color:var(--accent);width:16px;height:16px;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<svg class="defs">
+  <filter id="liquid-refraction" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise"/>
+    <feGaussianBlur in="noise" stdDeviation="2" result="softNoise"/>
+    <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="60" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<div class="bg-blob blob-a"></div>
+<div class="bg-blob blob-b"></div>
+<div class="bg-blob blob-c"></div>
+<div class="vignette"></div>
+<div class="grain"></div>
+
+<div class="wrap">
+  <header class="top" id="headerBar"></header>
+  <div class="glass thin syncbar" id="syncBar"></div>
+  <nav class="tabs">
+    <div class="glass thin tabbar" id="tabbar"></div>
+  </nav>
+  <main id="mainContent"></main>
+</div>
+
+<div id="toastHost"></div>
+
+<script>
+try{
+  if (CSS && CSS.supports && CSS.supports('backdrop-filter','url(#a) blur(1px)')){
+    document.documentElement.classList.add('supports-distort');
+  }
+}catch(e){}
+
+/* ============================== ICONS ============================== */
+const ICONS = {
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  upload:'<path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M4 21h16"/>',
+  download:'<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  building:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 21v-4h6v4"/><path d="M8 7h1M15 7h1M8 11h1M15 11h1M8 15h1M15 15h1"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  trash:'<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/>',
+  pencil:'<path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4z"/>',
+  check:'<path d="M20 6L9 17l-5-5"/>',
+  x:'<path d="M18 6L6 18M6 6l12 12"/>',
+  chevron:'<path d="M6 9l6 6 6-6"/>',
+  sparkle:'<path d="M12 3l1.6 4.9L18.5 9l-4.9 1.6L12 15.5l-1.6-4.9L5.5 9l4.9-1.6L12 3z"/>',
+  alert:'<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/>',
+  filesheet:'<path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/>',
+  cloud:'<path d="M7 18a4 4 0 0 1-.6-7.95A5 5 0 0 1 16 8a4.5 4.5 0 0 1 1.1 8.86"/><path d="M12 12v7M9.5 14.5L12 12l2.5 2.5"/>',
+  trenddown:'<path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/>',
+  trendup:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  arrowup:'<path d="M7 17L17 7M7 7h10v10"/>',
+  gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2.5 12h3M18.5 12h3M4.9 19.1l2.1-2.1M17 7l2.1-2.1"/>',
+  refresh:'<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/>',
+  link:'<path d="M9 15l6-6"/><path d="M13 5l.7-.7a4 4 0 0 1 5.6 5.6l-2 2"/><path d="M11 19l-.7.7a4 4 0 0 1-5.6-5.6l2-2"/>',
+  table:'<rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9.5h18M3 14.5h18M9.5 4v16"/>',
+  layers:'<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/>',
+  monitor:'<rect x="3" y="4" width="18" height="13" rx="1.5"/><path d="M8 21h8M12 17v4"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z"/>',
+};
+function icon(name, size=16, cls=''){
+  return `<svg class="${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||''}</svg>`;
+}
+
+/* ============================== I18N ============================== */
+let lang = 'ar';
+const I18N = {
+  ar:{
+    appName:'بيان جهات متعاقدة', appTagline:'إدارة دقيقة وسلسة لبيانات الجهات المتعاقدة',
+    tab_entry:'إدخال البيانات', tab_import:'الاستيراد', tab_dashboard:'لوحة التحكم', tab_hospitals:'الجهات',
+    sync_notConfigured:'المزامنة غير مُعدّة — اضغط على الإعدادات', sync_notConnected:'غير متصل بـ Google Sheets',
+    sync_waiting:'متصل — بانتظار أول مزامنة', sync_syncing:'جارٍ المزامنة...', sync_failedPrefix:'فشلت آخر مزامنة: ',
+    sync_lastPrefix:'آخر مزامنة: ', sync_nowBtn:'مزامنة الآن', sync_gearTitle:'إعدادات المزامنة',
+    settings_title:'الإعدادات', settings_generalTitle:'إعدادات عامة', settings_syncTitle:'مزامنة Google Sheets',
+    settings_currencyUnit:'وحدة العملة (اختياري)', settings_currencyUnitPh:'مثال: ر.س — اتركه فارغًا لعدم إظهار وحدة',
+    sync_clientId:'معرف عميل Google OAuth (Client ID)', sync_clientIdPh:'xxxx.apps.googleusercontent.com',
+    sync_sheetId:'معرف جدول Google Sheets (Spreadsheet ID)', sync_sheetIdPh:'من رابط الجدول بين d/ و /edit',
+    sync_sheetName:'اسم الورقة (Sheet name)', sync_sheetNamePh:'Sheet1',
+    sync_autoLabel:'المزامنة التلقائية عند أي تعديل', sync_autoOn:'مفعّلة', sync_autoOff:'متوقفة',
+    sync_connect:'الاتصال بحساب Google', sync_disconnect:'فصل الاتصال', sync_save:'حفظ الإعدادات',
+    sync_helper:'يلزم إنشاء Client ID من Google Cloud Console مع تفعيل Google Sheets API، وإضافة نطاق الصفحة ضمن Authorized JavaScript origins. تسجيل الدخول عبر Google لا يعمل عند فتح الملف مباشرة كملف على الجهاز (file://) — شغّل الملف عبر خادم محلي بسيط أو ارفعه على استضافة. معرف الجدول يوجد داخل رابط الشيت بين d/ و /edit.',
+    sync_missingConfig:'أدخل معرف العميل ومعرف الجدول أولًا', sync_noGoogle:'تعذر تحميل خدمة Google — تأكد من فتح الملف عبر خادم http',
+    sync_success:'تمت المزامنة مع Google Sheets', sync_failPrefix:'فشلت المزامنة: ', sync_disconnected:'تم فصل الاتصال بـ Google Sheets',
+    sync_loadedExisting:'تم الاتصال — تم تحميل {n} سجل موجود في الجدول', sync_clearedPlaceholder:'تم الاتصال — أُزيلت بيانات العرض التجريبية، الجدول جاهز لبياناتك',
+    sync_saved:'تم حفظ إعدادات المزامنة', sync_loginFail:'تعذر إتمام تسجيل الدخول إلى Google',
+    theme_system:'النظام', theme_light:'فاتح', theme_dark:'داكن',
+    entry_title:'إدخال سريع', entry_sub:'اضغط Enter للحفظ والانتقال للتالي', entry_importShortcut:'استيراد Excel',
+    field_name:'الاسم', field_namePh:'مثال: مستشفى الملك فهد', field_category:'التصنيف', field_categoryPh:'مثال: مستشفى عام',
+    field_budget:'الموازنة', field_month:'الشهر', field_year:'السنة', field_before:'المبلغ قبل المراجعة', field_after:'المبلغ بعد المراجعة',
+    entry_save:'حفظ السجل', entry_variance:'الفرق بعد المراجعة', entry_recent:'أحدث الإدخالات', entry_recordsSuffix:'سجل',
+    entry_empty:'لا توجد سجلات بعد', entry_nameRequired:'يرجى إدخال الاسم', entry_added:'تمت الإضافة بنجاح', currency:'ر.س',
+    import_tabular:'جدولي', import_freeform:'غير جدولي',
+    import_tabularHint:'الملف يطابق ترتيب أعمدة القالب مباشرة', import_freeformHint:'أي ملف بأي ترتيب أعمدة — حدد كل عمود يدويًا',
+    import_tabularTitle:'استيراد جدولي', import_tabularSub:'الملف يطابق القالب الجاهز بترتيب الأعمدة نفسه',
+    import_downloadTpl:'تنزيل القالب الفارغ', import_dzTitle:'اسحب ملف Excel هنا', import_dzSub:'أو اضغط للاختيار — xlsx, xls, csv',
+    import_previewTitle:'معاينة قبل الاستيراد', import_confirm:'تأكيد الاستيراد', import_emptyPreview:'ستظهر معاينة السجلات هنا بعد رفع الملف',
+    import_fileEmpty:'الملف فارغ أو لا يحتوي على بيانات صالحة', import_noColumns:'تعذر التعرف على الأعمدة — جرّب وضع "غير جدولي" لتخطيط مخصص',
+    import_imported:'تم استيراد {n} سجل بنجاح', import_readError:'حدث خطأ أثناء قراءة الملف',
+    import_freeformTitle:'استيراد غير جدولي', import_freeformSub:'ارفع أي ملف Excel بأي ترتيب أعمدة، ثم حدد يدويًا أي عمود يقابل كل حقل',
+    import_freeDzTitle:'اسحب أي ملف Excel هنا', import_freeDzSub:'لا حاجة لمطابقة القالب — سيتم تحديد الأعمدة يدويًا',
+    import_step1:'١) حدد صف عناوين الأعمدة', import_step1Sub:'اضغط على أي صف أدناه لتعيينه كصف العناوين (تجاهل صفوف الملاحظات في الأعلى)',
+    import_step2:'٢) طابق كل عمود مع الحقل المناسب', import_step2Sub:'تم تخمين بعض المطابقات تلقائيًا — يمكنك تعديلها',
+    import_step3:'٣) اختر الأعمدة والصفوف ثم عاين النتيجة', import_row:'صف', import_col:'عمود ',
+    import_ignoreColumn:'تجاهل هذا العمود', import_noValidRows:'لا توجد سجلات صالحة للاستيراد — تأكد من تعيين عمود الاسم',
+    import_columnsControl:'الأعمدة المُدرجة في الاستيراد', import_selectAll:'تحديد الكل', import_deselectAll:'إلغاء التحديد',
+    import_rowsSelected:'{n} من {t} صف محدد للاستيراد', import_readyCount:'{n} سجل جاهز للاستيراد',
+    dash_year:'السنة', dash_type:'الموازنة', dash_all:'الكل', dash_category:'التصنيف', dash_entity:'الجهة', dash_resetFilters:'إعادة تعيين الفلاتر',
+    dash_kpiBefore:'الإجمالي قبل المراجعة', dash_kpiAfter:'الإجمالي بعد المراجعة', dash_kpiDiff:'الفرق الإجمالي',
+    dash_kpiTotal:'إجمالي المبالغ بعد المراجعة', dash_kpiRecords:'عدد السجلات', dash_kpiEntitiesSuffix:'جهة',
+    dash_kpiIncreased:'سجلات زاد مبلغها', dash_kpiDecreased:'سجلات قلّ مبلغها', dash_kpiChangeSub:'بعد المراجعة',
+    dash_trendTitle:'الاتجاه الشهري — قبل وبعد المراجعة', dash_trendSub:'مقارنة المبالغ عبر الأشهر (حسب عوامل التصفية)',
+    dash_typeTitle:'توزيع أنواع الموازنة', dash_typeSub:'حسب المبلغ بعد المراجعة',
+    dash_topTitle:'أعلى الجهات إنفاقًا', dash_topHint:'للتفصيل حسب الزيادة أو النقصان راجع تبويب الجهات',
+    dash_noData:'لا توجد بيانات كافية',
+    hosp_title:'إدارة الجهات المتعاقدة', hosp_searchPh:'بحث بالاسم أو التصنيف...', hosp_export:'تصدير', hosp_import:'استيراد',
+    hosp_groupBy:'تجميع:', hosp_groupNone:'بدون', hosp_groupType:'الموازنة', hosp_groupMonth:'الشهر', hosp_groupCategory:'التصنيف',
+    hosp_trend:'الاتجاه بعد المراجعة:', hosp_trendAll:'الكل', hosp_trendUp:'ازداد', hosp_trendDown:'قلّ',
+    col_name:'الاسم', col_category:'التصنيف', col_budget:'الموازنة', col_month:'الشهر', col_year:'السنة', col_before:'قبل المراجعة', col_after:'بعد المراجعة',
+    hosp_countSuffix:'{n} من أصل {t} سجل', hosp_noMatch:'لا توجد نتائج مطابقة', hosp_deleted:'تم حذف السجل', hosp_updated:'تم تحديث السجل',
+    hosp_groupRecords:'سجل', hosp_groupTotal:'الإجمالي',
+    budget_newborns:'مواليد', budget_students:'طلاب', budget_workforce:'قوى عاملة',
+    spotlight_placeholder:'ابحث عن سجل أو اكتب أمرًا...', spotlight_empty:'لا توجد نتائج',
+    spotlight_sectionCommands:'أوامر', spotlight_sectionRecords:'السجلات',
+    cmd_goEntry:'الانتقال إلى إدخال البيانات', cmd_goImport:'الانتقال إلى الاستيراد',
+    cmd_goDashboard:'الانتقال إلى لوحة التحكم', cmd_goHospitals:'الانتقال إلى الجهات',
+    cmd_themeLight:'التبديل إلى المظهر الفاتح', cmd_themeDark:'التبديل إلى المظهر الداكن', cmd_themeSystem:'التبديل إلى مظهر النظام',
+    cmd_openSettings:'فتح الإعدادات', cmd_syncNow:'مزامنة الآن مع Google Sheets',
+    cmd_exportData:'تصدير البيانات (Excel)', cmd_downloadTemplate:'تنزيل القالب الفارغ',
+    cmd_exportBackup:'تصدير نسخة احتياطية كاملة (JSON)', cmd_importBackup:'استيراد نسخة احتياطية (JSON)',
+    settings_backupTitle:'النسخ الاحتياطي', backup_exported:'تم تنزيل النسخة الاحتياطية',
+    backup_imported:'تم استيراد {n} سجل من النسخة الاحتياطية', backup_importError:'ملف النسخة الاحتياطية غير صالح',
+  },
+  en:{
+    appName:'Contracted Entities Statement', appTagline:'Precise, seamless management of contracted-entity data',
+    tab_entry:'Data Entry', tab_import:'Import', tab_dashboard:'Dashboard', tab_hospitals:'Entities',
+    sync_notConfigured:'Sync not configured — open settings', sync_notConnected:'Not connected to Google Sheets',
+    sync_waiting:'Connected — awaiting first sync', sync_syncing:'Syncing...', sync_failedPrefix:'Last sync failed: ',
+    sync_lastPrefix:'Last sync: ', sync_nowBtn:'Sync now', sync_gearTitle:'Sync settings',
+    settings_title:'Settings', settings_generalTitle:'General settings', settings_syncTitle:'Google Sheets sync',
+    settings_currencyUnit:'Currency unit (optional)', settings_currencyUnitPh:'e.g. SAR — leave blank to show no unit',
+    sync_clientId:'Google OAuth Client ID', sync_clientIdPh:'xxxx.apps.googleusercontent.com',
+    sync_sheetId:'Google Sheets Spreadsheet ID', sync_sheetIdPh:'the part of the URL between /d/ and /edit',
+    sync_sheetName:'Sheet name', sync_sheetNamePh:'Sheet1',
+    sync_autoLabel:'Auto-sync on every change', sync_autoOn:'On', sync_autoOff:'Off',
+    sync_connect:'Connect Google account', sync_disconnect:'Disconnect', sync_save:'Save settings',
+    sync_helper:'You need an OAuth Client ID from Google Cloud Console with the Google Sheets API enabled, with this page\'s origin added under Authorized JavaScript origins. Google sign-in does not work when this file is opened directly (file://) — serve it via a local server or hosting first. The Spreadsheet ID is the part of the sheet URL between /d/ and /edit.',
+    sync_missingConfig:'Enter the Client ID and Spreadsheet ID first', sync_noGoogle:'Could not load Google services — open this file over http',
+    sync_success:'Synced with Google Sheets', sync_failPrefix:'Sync failed: ', sync_disconnected:'Disconnected from Google Sheets',
+    sync_loadedExisting:'Connected — loaded {n} existing records from the sheet', sync_clearedPlaceholder:'Connected — placeholder demo data cleared, the sheet is ready for your data',
+    sync_saved:'Sync settings saved', sync_loginFail:'Could not complete Google sign-in',
+    theme_system:'System', theme_light:'Light', theme_dark:'Dark',
+    entry_title:'Quick entry', entry_sub:'Press Enter to save and move to the next', entry_importShortcut:'Import Excel',
+    field_name:'Name', field_namePh:'e.g. King Fahd Hospital', field_category:'Category', field_categoryPh:'e.g. General Hospital',
+    field_budget:'Budget type', field_month:'Month', field_year:'Year', field_before:'Amount before review', field_after:'Amount after review',
+    entry_save:'Save record', entry_variance:'Difference after review', entry_recent:'Recent entries', entry_recordsSuffix:'records',
+    entry_empty:'No records yet', entry_nameRequired:'Please enter a name', entry_added:'Added successfully', currency:'SAR',
+    import_tabular:'Tabular', import_freeform:'Non-tabular',
+    import_tabularHint:'File columns match the template order exactly', import_freeformHint:'Any file, any column order — map each column yourself',
+    import_tabularTitle:'Tabular import', import_tabularSub:'The file matches the ready-made template column order',
+    import_downloadTpl:'Download blank template', import_dzTitle:'Drop an Excel file here', import_dzSub:'or click to choose — xlsx, xls, csv',
+    import_previewTitle:'Preview before import', import_confirm:'Confirm import', import_emptyPreview:'A preview of the records will appear here after upload',
+    import_fileEmpty:'The file is empty or has no valid data', import_noColumns:'Could not detect columns — try "Non-tabular" mode for a custom layout',
+    import_imported:'Imported {n} records successfully', import_readError:'An error occurred while reading the file',
+    import_freeformTitle:'Non-tabular import', import_freeformSub:'Upload any Excel file in any column order, then map each column to a field yourself',
+    import_freeDzTitle:'Drop any Excel file here', import_freeDzSub:'No need to match the template — columns are mapped manually',
+    import_step1:'1) Choose the header row', import_step1Sub:'Click any row below to set it as the header row (skip note/title rows above)',
+    import_step2:'2) Map each column to the right field', import_step2Sub:'Some matches were guessed automatically — adjust as needed',
+    import_step3:'3) Choose columns and rows, then review the result', import_row:'Row', import_col:'Column ',
+    import_ignoreColumn:'Ignore this column', import_noValidRows:'No valid rows to import — make sure the Name column is mapped',
+    import_columnsControl:'Columns included in import', import_selectAll:'Select all', import_deselectAll:'Deselect all',
+    import_rowsSelected:'{n} of {t} rows selected for import', import_readyCount:'{n} records ready to import',
+    dash_year:'Year', dash_type:'Budget type', dash_all:'All', dash_category:'Category', dash_entity:'Entity', dash_resetFilters:'Reset filters',
+    dash_kpiBefore:'Total before review', dash_kpiAfter:'Total after review', dash_kpiDiff:'Total difference',
+    dash_kpiTotal:'Total amount after review', dash_kpiRecords:'Records', dash_kpiEntitiesSuffix:'entities',
+    dash_kpiIncreased:'Records that increased', dash_kpiDecreased:'Records that decreased', dash_kpiChangeSub:'after review',
+    dash_trendTitle:'Monthly trend — before vs. after review', dash_trendSub:'Amounts across months (respects filters)',
+    dash_typeTitle:'Budget type breakdown', dash_typeSub:'By amount after review',
+    dash_topTitle:'Top spenders', dash_topHint:'For increase/decrease detail, see the Entities tab',
+    dash_noData:'Not enough data yet',
+    hosp_title:'Manage contracted entities', hosp_searchPh:'Search by name or category...', hosp_export:'Export', hosp_import:'Import',
+    hosp_groupBy:'Group by:', hosp_groupNone:'None', hosp_groupType:'Budget type', hosp_groupMonth:'Month', hosp_groupCategory:'Category',
+    hosp_trend:'Trend after review:', hosp_trendAll:'All', hosp_trendUp:'Increased', hosp_trendDown:'Decreased',
+    col_name:'Name', col_category:'Category', col_budget:'Budget type', col_month:'Month', col_year:'Year', col_before:'Before review', col_after:'After review',
+    hosp_countSuffix:'{n} of {t} records', hosp_noMatch:'No matching results', hosp_deleted:'Record deleted', hosp_updated:'Record updated',
+    hosp_groupRecords:'records', hosp_groupTotal:'Total',
+    budget_newborns:'Newborns', budget_students:'Students', budget_workforce:'Workforce',
+    spotlight_placeholder:'Search records or type a command...', spotlight_empty:'No results',
+    spotlight_sectionCommands:'Commands', spotlight_sectionRecords:'Records',
+    cmd_goEntry:'Go to Data Entry', cmd_goImport:'Go to Import',
+    cmd_goDashboard:'Go to Dashboard', cmd_goHospitals:'Go to Entities',
+    cmd_themeLight:'Switch to light theme', cmd_themeDark:'Switch to dark theme', cmd_themeSystem:'Switch to system theme',
+    cmd_openSettings:'Open settings', cmd_syncNow:'Sync now with Google Sheets',
+    cmd_exportData:'Export data (Excel)', cmd_downloadTemplate:'Download blank template',
+    cmd_exportBackup:'Export full backup (JSON)', cmd_importBackup:'Import backup (JSON)',
+    settings_backupTitle:'Backup', backup_exported:'Backup downloaded',
+    backup_imported:'{n} records imported from backup', backup_importError:'Invalid backup file',
+  },
+};
+function t(key, vars){
+  let str = (I18N[lang] && I18N[lang][key]) || key;
+  if(vars) Object.keys(vars).forEach(k=>{ str = str.replace(`{${k}}`, vars[k]); });
+  return str;
+}
+
+/* ============================== DATA MODEL ============================== */
+const BUDGET_KEYS = ['newborns','students','workforce'];
+const BUDGET_HEX = { newborns:'#8fd4ea', students:'#2f93b0', workforce:'#1c6b83' };
+const MONTHS_AR = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const MONTHS_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const CATEGORY_SUGGESTIONS = {
+  ar:["مستشفى عام","مستشفى تخصصي","مستشفى خاص","مركز صحي","عيادة"],
+  en:["General Hospital","Specialized Hospital","Private Hospital","Health Center","Clinic"],
+};
+const HEADER_KEYS = ['name','category','budgetType','month','year','before','after'];
+const HEADERS_BY_LANG = {
+  ar:["الاسم","التصنيف","الموازنة","الشهر","السنة","المبلغ قبل المراجعة","المبلغ بعد المراجعة"],
+  en:["Name","Category","Budget Type","Month","Year","Amount Before Review","Amount After Review"],
+};
+function monthName(idx){ return (lang==='ar'?MONTHS_AR:MONTHS_EN)[idx] ?? ''; }
+function budgetLabel(key){ return t('budget_'+key); }
+function currentHeaders(){ return HEADERS_BY_LANG[lang]; }
+
+function budgetKeyFromLabel(text){
+  const norm = String(text||'').trim();
+  for(const key of BUDGET_KEYS){
+    if(I18N.ar['budget_'+key]===norm || I18N.en['budget_'+key].toLowerCase()===norm.toLowerCase() || key===norm) return key;
+  }
+  return BUDGET_KEYS[0];
+}
+function monthIndexFromLabel(text){
+  const norm = String(text||'').trim();
+  let idx = MONTHS_AR.indexOf(norm);
+  if(idx===-1) idx = MONTHS_EN.findIndex(m=>m.toLowerCase()===norm.toLowerCase());
+  if(idx===-1){ const n = Number(norm); if(n>=1 && n<=12) idx = n-1; }
+  if(idx===-1) idx = new Date().getMonth();
+  return idx;
+}
+function getColumnValue(row, fieldKey){
+  const i = HEADER_KEYS.indexOf(fieldKey);
+  const arH = HEADERS_BY_LANG.ar[i], enH = HEADERS_BY_LANG.en[i];
+  const foundKey = Object.keys(row).find(k=>{
+    const kt = k.trim();
+    return kt===arH || kt.toLowerCase()===enH.toLowerCase();
+  });
+  return foundKey ? row[foundKey] : '';
+}
+
+const uid = () => Math.random().toString(36).slice(2,10);
+const fmt = (n) => new Intl.NumberFormat('en-US').format(Math.round(n||0));
+const esc = (s) => String(s??"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* normalized text matching — collapses common Arabic letter variants + diacritics so search "just works" */
+function normalizeText(s){
+  return String(s||'')
+    .replace(/[\u064B-\u0652\u0670\u0640]/g,'')
+    .replace(/[إأآا]/g,'ا')
+    .replace(/ة/g,'ه')
+    .replace(/[يى]/g,'ي')
+    .toLowerCase()
+    .trim();
+}
+
+let state = {
+  tab: "dashboard",
+  records: [
+    {id:"r1",name:"مستشفى الملك فهد",category:"مستشفى عام",budgetType:"newborns",month:0,year:2026,before:185000,after:172500},
+    {id:"r2",name:"مستشفى الأمل",category:"مركز صحي",budgetType:"students",month:0,year:2026,before:96000,after:91200},
+    {id:"r3",name:"مستشفى الرحمة التخصصي",category:"مستشفى تخصصي",budgetType:"workforce",month:1,year:2026,before:240000,after:233800},
+    {id:"r4",name:"مستشفى النور",category:"مستشفى عام",budgetType:"newborns",month:1,year:2026,before:205000,after:198000},
+    {id:"r5",name:"المجمع الطبي التخصصي",category:"مستشفى خاص",budgetType:"students",month:2,year:2026,before:132000,after:129500},
+    {id:"r6",name:"مستشفى الشفاء",category:"مركز صحي",budgetType:"workforce",month:2,year:2026,before:178000,after:186400},
+    {id:"r7",name:"مستشفى دار الشفاء",category:"مستشفى عام",budgetType:"newborns",month:3,year:2026,before:221000,after:210300},
+    {id:"r8",name:"عيادات الوفاء التخصصية",category:"عيادة",budgetType:"students",month:3,year:2026,before:87000,after:89600},
+  ],
+};
+
+/* ============================== TOAST ============================== */
+/* ============================== CUSTOM DROPDOWN (replaces native <select> entirely) ============================== */
+const cselRegistry = {};
+let cselOpenId = null, cselHighlightIdx = -1;
+
+function csel(id, options, value, onChange, opts){
+  opts = opts || {};
+  cselRegistry[id] = { options, onChange, value: String(value) };
+  const chosen = options.find(o=>String(o.value)===String(value)) || options[0] || {label:''};
+  const style = opts.width ? ` style="width:${opts.width};"` : '';
+  return `<div class="csel${opts.mini?' mini':''}"${style}>
+    <button type="button" class="csel-trigger" data-csel-trigger="${id}" aria-haspopup="listbox" aria-expanded="false">
+      <span class="csel-value">${esc(chosen.label)}</span>
+      ${icon('chevron',15,'csel-chev')}
+    </button>
+  </div>`;
+}
+
+function ensureCselPortal(){
+  let el = document.getElementById('cselPortal');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'cselPortal';
+    el.setAttribute('role','listbox');
+    el.hidden = true;
+    document.body.appendChild(el);
+  }
+  return el;
+}
+
+function positionCselPortal(portal, triggerEl){
+  const rect = triggerEl.getBoundingClientRect();
+  const maxH = 264;
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const openUp = spaceBelow < maxH && rect.top > spaceBelow;
+  portal.style.width = Math.max(rect.width, 170) + 'px';
+  const minLeft = 8, maxLeft = window.innerWidth - Math.max(rect.width,170) - 8;
+  portal.style.left = Math.min(Math.max(rect.left, minLeft), Math.max(minLeft,maxLeft)) + 'px';
+  if(openUp){ portal.style.top = 'auto'; portal.style.bottom = (window.innerHeight - rect.top + 6) + 'px'; }
+  else { portal.style.bottom = 'auto'; portal.style.top = (rect.bottom + 6) + 'px'; }
+}
+
+function openCsel(id, triggerEl){
+  const reg = cselRegistry[id];
+  if(!reg) return;
+  const portal = ensureCselPortal();
+  portal.dataset.for = id;
+  portal.innerHTML = reg.options.map(o=>`<div class="csel-option ${String(o.value)===reg.value?'sel':''}" role="option" data-value="${esc(String(o.value))}">${esc(o.label)}</div>`).join('');
+  portal.hidden = false;
+  positionCselPortal(portal, triggerEl);
+  requestAnimationFrame(()=> portal.classList.add('open'));
+  document.querySelectorAll('.csel-trigger.csel-active').forEach(b=>b.classList.remove('csel-active'));
+  triggerEl.setAttribute('aria-expanded','true');
+  triggerEl.classList.add('csel-active');
+  cselOpenId = id; cselHighlightIdx = reg.options.findIndex(o=>String(o.value)===reg.value);
+}
+function closeCsel(){
+  const portal = document.getElementById('cselPortal');
+  if(portal){
+    portal.classList.remove('open');
+    setTimeout(()=>{ if(portal && !portal.classList.contains('open')) portal.hidden = true; }, 160);
+  }
+  document.querySelectorAll('.csel-trigger[aria-expanded="true"]').forEach(b=>{ b.setAttribute('aria-expanded','false'); b.classList.remove('csel-active'); });
+  cselOpenId = null; cselHighlightIdx = -1;
+}
+function setCselDisplay(id, val){
+  const reg = cselRegistry[id];
+  if(!reg) return;
+  reg.value = String(val);
+  const trig = document.querySelector(`[data-csel-trigger="${id}"]`);
+  const chosen = reg.options.find(o=>String(o.value)===reg.value);
+  if(trig){ const vEl = trig.querySelector('.csel-value'); if(vEl) vEl.textContent = chosen ? chosen.label : ''; }
+}
+function chooseCselValue(id, val){
+  setCselDisplay(id, val);
+  closeCsel();
+  const trig = document.querySelector(`[data-csel-trigger="${id}"]`);
+  if(trig) trig.focus();
+  const reg = cselRegistry[id];
+  reg && reg.onChange && reg.onChange(reg.value);
+}
+function cselHighlightUpdate(){
+  const portal = document.getElementById('cselPortal');
+  if(!portal) return;
+  const opts = [...portal.querySelectorAll('.csel-option')];
+  opts.forEach((o,i)=>o.classList.toggle('hl', i===cselHighlightIdx));
+  if(opts[cselHighlightIdx]) opts[cselHighlightIdx].scrollIntoView({block:'nearest'});
+}
+
+document.addEventListener('click', (e)=>{
+  const trigger = e.target.closest('[data-csel-trigger]');
+  if(trigger){
+    const id = trigger.dataset.cselTrigger;
+    if(cselOpenId === id) closeCsel(); else openCsel(id, trigger);
+    return;
+  }
+  const portal = document.getElementById('cselPortal');
+  const optionEl = e.target.closest('.csel-option');
+  if(portal && !portal.hidden && optionEl && portal.contains(optionEl)){
+    chooseCselValue(portal.dataset.for, optionEl.dataset.value);
+    return;
+  }
+  if(cselOpenId && !e.target.closest('#cselPortal')) closeCsel();
+});
+document.addEventListener('keydown', (e)=>{
+  if(!cselOpenId) return;
+  const portal = document.getElementById('cselPortal');
+  const opts = portal ? [...portal.querySelectorAll('.csel-option')] : [];
+  if(e.key === 'Escape'){
+    const id = cselOpenId;
+    closeCsel();
+    const trig = document.querySelector(`[data-csel-trigger="${id}"]`);
+    if(trig) trig.focus();
+  }
+  else if(e.key === 'ArrowDown'){ e.preventDefault(); cselHighlightIdx = Math.min(opts.length-1, cselHighlightIdx+1); cselHighlightUpdate(); }
+  else if(e.key === 'ArrowUp'){ e.preventDefault(); cselHighlightIdx = Math.max(0, cselHighlightIdx-1); cselHighlightUpdate(); }
+  else if(e.key === 'Enter'){ if(cselHighlightIdx>=0 && opts[cselHighlightIdx]){ e.preventDefault(); opts[cselHighlightIdx].click(); } }
+});
+window.addEventListener('scroll', ()=>{ if(cselOpenId) closeCsel(); }, true);
+window.addEventListener('resize', ()=>{ if(cselOpenId) closeCsel(); });
+document.addEventListener('focusin', (e)=>{
+  if(!cselOpenId) return;
+  if(e.target.closest('#cselPortal')) return;
+  if(e.target.closest(`[data-csel-trigger="${cselOpenId}"]`)) return;
+  closeCsel();
+});
+
+function toast(text, kind="ok"){
+  const host = document.getElementById('toastHost');
+  host.innerHTML = `<div class="toast ${kind}">${icon(kind==='err'?'alert':'check',16)}${esc(text)}</div>`;
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>{ host.innerHTML=''; }, 2800);
+}
+
+/* ============================== SMALL RENDER HELPERS ============================== */
+function budgetTag(key){
+  const hex = BUDGET_HEX[key] || BUDGET_HEX.newborns;
+  return `<span class="tag"><span class="dot" style="background:${hex}"></span>${esc(budgetLabel(key))}</span>`;
+}
+function categoryBadge(cat){ return `<span class="badge">${esc(cat||'—')}</span>`; }
+function varianceTag(before, after){
+  const diff = before - after, pct = before ? (diff/before)*100 : 0, down = diff >= 0;
+  return `<span class="var-tag" style="background:${down?'var(--good-soft)':'var(--bad-soft)'};color:${down?'var(--good)':'var(--bad)'}">${icon(down?'trenddown':'trendup',12)}${Math.abs(pct).toFixed(1)}%</span>`;
+}
+
+/* ============================== THEME ============================== */
+let theme = 'system';
+function applyTheme(){ document.documentElement.setAttribute('data-theme', theme); }
+
+/* ============================== HEADER ============================== */
+function renderHeader(){
+  const el = document.getElementById('headerBar');
+  el.innerHTML = `
+    <div class="brand">
+      <div class="brand-icon">${icon('sparkle',18)}</div>
+      <div style="min-width:0;">
+        <h1>${esc(t('appName'))}</h1>
+        <p>${esc(t('appTagline'))}</p>
+      </div>
+    </div>
+    <div class="header-controls">
+      <button class="spotlight-trigger-btn" id="spotlightTriggerBtn" type="button">${icon('search',14)} <span class="spotlight-kbd">${/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent)?'⌘K':'Ctrl+K'}</span></button>
+      <div class="theme-group" id="themeSeg">
+        <button class="theme-icon ${theme==='system'?'active':''}" data-theme="system" title="${esc(t('theme_system'))}" aria-label="${esc(t('theme_system'))}">${icon('monitor',14)}</button>
+        <button class="theme-icon ${theme==='light'?'active':''}" data-theme="light" title="${esc(t('theme_light'))}" aria-label="${esc(t('theme_light'))}">${icon('sun',14)}</button>
+        <button class="theme-icon ${theme==='dark'?'active':''}" data-theme="dark" title="${esc(t('theme_dark'))}" aria-label="${esc(t('theme_dark'))}">${icon('moon',14)}</button>
+      </div>
+      <button class="lang-toggle" id="langToggleBtn">${icon('globe',14)} ${lang==='ar'?'EN':'العربية'}</button>
+    </div>`;
+  el.querySelector('#spotlightTriggerBtn').addEventListener('click', openSpotlight);
+  el.querySelectorAll('#themeSeg .theme-icon').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ theme = btn.dataset.theme; applyTheme(); renderHeader(); saveCache(); });
+  });
+  el.querySelector('#langToggleBtn').addEventListener('click', ()=>{
+    lang = lang==='ar' ? 'en' : 'ar';
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
+    document.title = t('appName');
+    saveCache();
+    renderHeader(); renderSyncBar(); renderTabbar(); renderMain();
+  });
+}
+
+/* ============================== GOOGLE SHEETS SYNC ============================== */
+let appSettings = { currencyUnit: '' };
+function currencyUnit(){ return appSettings.currencyUnit ? ' ' + appSettings.currencyUnit : ''; }
+
+let sync = {
+  clientId:'', spreadsheetId:'', sheetName:'Sheet1',
+  accessToken:null, tokenClient:null, connected:false,
+  autoSync:true, syncing:false, lastSync:null, lastStatus:null, lastError:'',
+  panelOpen:false,
+};
+let autoSyncTimer = null;
+
+function scheduleAutoSync(){
+  saveCache();
+  if(!sync.autoSync || !sync.connected) return;
+  clearTimeout(autoSyncTimer);
+  autoSyncTimer = setTimeout(syncNow, 1600);
+}
+function ensureTokenClient(){
+  if(sync.tokenClient) return sync.tokenClient;
+  if(!window.google || !google.accounts || !google.accounts.oauth2) return null;
+  sync.tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: sync.clientId,
+    scope: 'https://www.googleapis.com/auth/spreadsheets',
+    callback: (resp)=>{
+      if(resp && resp.access_token){ sync.accessToken = resp.access_token; sync.connected = true; updateSyncBar(); initialConnectSync(); }
+      else toast(t('sync_loginFail'), 'err');
+    },
+  });
+  return sync.tokenClient;
+}
+function connectGoogle(){
+  if(!sync.clientId || !sync.spreadsheetId){ sync.panelOpen = true; renderSyncBar(); toast(t('sync_missingConfig'), 'err'); return; }
+  if(!window.google || !google.accounts){ toast(t('sync_noGoogle'), 'err'); return; }
+  const tc = ensureTokenClient();
+  if(tc) tc.requestAccessToken();
+}
+function disconnectGoogle(){
+  sync.connected = false; sync.accessToken = null; sync.lastStatus=null;
+  renderSyncBar(); toast(t('sync_disconnected'));
+}
+async function readSheetValues(){
+  const range = `${sync.sheetName}!A1:Z20000`;
+  const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sync.spreadsheetId}/values/${encodeURIComponent(range)}`, {
+    headers:{ Authorization:`Bearer ${sync.accessToken}` }
+  });
+  if(!res.ok){ const eb = await res.json().catch(()=>({})); throw new Error((eb.error && eb.error.message) || `HTTP ${res.status}`); }
+  const data = await res.json();
+  return data.values || [];
+}
+function parseSheetRowsToRecords(values){
+  if(!values.length) return [];
+  const mapping = guessMapping(values[0]);
+  if(!mapping.some(Boolean)) return null;
+  const out = [];
+  values.slice(1).forEach(row=>{
+    const rec = { id: uid(), name:'', category:'', budgetType: BUDGET_KEYS[0], month:new Date().getMonth(), year:new Date().getFullYear(), before:0, after:0 };
+    let hasName = false;
+    mapping.forEach((field, colIdx)=>{
+      if(!field) return;
+      const val = row[colIdx];
+      if(val===undefined || val==='') return;
+      if(field==='name'){ rec.name = String(val).trim(); hasName = !!rec.name; }
+      else if(field==='category') rec.category = String(val).trim();
+      else if(field==='budgetType') rec.budgetType = budgetKeyFromLabel(val);
+      else if(field==='month') rec.month = monthIndexFromLabel(val);
+      else if(field==='year') rec.year = Number(val) || new Date().getFullYear();
+      else if(field==='before') rec.before = Number(val) || 0;
+      else if(field==='after') rec.after = Number(val) || 0;
+    });
+    if(hasName) out.push(rec);
+  });
+  return out;
+}
+/* runs once right after a successful connection: reads whatever is already in the sheet first,
+   so we never silently overwrite real spreadsheet data with our local demo/placeholder records */
+async function initialConnectSync(){
+  sync.syncing = true; updateSyncBar();
+  try{
+    const values = await readSheetValues();
+    const parsed = values.length > 1 ? parseSheetRowsToRecords(values) : [];
+    if(parsed && parsed.length){
+      state.records = parsed;
+      toast(t('sync_loadedExisting', {n: parsed.length}));
+    } else {
+      state.records = [];
+      toast(t('sync_clearedPlaceholder'));
+    }
+    sync.lastStatus = 'success'; sync.lastSync = new Date(); sync.lastError = '';
+    saveCache();
+    renderMain();
+  }catch(e){
+    sync.lastStatus = 'error'; sync.lastSync = new Date(); sync.lastError = e.message || 'error';
+    toast(t('sync_failPrefix') + sync.lastError, 'err');
+  }
+  sync.syncing = false; updateSyncBar();
+}
+async function syncNow(){
+  if(!sync.connected || !sync.accessToken){ connectGoogle(); return; }
+  if(sync.syncing) return;
+  sync.syncing = true; updateSyncBar();
+  try{
+    const clearRange = `${sync.sheetName}!A1:Z20000`;
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sync.spreadsheetId}/values/${encodeURIComponent(clearRange)}:clear`, {
+      method:'POST', headers:{ Authorization:`Bearer ${sync.accessToken}` }
+    });
+    const values = [currentHeaders(), ...state.records.map(r=>[r.name,r.category,budgetLabel(r.budgetType),monthName(r.month),r.year,r.before,r.after])];
+    const updateRange = `${sync.sheetName}!A1`;
+    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sync.spreadsheetId}/values/${encodeURIComponent(updateRange)}?valueInputOption=RAW`, {
+      method:'PUT', headers:{ Authorization:`Bearer ${sync.accessToken}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({ range: updateRange, majorDimension:'ROWS', values })
+    });
+    if(!res.ok){ const eb = await res.json().catch(()=>({})); throw new Error((eb.error && eb.error.message) || `HTTP ${res.status}`); }
+    sync.lastStatus = 'success'; sync.lastSync = new Date(); sync.lastError='';
+    toast(t('sync_success'));
+  }catch(e){
+    sync.lastStatus = 'error'; sync.lastSync = new Date(); sync.lastError = e.message || 'error';
+    if(/401|unauth/i.test(sync.lastError)){ sync.connected=false; sync.accessToken=null; }
+    toast(t('sync_failPrefix') + sync.lastError, 'err');
+  }
+  sync.syncing = false; updateSyncBar();
+}
+function renderSyncBar(){
+  const bar = document.getElementById('syncBar');
+  const configured = sync.clientId && sync.spreadsheetId;
+  let dotColor = 'var(--muted2)', text = t('sync_notConfigured');
+  if(sync.syncing){ dotColor='var(--accent)'; text=t('sync_syncing'); }
+  else if(!configured){ dotColor='var(--muted2)'; text=t('sync_notConfigured'); }
+  else if(!sync.connected){ dotColor='var(--muted2)'; text=t('sync_notConnected'); }
+  else if(sync.lastStatus==='error'){ dotColor='var(--bad)'; text=t('sync_failedPrefix')+esc(sync.lastError); }
+  else if(sync.lastSync){ dotColor='var(--good)'; text=t('sync_lastPrefix')+sync.lastSync.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}); }
+  else { dotColor='var(--accent)'; text=t('sync_waiting'); }
+
+  bar.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;">
+      <div class="sync-left"><span class="sync-dot" style="background:${dotColor};"></span><span class="sync-text">${text}</span></div>
+      <div class="sync-actions">
+        <button class="btn-ghost" id="syncNowBtn" ${sync.syncing?'disabled':''}>${icon('refresh',14)} ${t('sync_nowBtn')}</button>
+        <button class="icon-btn" id="syncGearBtn" title="${esc(t('settings_title'))}">${icon('gear',17)}</button>
+      </div>
+    </div>
+    <div class="sync-panel ${sync.panelOpen?'open':''}" id="syncPanel">
+      <h3 class="card-title" style="margin-bottom:12px;">${t('settings_generalTitle')}</h3>
+      <div class="sync-grid" style="margin-bottom:18px;">
+        <label class="field"><span>${t('settings_currencyUnit')}</span><input class="inp" id="cfgCurrency" placeholder="${t('settings_currencyUnitPh')}" value="${esc(appSettings.currencyUnit)}"></label>
+      </div>
+      <h3 class="card-title" style="margin-bottom:12px;">${t('settings_backupTitle')}</h3>
+      <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+        <button class="btn-ghost" id="exportBackupBtn" type="button">${icon('download',14)} ${t('cmd_exportBackup')}</button>
+        <button class="btn-ghost" id="importBackupBtn" type="button">${icon('upload',14)} ${t('cmd_importBackup')}</button>
+        <input type="file" id="backupFileInput" accept="application/json,.json" style="display:none;">
+      </div>
+      <h3 class="card-title" style="margin-bottom:12px;">${t('settings_syncTitle')}</h3>
+      <div class="sync-grid">
+        <label class="field"><span>${t('sync_clientId')}</span><input class="inp" id="cfgClientId" placeholder="${t('sync_clientIdPh')}" value="${esc(sync.clientId)}"></label>
+        <label class="field"><span>${t('sync_sheetId')}</span><input class="inp" id="cfgSheetId" placeholder="${t('sync_sheetIdPh')}" value="${esc(sync.spreadsheetId)}"></label>
+        <label class="field"><span>${t('sync_sheetName')}</span><input class="inp" id="cfgSheetName" placeholder="${t('sync_sheetNamePh')}" value="${esc(sync.sheetName)}"></label>
+        <label class="field"><span>${t('sync_autoLabel')}</span>
+          <div style="display:flex;align-items:center;gap:10px;height:44px;">
+            <div class="switch ${sync.autoSync?'on':''}" id="autoSyncSwitch"></div>
+            <span style="font-size:13px;color:var(--muted);">${sync.autoSync?t('sync_autoOn'):t('sync_autoOff')}</span>
+          </div>
+        </label>
+      </div>
+      <div style="display:flex;gap:10px;margin:14px 0;flex-wrap:wrap;">
+        ${sync.connected ? `<button class="btn-ghost" id="disconnectBtn">${icon('x',14)} ${t('sync_disconnect')}</button>`
+                          : `<button class="btn-ghost btn-accent" id="connectBtn">${icon('link',14)} ${t('sync_connect')}</button>`}
+        <button class="btn-ghost" id="saveCfgBtn">${icon('check',14)} ${t('sync_save')}</button>
+      </div>
+      <div class="helper-note">${t('sync_helper')}</div>
+    </div>`;
+
+  document.getElementById('syncNowBtn').addEventListener('click', syncNow);
+  document.getElementById('syncGearBtn').addEventListener('click', ()=>{ sync.panelOpen = !sync.panelOpen; renderSyncBar(); });
+  const cb = document.getElementById('connectBtn'); if(cb) cb.addEventListener('click', connectGoogle);
+  const db = document.getElementById('disconnectBtn'); if(db) db.addEventListener('click', disconnectGoogle);
+  document.getElementById('autoSyncSwitch').addEventListener('click', ()=>{ sync.autoSync = !sync.autoSync; saveCache(); renderSyncBar(); });
+  document.getElementById('exportBackupBtn').addEventListener('click', exportBackup);
+  document.getElementById('importBackupBtn').addEventListener('click', ()=> document.getElementById('backupFileInput').click());
+  document.getElementById('backupFileInput').addEventListener('change', (e)=>{
+    const f = e.target.files[0];
+    if(f) importBackupFile(f);
+    e.target.value = '';
+  });
+  document.getElementById('saveCfgBtn').addEventListener('click', ()=>{
+    appSettings.currencyUnit = document.getElementById('cfgCurrency').value.trim();
+    sync.clientId = document.getElementById('cfgClientId').value.trim();
+    sync.spreadsheetId = document.getElementById('cfgSheetId').value.trim();
+    sync.sheetName = document.getElementById('cfgSheetName').value.trim() || 'Sheet1';
+    sync.tokenClient = null;
+    saveCache();
+    toast(t('sync_saved')); renderSyncBar();
+    if(state.tab==='entry' || state.tab==='dashboard' || state.tab==='hospitals') renderMain();
+  });
+}
+function updateSyncBar(){ renderSyncBar(); }
+
+/* ============================== CACHE (localStorage autosave) ============================== */
+const CACHE_KEY = 'entitiesStatementApp:cache:v1';
+function saveCache(){
+  try{
+    const payload = {
+      records: state.records,
+      appSettings,
+      sync: { clientId: sync.clientId, spreadsheetId: sync.spreadsheetId, sheetName: sync.sheetName, autoSync: sync.autoSync },
+      theme, lang,
+    };
+    localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+  }catch(e){ /* storage unavailable or full — app still works, just without local persistence */ }
+}
+function loadCache(){
+  try{
+    const raw = localStorage.getItem(CACHE_KEY);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    if(data && Array.isArray(data.records)) state.records = data.records;
+    if(data && data.appSettings) appSettings = { ...appSettings, ...data.appSettings };
+    if(data && data.sync){
+      sync.clientId = data.sync.clientId || '';
+      sync.spreadsheetId = data.sync.spreadsheetId || '';
+      sync.sheetName = data.sync.sheetName || 'Sheet1';
+      sync.autoSync = data.sync.autoSync !== false;
+    }
+    if(data && data.theme) theme = data.theme;
+    if(data && data.lang) lang = data.lang;
+  }catch(e){ /* corrupt cache — fall back to defaults */ }
+}
+
+/* ============================== BACKUP (full export/import as JSON) ============================== */
+function exportBackup(){
+  const payload = {
+    app:'entitiesStatementApp', version:1, exportedAt:new Date().toISOString(),
+    records: state.records,
+    appSettings,
+    sync: { clientId: sync.clientId, spreadsheetId: sync.spreadsheetId, sheetName: sync.sheetName, autoSync: sync.autoSync },
+    theme, lang,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = (lang==='ar' ? 'نسخة_احتياطية_' : 'backup_') + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  toast(t('backup_exported'));
+}
+function importBackupFile(file){
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const data = JSON.parse(reader.result);
+      if(!data || !Array.isArray(data.records)) throw new Error('invalid');
+      state.records = data.records;
+      if(data.appSettings) appSettings = { ...appSettings, ...data.appSettings };
+      if(data.sync){
+        sync.clientId = data.sync.clientId || ''; sync.spreadsheetId = data.sync.spreadsheetId || '';
+        sync.sheetName = data.sync.sheetName || 'Sheet1'; sync.autoSync = data.sync.autoSync !== false;
+        sync.tokenClient = null; sync.connected = false; sync.accessToken = null;
+      }
+      if(data.theme){ theme = data.theme; applyTheme(); }
+      if(data.lang && data.lang !== lang){
+        lang = data.lang;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
+        document.title = t('appName');
+      }
+      saveCache();
+      renderHeader(); renderSyncBar(); renderTabbar(); renderMain();
+      toast(t('backup_imported', {n: state.records.length}));
+    }catch(e){
+      toast(t('backup_importError'), 'err');
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+/* ============================== TABS ============================== */
+function switchTab(key){
+  if(state.tab === key) return;
+  closeCsel();
+  state.tab = key;
+  const el = document.getElementById('tabbar');
+  el.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===key));
+  positionIndicator();
+  renderMain();
+}
+function renderTabbar(){
+  const el = document.getElementById('tabbar');
+  const TABS = [
+    {key:"entry", label:t('tab_entry'), ic:"plus"},
+    {key:"import", label:t('tab_import'), ic:"upload"},
+    {key:"dashboard", label:t('tab_dashboard'), ic:"grid"},
+    {key:"hospitals", label:t('tab_hospitals'), ic:"building"},
+  ];
+  el.innerHTML = `<div id="tabIndicator"></div>` + TABS.map(tb => `<button class="tab-btn ${state.tab===tb.key?'active':''}" data-tab="${tb.key}">${icon(tb.ic,15)}${tb.label}</button>`).join('');
+  el.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> switchTab(btn.dataset.tab));
+  });
+  positionIndicator();
+}
+function positionIndicator(){
+  const el = document.getElementById('tabbar');
+  const active = el.querySelector('.tab-btn.active');
+  const ind = document.getElementById('tabIndicator');
+  if(!active || !ind) return;
+  ind.style.transform = `translateX(${active.offsetLeft}px)`;
+  ind.style.width = active.offsetWidth + 'px';
+}
+window.addEventListener('resize', positionIndicator);
+
+function renderMain(){
+  closeCsel();
+  const main = document.getElementById('mainContent');
+  main.style.animation = 'none'; void main.offsetWidth; main.style.animation = 'rise .35s ease both';
+  if(state.tab==='entry') renderEntryTab(main);
+  else if(state.tab==='import') renderImportTab(main);
+  else if(state.tab==='dashboard') renderDashboardTab(main);
+  else if(state.tab==='hospitals') renderHospitalsTab(main);
+}
+
+/* ============================== ENTRY TAB ============================== */
+function renderEntryTab(main){
+  main.innerHTML = `
+  <div class="grid grid-5">
+    <div class="glass p col-2">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div>
+          <h2 class="card-title"><span style="height:32px;width:32px;border-radius:var(--r-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent-light);">${icon('plus',16)}</span>${t('entry_title')}</h2>
+          <p class="card-sub">${t('entry_sub')}</p>
+        </div>
+        <button class="link-btn" id="goImportBtn">${t('entry_importShortcut')} ${icon('upload',13)}</button>
+      </div>
+
+      <form id="entryForm">
+        <label class="field"><span>${t('field_name')}</span>
+          <input class="inp" id="f-name" list="hospital-names" placeholder="${t('field_namePh')}" autocomplete="off" autofocus>
+          <datalist id="hospital-names">${[...new Set(state.records.map(r=>r.name))].map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+        </label>
+        <label class="field"><span>${t('field_category')}</span>
+          <input class="inp" id="f-category" list="category-list" placeholder="${t('field_categoryPh')}" autocomplete="off">
+          <datalist id="category-list">${CATEGORY_SUGGESTIONS[lang].map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
+        </label>
+        <label class="field"><span>${t('field_budget')}</span>
+          <div class="pill-row" id="budgetPills">
+            ${BUDGET_KEYS.map((k,i)=>`<button type="button" class="budget-pill ${i===0?'sel':''}" data-key="${k}" style="${i===0?`border-color:${BUDGET_HEX[k]}88;background:${BUDGET_HEX[k]}22;color:${BUDGET_HEX[k]};box-shadow:0 0 0 1px ${BUDGET_HEX[k]}55`:''}"><span class="dot" style="background:${BUDGET_HEX[k]}"></span>${budgetLabel(k)}</button>`).join('')}
+          </div>
+        </label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <label class="field"><span>${t('field_month')}</span>
+            ${csel('f-month', (lang==='ar'?MONTHS_AR:MONTHS_EN).map((m,i)=>({value:i,label:m})), new Date().getMonth(), (v)=>{ selectedMonth = Number(v); })}
+          </label>
+          <label class="field"><span>${t('field_year')}</span><input class="inp" type="number" id="f-year" value="${new Date().getFullYear()}"></label>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <label class="field"><span>${t('field_before')}</span><input class="inp" type="number" inputmode="decimal" id="f-before" placeholder="0"></label>
+          <label class="field"><span>${t('field_after')}</span><input class="inp" type="number" inputmode="decimal" id="f-after" placeholder="0"></label>
+        </div>
+        <div id="variancePreview"></div>
+        <button type="submit" class="btn-primary" style="margin-top:6px;">${icon('check',17)} ${t('entry_save')}</button>
+      </form>
+    </div>
+
+    <div class="glass p col-3">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <h3 class="card-title">${t('entry_recent')}</h3>
+        <span style="font-size:12.5px;color:var(--muted2);" id="recCount">${state.records.length} ${t('entry_recordsSuffix')}</span>
+      </div>
+      <div class="scroll-list" id="recentList"></div>
+    </div>
+  </div>`;
+
+  let selectedKey = BUDGET_KEYS[0];
+  let selectedMonth = new Date().getMonth();
+  const pillsWrap = main.querySelector('#budgetPills');
+  pillsWrap.querySelectorAll('.budget-pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      selectedKey = btn.dataset.key;
+      pillsWrap.querySelectorAll('.budget-pill').forEach(b=>{
+        const hex = BUDGET_HEX[b.dataset.key];
+        const sel = b===btn;
+        b.classList.toggle('sel', sel);
+        b.style.cssText = sel ? `border-color:${hex}88;background:${hex}22;color:${hex};box-shadow:0 0 0 1px ${hex}55;transform:translateY(-2px);` : ``;
+      });
+    });
+  });
+
+  const beforeI = main.querySelector('#f-before');
+  const afterI = main.querySelector('#f-after');
+  const varBox = main.querySelector('#variancePreview');
+  function updateVariancePreview(){
+    const b = Number(beforeI.value)||0, a = Number(afterI.value)||0;
+    if(!beforeI.value && !afterI.value){ varBox.innerHTML=''; return; }
+    const diff = b - a;
+    varBox.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;border-radius:var(--r-md);padding:12px 16px;border:1px solid var(--divider);background:var(--divider-soft);margin-bottom:16px;">
+      <span style="font-size:12.5px;color:var(--muted);">${t('entry_variance')}</span>
+      <span style="font-size:14.5px;font-weight:800;color:${diff>=0?'var(--good)':'var(--bad)'}">${diff>=0?'−':'+'}${fmt(Math.abs(diff))}${currencyUnit()}</span>
+    </div>`;
+  }
+  beforeI.addEventListener('input', updateVariancePreview);
+  afterI.addEventListener('input', updateVariancePreview);
+
+  function renderRecentList(){
+    const list = main.querySelector('#recentList');
+    main.querySelector('#recCount').textContent = `${state.records.length} ${t('entry_recordsSuffix')}`;
+    if(state.records.length===0){ list.innerHTML = `<div class="empty">${t('entry_empty')}</div>`; return; }
+    list.innerHTML = state.records.slice(0,14).map((r,i)=>`
+      <div class="row-card" style="animation:rise .4s ease ${i*0.03}s both;">
+        <div style="min-width:0;">
+          <div style="font-size:14.5px;font-weight:600;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(r.name)||'—'}</div>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center;">
+            ${budgetTag(r.budgetType)}${categoryBadge(r.category)}
+            <span style="font-size:12px;color:var(--muted2);">${monthName(r.month)} ${r.year}</span>
+          </div>
+        </div>
+        <div style="text-align:end;flex-shrink:0;">
+          <div style="font-size:15px;font-weight:800;color:var(--fg);">${fmt(r.after)}${currencyUnit()}</div>
+          <div style="margin-top:5px;">${varianceTag(r.before, r.after)}</div>
+        </div>
+      </div>`).join('');
+  }
+  renderRecentList();
+
+  main.querySelector('#goImportBtn').addEventListener('click', ()=> switchTab('import'));
+
+  main.querySelector('#entryForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const nameI = main.querySelector('#f-name');
+    if(!nameI.value.trim()){ toast(t('entry_nameRequired'), 'err'); nameI.focus(); return; }
+    const rec = {
+      id: uid(), name: nameI.value.trim(), category: main.querySelector('#f-category').value.trim(),
+      budgetType: selectedKey, month: selectedMonth,
+      year: Number(main.querySelector('#f-year').value) || new Date().getFullYear(),
+      before: Number(beforeI.value) || 0, after: Number(afterI.value) || 0,
+    };
+    state.records.unshift(rec);
+    toast(t('entry_added'));
+    nameI.value = ''; main.querySelector('#f-category').value = '';
+    beforeI.value = ''; afterI.value = ''; varBox.innerHTML='';
+    renderRecentList();
+    scheduleAutoSync();
+    nameI.focus();
+  });
+}
+
+/* ============================== XLSX HELPERS ============================== */
+function downloadTemplate(){
+  const wb = XLSX.utils.book_new();
+  const headers = currentHeaders();
+  const sampleType = lang==='ar' ? 'مواليد' : 'Newborns';
+  const sampleMonth = monthName(0);
+  const rows = [headers, [lang==='ar'?'مستشفى المثال':'Example Hospital', CATEGORY_SUGGESTIONS[lang][0], sampleType, sampleMonth, 2026, 100000, 95000]];
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = headers.map(h=>({wch: Math.max(18, h.length+4)}));
+  XLSX.utils.book_append_sheet(wb, ws, lang==='ar'?'قالب البيانات':'Data Template');
+  const out = XLSX.write(wb, {bookType:'xlsx', type:'array'});
+  const blob = new Blob([out], {type:'application/octet-stream'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = lang==='ar' ? 'قالب_بيانات.xlsx' : 'data_template.xlsx';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+function exportRecords(records){
+  const headers = currentHeaders();
+  const rows = [headers, ...records.map(r=>[r.name,r.category,budgetLabel(r.budgetType),monthName(r.month),r.year,r.before,r.after])];
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = headers.map(h=>({wch: Math.max(18, h.length+4)}));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, lang==='ar'?'البيانات':'Data');
+  const out = XLSX.write(wb, {bookType:'xlsx', type:'array'});
+  const blob = new Blob([out], {type:'application/octet-stream'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = lang==='ar' ? 'بيانات_الجهات.xlsx' : 'entities_data.xlsx';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+function normalizeRow(row){
+  const budgetType = budgetKeyFromLabel(getColumnValue(row,'budgetType'));
+  const month = monthIndexFromLabel(getColumnValue(row,'month'));
+  return {
+    id: uid(),
+    name: String(getColumnValue(row,'name')||'').trim(),
+    category: String(getColumnValue(row,'category')||'').trim(),
+    budgetType, month,
+    year: Number(getColumnValue(row,'year')) || new Date().getFullYear(),
+    before: Number(getColumnValue(row,'before')) || 0,
+    after: Number(getColumnValue(row,'after')) || 0,
+  };
+}
+/* proper Arabic encoding: CSV needs explicit UTF-8 text decoding; xlsx/xls already store unicode natively */
+function readWorkbookGrid(file){
+  return new Promise((resolve, reject)=>{
+    const isCsv = /\.csv$/i.test(file.name);
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      try{
+        const wb = isCsv ? XLSX.read(e.target.result, {type:'string'}) : XLSX.read(e.target.result, {type:'array'});
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        resolve(XLSX.utils.sheet_to_json(sheet, {header:1, defval:"", raw:false}));
+      }catch(err){ reject(err); }
+    };
+    reader.onerror = reject;
+    if(isCsv) reader.readAsText(file, 'UTF-8'); else reader.readAsArrayBuffer(file);
+  });
+}
+function readWorkbookObjects(file){
+  return new Promise((resolve, reject)=>{
+    const isCsv = /\.csv$/i.test(file.name);
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      try{
+        const wb = isCsv ? XLSX.read(e.target.result, {type:'string'}) : XLSX.read(e.target.result, {type:'array'});
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        resolve(XLSX.utils.sheet_to_json(sheet, {defval:""}));
+      }catch(err){ reject(err); }
+    };
+    reader.onerror = reject;
+    if(isCsv) reader.readAsText(file, 'UTF-8'); else reader.readAsArrayBuffer(file);
+  });
+}
+
+/* ============================== IMPORT TAB ============================== */
+let importMode = 'tabular';
+let pendingPreview = null;                 // tabular: array of records
+let tabularIncluded = null;                // tabular: Set of row indices included
+let tabularColsOn = null;                  // tabular: Set of field keys included
+let freeGrid = null, freeHeaderRow = 1, freeMapping = [];
+let freeIncluded = null;                   // freeform: Set of row indices included
+let freeColsOn = null;                     // freeform: Set of field keys included
+
+function renderImportTab(main){
+  main.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+      <div class="seg" id="modeSeg">
+        <button class="seg-btn ${importMode==='tabular'?'active':''}" data-mode="tabular">${icon('table',14)} ${t('import_tabular')}</button>
+        <button class="seg-btn ${importMode==='freeform'?'active':''}" data-mode="freeform">${icon('layers',14)} ${t('import_freeform')}</button>
+      </div>
+      <span style="font-size:12.5px;color:var(--muted2);">${importMode==='tabular' ? t('import_tabularHint') : t('import_freeformHint')}</span>
+    </div>
+    <div id="importBody"></div>`;
+
+  main.querySelectorAll('#modeSeg .seg-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ importMode = btn.dataset.mode; renderImportTab(main); });
+  });
+  if(importMode==='tabular') renderTabularImport(main.querySelector('#importBody'));
+  else renderFreeformImport(main.querySelector('#importBody'));
+}
+
+function colChipsBar(colsOnSet, onChange){
+  return `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+    ${HEADER_KEYS.map(k=>`<span class="col-chip ${colsOnSet.has(k)?'on':'off'}" data-field="${k}">${icon('check',12)}${t('col_'+(k==='budgetType'?'budget':k))}</span>`).join('')}
+  </div>`;
+}
+function wireColChips(root, colsOnSet, rerender){
+  root.querySelectorAll('.col-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      const f = chip.dataset.field;
+      if(colsOnSet.has(f)) colsOnSet.delete(f); else colsOnSet.add(f);
+      rerender();
+    });
+  });
+}
+function applyColumnMask(rec, colsOnSet){
+  const out = { id: rec.id };
+  out.name = colsOnSet.has('name') ? rec.name : '';
+  out.category = colsOnSet.has('category') ? rec.category : '';
+  out.budgetType = colsOnSet.has('budgetType') ? rec.budgetType : BUDGET_KEYS[0];
+  out.month = colsOnSet.has('month') ? rec.month : new Date().getMonth();
+  out.year = colsOnSet.has('year') ? rec.year : new Date().getFullYear();
+  out.before = colsOnSet.has('before') ? rec.before : 0;
+  out.after = colsOnSet.has('after') ? rec.after : 0;
+  return out;
+}
+
+function renderTabularImport(root){
+  root.innerHTML = `
+  <div class="grid grid-5">
+    <div class="glass p col-2" style="height:fit-content;">
+      <h2 class="card-title"><span style="height:32px;width:32px;border-radius:var(--r-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent-light);">${icon('table',16)}</span>${t('import_tabularTitle')}</h2>
+      <p class="card-sub">${t('import_tabularSub')}</p>
+
+      <button class="btn-ghost" id="tplBtn" style="width:100%;justify-content:space-between;padding:13px 16px;margin:18px 0 16px;">
+        <span style="display:flex;align-items:center;gap:10px;color:var(--ink-8);">${icon('filesheet',17)} ${t('import_downloadTpl')}</span>
+        ${icon('download',15)}
+      </button>
+
+      <div class="dropzone" id="dropzone">
+        <div class="dz-icon">${icon('cloud',24)}</div>
+        <div>
+          <div style="font-size:14.5px;font-weight:600;color:var(--ink-85);">${t('import_dzTitle')}</div>
+          <div style="font-size:12.5px;color:var(--muted2);margin-top:4px;">${t('import_dzSub')}</div>
+        </div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none;">
+      </div>
+      <div id="fileStatus" style="margin-top:14px;font-size:12.5px;"></div>
+    </div>
+
+    <div class="glass p col-3">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <h3 class="card-title">${t('import_previewTitle')}</h3>
+        <div id="confirmWrap"></div>
+      </div>
+      <div id="colChipsWrap"></div>
+      <div id="previewArea"><div class="empty">${icon('sparkle',24)}<div style="margin-top:10px;">${t('import_emptyPreview')}</div></div></div>
+    </div>
+  </div>`;
+
+  root.querySelector('#tplBtn').addEventListener('click', downloadTemplate);
+  const dz = root.querySelector('#dropzone');
+  const fileInput = root.querySelector('#fileInput');
+  const fileStatus = root.querySelector('#fileStatus');
+  const previewArea = root.querySelector('#previewArea');
+  const confirmWrap = root.querySelector('#confirmWrap');
+  const colChipsWrap = root.querySelector('#colChipsWrap');
+
+  function renderPreview(){
+    if(!pendingPreview){
+      previewArea.innerHTML = `<div class="empty">${icon('sparkle',24)}<div style="margin-top:10px;">${t('import_emptyPreview')}</div></div>`;
+      confirmWrap.innerHTML = ''; colChipsWrap.innerHTML=''; return;
+    }
+    colChipsWrap.innerHTML = colChipsBar(tabularColsOn);
+    wireColChips(colChipsWrap, tabularColsOn, renderPreview);
+
+    const selectedCount = [...tabularIncluded].filter(Boolean).length;
+    confirmWrap.innerHTML = `<button class="btn-ghost btn-accent" id="confirmBtn">${icon('check',14)} ${t('import_confirm')} (${selectedCount})</button>`;
+    const headers = HEADER_KEYS.map(k=>t('col_'+(k==='budgetType'?'budget':k)));
+    previewArea.innerHTML = `
+      <div style="font-size:12px;color:var(--muted2);margin-bottom:10px;">${t('import_rowsSelected',{n:selectedCount,t:pendingPreview.length})}
+        <button class="link-btn" style="display:inline-flex;margin-inline-start:10px;" id="selAllBtn">${t('import_selectAll')}</button>
+        <button class="link-btn" style="display:inline-flex;margin-inline-start:8px;" id="deselAllBtn">${t('import_deselectAll')}</button>
+      </div>
+      <div style="overflow:auto;max-height:460px;"><table>
+      <thead><tr><th></th>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${pendingPreview.map((r,i)=>`<tr style="animation:rise .3s ease ${Math.min(i,12)*0.02}s both;">
+        <td><input type="checkbox" class="row-chk" data-i="${i}" ${tabularIncluded.has(i)?'checked':''}></td>
+        <td style="font-weight:600;color:var(--fg);">${esc(r.name)}</td><td>${esc(r.category)}</td><td>${budgetTag(r.budgetType)}</td>
+        <td>${monthName(r.month)}</td><td>${r.year}</td><td>${fmt(r.before)}</td><td>${fmt(r.after)}</td></tr>`).join('')}</tbody>
+    </table></div>`;
+
+    previewArea.querySelectorAll('.row-chk').forEach(chk=>{
+      chk.addEventListener('change', ()=>{
+        const i = Number(chk.dataset.i);
+        if(chk.checked) tabularIncluded.add(i); else tabularIncluded.delete(i);
+        renderPreview();
+      });
+    });
+    previewArea.querySelector('#selAllBtn').addEventListener('click', ()=>{ tabularIncluded = new Set(pendingPreview.map((_,i)=>i)); renderPreview(); });
+    previewArea.querySelector('#deselAllBtn').addEventListener('click', ()=>{ tabularIncluded = new Set(); renderPreview(); });
+
+    root.querySelector('#confirmBtn').addEventListener('click', ()=>{
+      const chosen = pendingPreview.filter((_,i)=>tabularIncluded.has(i)).map(r=>applyColumnMask(r, tabularColsOn));
+      if(!chosen.length){ toast(t('import_noValidRows'), 'err'); return; }
+      state.records = [...chosen, ...state.records];
+      toast(t('import_imported',{n:chosen.length}));
+      pendingPreview = null; tabularIncluded=null; tabularColsOn=null; fileStatus.innerHTML=''; renderPreview();
+      scheduleAutoSync();
+    });
+  }
+
+  async function handleFile(file){
+    if(!file) return;
+    fileStatus.innerHTML = '';
+    try{
+      const rows = await readWorkbookObjects(file);
+      if(!rows.length){ fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_fileEmpty')}</span>`; pendingPreview=null; renderPreview(); return; }
+      const normalized = rows.map(normalizeRow).filter(r=>r.name);
+      if(!normalized.length){ fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_noColumns')}</span>`; pendingPreview=null; renderPreview(); return; }
+      pendingPreview = normalized;
+      tabularIncluded = new Set(normalized.map((_,i)=>i));
+      tabularColsOn = new Set(HEADER_KEYS);
+      fileStatus.innerHTML = `<span style="color:var(--good);display:flex;align-items:center;gap:6px;">${icon('check',14)}${esc(file.name)}</span>`;
+      renderPreview();
+    }catch(err){
+      fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_readError')}</span>`;
+    }
+  }
+  dz.addEventListener('click', ()=> fileInput.click());
+  fileInput.addEventListener('change', (e)=> handleFile(e.target.files[0]));
+  dz.addEventListener('dragover', (e)=>{ e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', ()=> dz.classList.remove('drag'));
+  dz.addEventListener('drop', (e)=>{ e.preventDefault(); dz.classList.remove('drag'); handleFile(e.dataTransfer.files[0]); });
+  renderPreview();
+}
+
+function guessMapping(headerRow){
+  return headerRow.map(cell=>{
+    const c = String(cell||"").trim();
+    let idx = HEADERS_BY_LANG.ar.indexOf(c);
+    if(idx===-1) idx = HEADERS_BY_LANG.en.findIndex(h=>h.toLowerCase()===c.toLowerCase());
+    if(idx===-1) return '';
+    return HEADER_KEYS[idx];
+  });
+}
+
+function renderFreeformImport(root){
+  root.innerHTML = `
+  <div class="glass p" style="margin-bottom:20px;">
+    <h2 class="card-title"><span style="height:32px;width:32px;border-radius:var(--r-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent-light);">${icon('layers',16)}</span>${t('import_freeformTitle')}</h2>
+    <p class="card-sub">${t('import_freeformSub')}</p>
+    <div class="dropzone" id="freeDropzone" style="margin-top:18px;">
+      <div class="dz-icon">${icon('cloud',24)}</div>
+      <div>
+        <div style="font-size:14.5px;font-weight:600;color:var(--ink-85);">${t('import_freeDzTitle')}</div>
+        <div style="font-size:12.5px;color:var(--muted2);margin-top:4px;">${t('import_freeDzSub')}</div>
+      </div>
+      <input type="file" id="freeInput" accept=".xlsx,.xls,.csv" style="display:none;">
+    </div>
+    <div id="freeStatus" style="margin-top:14px;font-size:12.5px;"></div>
+  </div>
+  <div id="freeMapArea"></div>`;
+
+  const dz = root.querySelector('#freeDropzone');
+  const fileInput = root.querySelector('#freeInput');
+  const freeStatus = root.querySelector('#freeStatus');
+  const mapArea = root.querySelector('#freeMapArea');
+
+  async function handleFile(file){
+    if(!file) return;
+    freeStatus.innerHTML = '';
+    try{
+      const grid = await readWorkbookGrid(file);
+      if(!grid.length){ freeStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_fileEmpty')}</span>`; return; }
+      freeGrid = grid; freeHeaderRow = 1;
+      freeMapping = guessMapping(grid[0] || []);
+      freeColsOn = new Set(HEADER_KEYS);
+      freeStatus.innerHTML = `<span style="color:var(--good);display:flex;align-items:center;gap:6px;">${icon('check',14)}${esc(file.name)} — ${grid.length}</span>`;
+      renderMapUI();
+    }catch(err){
+      freeStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_readError')}</span>`;
+    }
+  }
+  dz.addEventListener('click', ()=> fileInput.click());
+  fileInput.addEventListener('change', (e)=> handleFile(e.target.files[0]));
+  dz.addEventListener('dragover', (e)=>{ e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', ()=> dz.classList.remove('drag'));
+  dz.addEventListener('drop', (e)=>{ e.preventDefault(); dz.classList.remove('drag'); handleFile(e.dataTransfer.files[0]); });
+
+  function computeMapped(){
+    const headerIdx = freeHeaderRow - 1;
+    const dataRows = freeGrid.slice(headerIdx+1);
+    const out = [];
+    dataRows.forEach(row=>{
+      const rec = { id: uid(), name:'', category:'', budgetType: BUDGET_KEYS[0], month:new Date().getMonth(), year:new Date().getFullYear(), before:0, after:0 };
+      let hasName = false;
+      freeMapping.forEach((field, colIdx)=>{
+        if(!field) return;
+        const val = row[colIdx];
+        if(val===undefined || val==="") return;
+        if(field==='name'){ rec.name = String(val).trim(); hasName = !!rec.name; }
+        else if(field==='category') rec.category = String(val).trim();
+        else if(field==='budgetType') rec.budgetType = budgetKeyFromLabel(val);
+        else if(field==='month') rec.month = monthIndexFromLabel(val);
+        else if(field==='year') rec.year = Number(val) || new Date().getFullYear();
+        else if(field==='before') rec.before = Number(val) || 0;
+        else if(field==='after') rec.after = Number(val) || 0;
+      });
+      if(hasName) out.push(rec);
+    });
+    return out;
+  }
+
+  function renderMapUI(){
+    if(!freeGrid){ mapArea.innerHTML=''; return; }
+    const previewRowsCount = Math.min(8, freeGrid.length);
+    const colCount = Math.max(...freeGrid.slice(0,previewRowsCount).map(r=>r.length), 1);
+    const fieldOptions = [{key:'', label:t('import_ignoreColumn')}, ...HEADER_KEYS.map(k=>({key:k, label:t('col_'+(k==='budgetType'?'budget':k))}))];
+
+    mapArea.innerHTML = `
+      <div class="glass p" style="margin-bottom:20px;">
+        <h3 class="card-title" style="margin-bottom:12px;">${t('import_step1')}</h3>
+        <p style="font-size:12.5px;color:var(--muted2);margin:0 0 14px;">${t('import_step1Sub')}</p>
+        <div style="overflow:auto;max-height:260px;border:1px solid var(--divider);border-radius:var(--r-md);">
+          <table><tbody id="rawRowsBody">
+              ${freeGrid.slice(0,previewRowsCount).map((row,i)=>`
+                <tr data-row="${i+1}" style="cursor:pointer;${i+1===freeHeaderRow?'background:var(--accent-soft);':''}">
+                  <td style="font-weight:700;color:var(--muted2);">${i+1===freeHeaderRow?icon('check',14,''):''} ${t('import_row')} ${i+1}</td>
+                  ${Array.from({length:colCount}).map((_,c)=>`<td>${esc(row[c]??'')}</td>`).join('')}
+                </tr>`).join('')}
+          </tbody></table>
+        </div>
+      </div>
+
+      <div class="glass p" style="margin-bottom:20px;">
+        <h3 class="card-title" style="margin-bottom:6px;">${t('import_step2')}</h3>
+        <p style="font-size:12.5px;color:var(--muted2);margin:0 0 14px;">${t('import_step2Sub')}</p>
+        <div id="mapRows"></div>
+      </div>
+
+      <div class="glass p">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+          <h3 class="card-title">${t('import_step3')}</h3>
+          <button class="btn-ghost btn-accent" id="freeConfirmBtn">${icon('check',14)} ${t('import_confirm')}</button>
+        </div>
+        <div id="freeColChips"></div>
+        <div id="freePreviewTable"></div>
+      </div>`;
+
+    mapArea.querySelectorAll('#rawRowsBody tr').forEach(tr=>{
+      tr.addEventListener('click', ()=>{
+        freeHeaderRow = Number(tr.dataset.row);
+        freeMapping = guessMapping(freeGrid[freeHeaderRow-1] || []);
+        renderMapUI();
+      });
+    });
+
+    const headerRowCells = freeGrid[freeHeaderRow-1] || [];
+    const mapRowsEl = mapArea.querySelector('#mapRows');
+    mapRowsEl.innerHTML = Array.from({length: Math.max(headerRowCells.length, colCount)}).map((_,colIdx)=>`
+      <div class="map-row">
+        <span style="font-size:12px;color:var(--muted2);">${colIdx+1}</span>
+        <span style="font-size:13px;color:var(--ink-8);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(headerRowCells[colIdx] || (t('import_col') + (colIdx+1)))}</span>
+        ${csel('mapcol-'+colIdx, fieldOptions.map(f=>({value:f.key, label:f.label})), freeMapping[colIdx]||'', (v)=>{ freeMapping[colIdx] = v; refreshFreePreview(true); }, {mini:true})}
+      </div>`).join('');
+
+    let freeRecordsCache = [];
+    function refreshFreePreview(resetSelection){
+      freeRecordsCache = computeMapped();
+      if(resetSelection || !freeIncluded) freeIncluded = new Set(freeRecordsCache.map((_,i)=>i));
+      const chipsWrap = mapArea.querySelector('#freeColChips');
+      chipsWrap.innerHTML = colChipsBar(freeColsOn);
+      wireColChips(chipsWrap, freeColsOn, ()=>refreshFreePreview(false));
+
+      const tableEl = mapArea.querySelector('#freePreviewTable');
+      if(!freeRecordsCache.length){ tableEl.innerHTML = `<div class="empty">${t('import_noValidRows')}</div>`; return; }
+      const selectedCount = [...freeIncluded].filter(Boolean).length;
+      const headers = HEADER_KEYS.map(k=>t('col_'+(k==='budgetType'?'budget':k)));
+      tableEl.innerHTML = `
+        <div style="font-size:12px;color:var(--muted2);margin-bottom:10px;">${t('import_rowsSelected',{n:selectedCount,t:freeRecordsCache.length})}
+          <button class="link-btn" style="display:inline-flex;margin-inline-start:10px;" id="freeSelAll">${t('import_selectAll')}</button>
+          <button class="link-btn" style="display:inline-flex;margin-inline-start:8px;" id="freeDeselAll">${t('import_deselectAll')}</button>
+        </div>
+        <div style="overflow:auto;max-height:400px;"><table>
+        <thead><tr><th></th>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+        <tbody>${freeRecordsCache.slice(0,300).map((r,i)=>`<tr style="animation:rise .3s ease ${Math.min(i,10)*0.02}s both;">
+          <td><input type="checkbox" class="free-row-chk" data-i="${i}" ${freeIncluded.has(i)?'checked':''}></td>
+          <td style="font-weight:600;color:var(--fg);">${esc(r.name)}</td><td>${esc(r.category)}</td><td>${budgetTag(r.budgetType)}</td>
+          <td>${esc(monthName(r.month))}</td><td>${r.year}</td><td>${fmt(r.before)}</td><td>${fmt(r.after)}</td></tr>`).join('')}</tbody>
+        </table></div>`;
+      tableEl.querySelectorAll('.free-row-chk').forEach(chk=>{
+        chk.addEventListener('change', ()=>{
+          const i = Number(chk.dataset.i);
+          if(chk.checked) freeIncluded.add(i); else freeIncluded.delete(i);
+          refreshFreePreview(false);
+        });
+      });
+      tableEl.querySelector('#freeSelAll').addEventListener('click', ()=>{ freeIncluded = new Set(freeRecordsCache.map((_,i)=>i)); refreshFreePreview(false); });
+      tableEl.querySelector('#freeDeselAll').addEventListener('click', ()=>{ freeIncluded = new Set(); refreshFreePreview(false); });
+    }
+    refreshFreePreview(true);
+
+    mapArea.querySelector('#freeConfirmBtn').addEventListener('click', ()=>{
+      const chosen = freeRecordsCache.filter((_,i)=>freeIncluded.has(i)).map(r=>applyColumnMask(r, freeColsOn));
+      if(!chosen.length){ toast(t('import_noValidRows'), 'err'); return; }
+      state.records = [...chosen, ...state.records];
+      toast(t('import_imported',{n:chosen.length}));
+      freeGrid = null; freeMapping = []; freeHeaderRow = 1; freeIncluded=null; freeColsOn=null;
+      mapArea.innerHTML = ''; freeStatus.innerHTML='';
+      scheduleAutoSync();
+    });
+  }
+}
+
+/* ============================== DASHBOARD TAB (actionable, filterable) ============================== */
+function svgArea(data){
+  const w=640,h=220,padL=6,padR=6,padT=10,padB=26;
+  const innerW=w-padL-padR, innerH=h-padT-padB;
+  const max = Math.max(1, ...data.map(d=>Math.max(d.before,d.after)));
+  const n = Math.max(data.length-1,1);
+  const pts=(key)=>data.map((d,i)=>{ const x = padL + (i/n)*innerW; const y = padT + innerH - (d[key]/max)*innerH; return [x,y]; });
+  const toPath=(pts)=> 'M '+pts.map(p=>p.join(',')).join(' L ');
+  const toArea=(pts)=> `M ${pts[0][0]},${h-padB} L ${pts.map(p=>p.join(',')).join(' L ')} L ${pts[pts.length-1][0]},${h-padB} Z`;
+  const beforePts = pts('before'), afterPts = pts('after');
+  const gridLines = [0,0.25,0.5,0.75,1].map(f=>{ const y = padT + innerH*f; return `<line x1="${padL}" y1="${y}" x2="${w-padR}" y2="${y}" stroke="rgba(128,128,140,0.14)" stroke-dasharray="3 6"/>`; }).join('');
+  const labels = data.map((d,i)=>{ const x = padL + (i/n)*innerW; return `<text x="${x}" y="${h-6}" text-anchor="middle" font-size="10.5" fill="var(--muted2)">${d.label}</text>`; }).join('');
+  return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="overflow:visible;">
+    <defs>
+      <linearGradient id="gAfter" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2f93b0" stop-opacity="0.5"/><stop offset="100%" stop-color="#2f93b0" stop-opacity="0"/></linearGradient>
+      <linearGradient id="gBefore" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#cda15c" stop-opacity="0.28"/><stop offset="100%" stop-color="#cda15c" stop-opacity="0"/></linearGradient>
+    </defs>
+    ${gridLines}
+    <path d="${toArea(beforePts)}" fill="url(#gBefore)"/><path d="${toPath(beforePts)}" fill="none" stroke="#cda15c" stroke-width="2"/>
+    <path d="${toArea(afterPts)}" fill="url(#gAfter)"/><path d="${toPath(afterPts)}" fill="none" stroke="#2f93b0" stroke-width="2.5"/>
+    ${labels}
+  </svg>`;
+}
+function svgDonut(data){
+  const r=54, cx=90, cy=90, c=2*Math.PI*r;
+  const total = data.reduce((s,d)=>s+d.value,0) || 1;
+  let cum = 0;
+  const segs = data.map(d=>{
+    const frac = d.value/total, seg = c*frac, rotate = -90 + (cum/total)*360;
+    cum += d.value;
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.color}" stroke-width="16" stroke-dasharray="${seg} ${c-seg}" transform="rotate(${rotate} ${cx} ${cy})"/>`;
+  }).join('');
+  return `<svg width="180" height="180" viewBox="0 0 180 180">${segs}</svg>`;
+}
+
+function renderDashboardTab(main){
+  let filterYear = 'all', filterType = 'all', filterEntity = 'all', filterCategory = 'all';
+  const allYears = [...new Set(state.records.map(r=>r.year))].sort((a,b)=>b-a);
+  const allEntities = [...new Set(state.records.map(r=>r.name))].sort((a,b)=>a.localeCompare(b, lang==='ar'?'ar':'en'));
+  const allCategories = [...new Set(state.records.map(r=>r.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b, lang==='ar'?'ar':'en'));
+
+  main.innerHTML = `
+    <div class="toolbar" style="margin-bottom:18px;">
+      ${csel('filterYear', [{value:'all',label:t('dash_year')+': '+t('dash_all')}, ...allYears.map(y=>({value:y,label:t('dash_year')+': '+y}))], 'all', (v)=>{ filterYear=v; render(); }, {width:'150px'})}
+      ${csel('filterType', [{value:'all',label:t('dash_type')+': '+t('dash_all')}, ...BUDGET_KEYS.map(k=>({value:k,label:t('dash_type')+': '+budgetLabel(k)}))], 'all', (v)=>{ filterType=v; render(); }, {width:'180px'})}
+      ${csel('filterCategory', [{value:'all',label:t('dash_category')+': '+t('dash_all')}, ...allCategories.map(c=>({value:c,label:t('dash_category')+': '+c}))], 'all', (v)=>{ filterCategory=v; render(); }, {width:'190px'})}
+      ${csel('filterEntity', [{value:'all',label:t('dash_entity')+': '+t('dash_all')}, ...allEntities.map(n=>({value:n,label:n}))], 'all', (v)=>{ filterEntity=v; render(); }, {width:'220px'})}
+      <button class="link-btn" id="resetFiltersBtn">${icon('x',13)} ${t('dash_resetFilters')}</button>
+    </div>
+    <div id="dashBody"></div>`;
+
+  function compute(){
+    return state.records.filter(r =>
+      (filterYear==='all' || r.year===Number(filterYear)) &&
+      (filterType==='all' || r.budgetType===filterType) &&
+      (filterCategory==='all' || r.category===filterCategory) &&
+      (filterEntity==='all' || r.name===filterEntity)
+    );
+  }
+
+  function render(){
+    const records = compute();
+    const totalBefore = records.reduce((s,r)=>s+r.before,0);
+    const totalAfter = records.reduce((s,r)=>s+r.after,0);
+    const totalDiff = totalBefore - totalAfter;
+    const diffPct = totalBefore ? (totalDiff/totalBefore)*100 : 0;
+    const increasedCount = records.filter(r=>r.after > r.before).length;
+    const decreasedCount = records.filter(r=>r.after < r.before).length;
+
+    const byType = BUDGET_KEYS.map(k=>({ name:budgetLabel(k), value: records.filter(r=>r.budgetType===k).reduce((s,r)=>s+r.after,0), color: BUDGET_HEX[k] })).filter(d=>d.value>0);
+
+    const monthMap = {};
+    records.forEach(r=>{
+      const key = `${r.year}-${r.month}`;
+      if(!monthMap[key]) monthMap[key] = {label:`${monthName(r.month)} ${r.year}`, before:0, after:0, order:r.year*12+r.month};
+      monthMap[key].before += r.before; monthMap[key].after += r.after;
+    });
+    const byMonth = Object.values(monthMap).sort((a,b)=>a.order-b.order);
+
+    const hMap = {};
+    records.forEach(r=>{ if(!hMap[r.name]) hMap[r.name] = {name:r.name, total:0}; hMap[r.name].total += r.after; });
+    const top = Object.values(hMap).sort((a,b)=>b.total-a.total).slice(0,6);
+    const maxTop = top[0] ? top[0].total : 1;
+
+    const body = main.querySelector('#dashBody');
+    body.innerHTML = `
+      <div class="stats-row">
+        <div class="glass stat-card" style="animation:rise .45s ease both;"><div class="stat-icon" style="background:var(--divider-soft);color:var(--ink-6);">${icon('filesheet',18)}</div>
+          <div><div class="stat-label">${t('dash_kpiBefore')}</div><div class="stat-value">${fmt(totalBefore)}${currencyUnit()}</div><div class="stat-sub">${records.length} ${t('entry_recordsSuffix')}</div></div></div>
+        <div class="glass stat-card" style="animation:rise .45s ease .06s both;"><div class="stat-icon" style="background:var(--accent-soft);color:var(--accent-light);">${icon('arrowup',19)}</div>
+          <div><div class="stat-label">${t('dash_kpiAfter')}</div><div class="stat-value">${fmt(totalAfter)}${currencyUnit()}</div><div class="stat-sub">${new Set(records.map(r=>r.name)).size} ${t('dash_kpiEntitiesSuffix')}</div></div></div>
+        <div class="glass stat-card" style="animation:rise .45s ease .12s both;"><div class="stat-icon" style="background:${totalDiff>=0?'var(--good-soft)':'var(--bad-soft)'};color:${totalDiff>=0?'var(--good)':'var(--bad)'};">${icon(totalDiff>=0?'trenddown':'trendup',18)}</div>
+          <div><div class="stat-label">${t('dash_kpiDiff')}</div><div class="stat-value" style="color:${totalDiff>=0?'var(--good)':'var(--bad)'};">${totalDiff>=0?'−':'+'}${fmt(Math.abs(totalDiff))}${currencyUnit()}</div><div class="stat-sub">${Math.abs(diffPct).toFixed(1)}%</div></div></div>
+        <div class="glass stat-card" style="animation:rise .45s ease .18s both;"><div class="stat-icon" style="background:var(--divider-soft);color:var(--ink-6);">${icon('trendup',18)}</div>
+          <div><div class="stat-label">${t('dash_kpiIncreased')}</div><div class="stat-value">${increasedCount}</div><div class="stat-sub">${t('dash_kpiChangeSub')}</div></div></div>
+        <div class="glass stat-card" style="animation:rise .45s ease .24s both;"><div class="stat-icon" style="background:var(--divider-soft);color:var(--ink-6);">${icon('trenddown',18)}</div>
+          <div><div class="stat-label">${t('dash_kpiDecreased')}</div><div class="stat-value">${decreasedCount}</div><div class="stat-sub">${t('dash_kpiChangeSub')}</div></div></div>
+      </div>
+
+      <div class="grid grid-5">
+        <div class="glass p col-3">
+          <h3 class="card-title">${t('dash_trendTitle')}</h3>
+          <p style="font-size:12.5px;color:var(--muted2);margin:5px 0 16px;">${t('dash_trendSub')}</p>
+          ${byMonth.length ? svgArea(byMonth) : `<div class="empty">${t('dash_noData')}</div>`}
+        </div>
+        <div class="glass p col-2" style="display:flex;flex-direction:column;">
+          <h3 class="card-title">${t('dash_typeTitle')}</h3>
+          <p style="font-size:12.5px;color:var(--muted2);margin:5px 0 10px;">${t('dash_typeSub')}</p>
+          <div style="display:flex;justify-content:center;">${byType.length?svgDonut(byType):''}</div>
+          <div style="margin-top:12px;">${byType.map(d=>`<div class="legend-row"><span><span class="dot" style="background:${d.color}"></span>${d.name}</span><span style="color:var(--ink-85);font-weight:700;">${fmt(d.value)}${currencyUnit()}</span></div>`).join('') || `<div class="empty">${t('dash_noData')}</div>`}</div>
+        </div>
+      </div>
+
+      <div class="grid grid-5" style="margin-top:20px;">
+        <div class="glass p col-5">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+            <h3 class="card-title">${t('dash_topTitle')}</h3>
+            <span style="font-size:11.5px;color:var(--muted2);">${t('dash_topHint')}</span>
+          </div>
+          ${top.length ? top.map((h,i)=>`
+            <div class="bar-item" style="animation:rise .4s ease ${i*0.05}s both;">
+              <div class="bar-rank">${String(i+1).padStart(2,'0')}</div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+                  <span style="font-size:13px;font-weight:600;color:var(--ink-8);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(h.name)}</span>
+                  <span style="font-size:13px;font-weight:800;color:var(--fg);flex-shrink:0;margin-inline-start:8px;">${fmt(h.total)}${currencyUnit()}</span>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width:${(h.total/maxTop)*100}%;"></div></div>
+              </div>
+            </div>`).join('') : `<div class="empty">${t('dash_noData')}</div>`}
+        </div>
+      </div>`;
+  }
+
+  main.querySelector('#resetFiltersBtn').addEventListener('click', ()=>{
+    filterYear='all'; filterType='all'; filterEntity='all'; filterCategory='all';
+    setCselDisplay('filterYear','all'); setCselDisplay('filterType','all');
+    setCselDisplay('filterCategory','all'); setCselDisplay('filterEntity','all');
+    render();
+  });
+  render();
+}
+
+/* ============================== HOSPITALS TAB (normalized search + group-by) ============================== */
+function renderHospitalsTab(main){
+  let query = pendingHospitalSearch || ''; pendingHospitalSearch = null;
+  let sortKey='name', sortDir=1, editingId=null, groupBy='none', trendFilter='all';
+  const collapsedGroups = new Set();
+
+  main.innerHTML = `
+  <div class="glass p">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px;">
+      <div>
+        <h2 class="card-title"><span style="height:32px;width:32px;border-radius:var(--r-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent-light);">${icon('building',16)}</span>${t('hosp_title')}</h2>
+        <p class="card-sub" id="countLabel"></p>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap">${icon('search',15)}<input class="inp" id="searchInput" placeholder="${t('hosp_searchPh')}" value="${esc(query)}"></div>
+        <button class="btn-ghost" id="exportBtn">${icon('download',14)} ${t('hosp_export')}</button>
+        <button class="btn-ghost btn-accent" id="importShortcut">${icon('upload',14)} ${t('hosp_import')}</button>
+      </div>
+    </div>
+    <div class="toolbar" style="margin-bottom:10px;">
+      <span style="font-size:12.5px;color:var(--muted2);">${t('hosp_groupBy')}</span>
+      <div class="seg" id="groupSeg">
+        <button class="seg-btn active" data-g="none">${t('hosp_groupNone')}</button>
+        <button class="seg-btn" data-g="budgetType">${t('hosp_groupType')}</button>
+        <button class="seg-btn" data-g="month">${t('hosp_groupMonth')}</button>
+        <button class="seg-btn" data-g="category">${t('hosp_groupCategory')}</button>
+      </div>
+    </div>
+    <div class="toolbar" style="margin-bottom:16px;">
+      <span style="font-size:12.5px;color:var(--muted2);">${t('hosp_trend')}</span>
+      <div class="seg" id="trendSeg">
+        <button class="seg-btn active" data-tr="all">${t('hosp_trendAll')}</button>
+        <button class="seg-btn" data-tr="up">${icon('trendup',12)} ${t('hosp_trendUp')}</button>
+        <button class="seg-btn" data-tr="down">${icon('trenddown',12)} ${t('hosp_trendDown')}</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table><thead><tr id="theadRow"></tr></thead><tbody id="tbody"></tbody></table>
+      <div id="emptyMsg"></div>
+    </div>
+  </div>`;
+
+  const cols = [
+    {key:'name', label:t('col_name')}, {key:'category', label:t('col_category')}, {key:'budgetType', label:t('col_budget')},
+    {key:'month', label:t('col_month')}, {key:'year', label:t('col_year')}, {key:'before', label:t('col_before')}, {key:'after', label:t('col_after')},
+  ];
+
+  function renderHead(){
+    main.querySelector('#theadRow').innerHTML = cols.map(c=>`<th data-key="${c.key}">${c.label} ${sortKey===c.key?icon('chevron',12,''):''}</th>`).join('') + `<th></th>`;
+    main.querySelectorAll('#theadRow th[data-key]').forEach(th=>{
+      const svgEl = th.querySelector('svg');
+      if(svgEl && sortKey===th.dataset.key) svgEl.style.transform = sortDir===1?'rotate(0deg)':'rotate(180deg)';
+      th.addEventListener('click', ()=>{
+        if(sortKey===th.dataset.key) sortDir*=-1; else { sortKey=th.dataset.key; sortDir=1; }
+        renderHead(); updateTable();
+      });
+    });
+  }
+
+  function getFiltered(){
+    let rows = state.records.filter(r => !query.trim() ||
+      Math.max(fuzzyScore(query, r.name), fuzzyScore(query, r.category), fuzzyScore(query, budgetLabel(r.budgetType))) > -Infinity);
+    if(trendFilter==='up') rows = rows.filter(r=>r.after > r.before);
+    else if(trendFilter==='down') rows = rows.filter(r=>r.after < r.before);
+    rows.sort((a,b)=>{
+      let av=a[sortKey], bv=b[sortKey];
+      if(sortKey==='budgetType'){ av = budgetLabel(av); bv = budgetLabel(bv); }
+      if(sortKey==='month'){ av = monthName(av); bv = monthName(bv); }
+      if(typeof av === 'string'){ return sortDir*(av||'').localeCompare(bv||'', lang==='ar'?'ar':'en'); }
+      return sortDir*((av||0)-(bv||0));
+    });
+    return rows;
+  }
+
+  function editRowHtml(r){
+    return `<tr data-id="${r.id}" class="edit-row">
+      <td><input class="mini-inp e-name" value="${esc(r.name)}"></td>
+      <td><input class="mini-inp e-category" value="${esc(r.category)}"></td>
+      <td>${csel('editBudget-'+r.id, BUDGET_KEYS.map(k=>({value:k,label:budgetLabel(k)})), r.budgetType, null, {mini:true})}</td>
+      <td>${csel('editMonth-'+r.id, (lang==='ar'?MONTHS_AR:MONTHS_EN).map((m,i)=>({value:i,label:m})), r.month, null, {mini:true})}</td>
+      <td><input class="mini-inp e-year" type="number" value="${r.year}" style="width:70px;"></td>
+      <td><input class="mini-inp e-before" type="number" value="${r.before}" style="width:90px;"></td>
+      <td><input class="mini-inp e-after" type="number" value="${r.after}" style="width:90px;"></td>
+      <td><div class="tbl-actions">
+        <button class="icon-btn ok" data-action="save">${icon('check',14)}</button>
+        <button class="icon-btn cancel" data-action="cancel">${icon('x',14)}</button>
+      </div></td>
+    </tr>`;
+  }
+  function viewRowHtml(r, i){
+    return `<tr data-id="${r.id}" style="animation:rise .3s ease ${Math.min(i,10)*0.02}s both;">
+      <td style="font-weight:600;color:var(--fg);">${esc(r.name)}</td>
+      <td>${esc(r.category)||'—'}</td>
+      <td>${budgetTag(r.budgetType)}</td>
+      <td>${monthName(r.month)}</td>
+      <td>${r.year}</td>
+      <td style="color:var(--ink-85);font-weight:600;">${fmt(r.before)}${currencyUnit()}</td>
+      <td><span style="color:var(--fg);font-weight:700;">${fmt(r.after)}${currencyUnit()}</span> <span style="margin-inline-start:8px;">${varianceTag(r.before, r.after)}</span></td>
+      <td><div class="tbl-actions">
+        <button class="icon-btn" data-action="edit">${icon('pencil',13)}</button>
+        <button class="icon-btn danger" data-action="delete">${icon('trash',13)}</button>
+      </div></td>
+    </tr>`;
+  }
+
+  function groupKeyOf(r){
+    if(groupBy==='budgetType') return r.budgetType;
+    if(groupBy==='month') return String(r.month);
+    if(groupBy==='category') return r.category || '—';
+    return null;
+  }
+  function groupLabelOf(key){
+    if(groupBy==='budgetType') return budgetLabel(key);
+    if(groupBy==='month') return monthName(Number(key));
+    return key;
+  }
+
+  function updateTable(){
+    closeCsel();
+    const filtered = getFiltered();
+    main.querySelector('#countLabel').textContent = t('hosp_countSuffix',{n:filtered.length,t:state.records.length});
+    const tbody = main.querySelector('#tbody');
+    const emptyMsg = main.querySelector('#emptyMsg');
+    if(filtered.length===0){ tbody.innerHTML=''; emptyMsg.innerHTML = `<div class="empty">${t('hosp_noMatch')}</div>`; return; }
+    emptyMsg.innerHTML = '';
+
+    if(groupBy==='none'){
+      tbody.innerHTML = filtered.map((r,i)=> r.id===editingId ? editRowHtml(r) : viewRowHtml(r,i)).join('');
+      return;
+    }
+    const groups = {};
+    filtered.forEach(r=>{ const k = groupKeyOf(r); if(!groups[k]) groups[k]=[]; groups[k].push(r); });
+    let html = '';
+    Object.keys(groups).forEach(k=>{
+      const rows = groups[k];
+      const subtotal = rows.reduce((s,r)=>s+r.after,0);
+      const collapsed = collapsedGroups.has(k);
+      html += `<tr class="group-header" data-group="${esc(k)}"><td colspan="8">
+        <span style="display:inline-flex;align-items:center;gap:8px;">
+          <span style="transform:rotate(${collapsed?'-90deg':'0deg'});transition:transform .2s;display:inline-flex;">${icon('chevron',13)}</span>
+          ${esc(groupLabelOf(k))} · ${rows.length} ${t('hosp_groupRecords')} · ${t('hosp_groupTotal')}: ${fmt(subtotal)}${currencyUnit()}
+        </span>
+      </td></tr>`;
+      if(!collapsed) html += rows.map((r,i)=> r.id===editingId ? editRowHtml(r) : viewRowHtml(r,i)).join('');
+    });
+    tbody.innerHTML = html;
+    tbody.querySelectorAll('tr.group-header').forEach(tr=>{
+      tr.addEventListener('click', ()=>{
+        const k = tr.dataset.group;
+        if(collapsedGroups.has(k)) collapsedGroups.delete(k); else collapsedGroups.add(k);
+        updateTable();
+      });
+    });
+  }
+
+  main.querySelector('#tbody').addEventListener('click', (e)=>{
+    const btn = e.target.closest('[data-action]');
+    if(!btn) return;
+    const tr = btn.closest('tr');
+    const id = tr.dataset.id;
+    const action = btn.dataset.action;
+    if(action==='edit'){ editingId = id; updateTable(); }
+    else if(action==='cancel'){ editingId = null; updateTable(); }
+    else if(action==='delete'){ state.records = state.records.filter(r=>r.id!==id); toast(t('hosp_deleted'),'err'); updateTable(); scheduleAutoSync(); }
+    else if(action==='save'){
+      const idx = state.records.findIndex(r=>r.id===id);
+      state.records[idx] = {
+        ...state.records[idx],
+        name: tr.querySelector('.e-name').value.trim(),
+        category: tr.querySelector('.e-category').value.trim(),
+        budgetType: (cselRegistry['editBudget-'+id] && cselRegistry['editBudget-'+id].value) || state.records[idx].budgetType,
+        month: Number((cselRegistry['editMonth-'+id] && cselRegistry['editMonth-'+id].value) ?? state.records[idx].month),
+        year: Number(tr.querySelector('.e-year').value)||state.records[idx].year,
+        before: Number(tr.querySelector('.e-before').value)||0,
+        after: Number(tr.querySelector('.e-after').value)||0,
+      };
+      editingId = null; toast(t('hosp_updated')); updateTable(); scheduleAutoSync();
+    }
+  });
+
+  main.querySelector('#searchInput').addEventListener('input', (e)=>{ query = e.target.value; updateTable(); });
+  main.querySelector('#exportBtn').addEventListener('click', ()=> exportRecords(getFiltered()));
+  main.querySelector('#importShortcut').addEventListener('click', ()=> switchTab('import'));
+  main.querySelectorAll('#groupSeg .seg-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      groupBy = btn.dataset.g;
+      main.querySelectorAll('#groupSeg .seg-btn').forEach(b=>b.classList.toggle('active', b===btn));
+      updateTable();
+    });
+  });
+  main.querySelectorAll('#trendSeg .seg-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      trendFilter = btn.dataset.tr;
+      main.querySelectorAll('#trendSeg .seg-btn').forEach(b=>b.classList.toggle('active', b===btn));
+      updateTable();
+    });
+  });
+
+  renderHead();
+  updateTable();
+}
+
+/* ============================== FUZZY SEARCH ============================== */
+/* normalized substring match scores highest; otherwise falls back to in-order
+   subsequence matching (typo/partial tolerant) with a bonus for consecutive hits */
+function fuzzyScore(query, target){
+  const q = normalizeText(query), t = normalizeText(target);
+  if(!q) return 0;
+  if(!t) return -Infinity;
+  const idx = t.indexOf(q);
+  if(idx !== -1) return 1000 - idx - (t.length - q.length) * 0.05;
+  let ti = 0, score = 0, streak = 0;
+  for(let qi = 0; qi < q.length; qi++){
+    const ch = q[qi];
+    let found = false;
+    while(ti < t.length){
+      if(t[ti] === ch){ found = true; score += 2 + streak; streak++; ti++; break; }
+      streak = 0; ti++;
+    }
+    if(!found) return -Infinity;
+  }
+  return score;
+}
+
+/* ============================== SPOTLIGHT (Ctrl/Cmd+K) ============================== */
+let pendingHospitalSearch = null;
+let spotlightIndex = -1, spotlightItems = [];
+
+function spotlightCommands(){
+  return [
+    { icon:'plus', title:t('cmd_goEntry'), action:()=>switchTab('entry') },
+    { icon:'upload', title:t('cmd_goImport'), action:()=>switchTab('import') },
+    { icon:'grid', title:t('cmd_goDashboard'), action:()=>switchTab('dashboard') },
+    { icon:'building', title:t('cmd_goHospitals'), action:()=>switchTab('hospitals') },
+    { icon:'sun', title:t('cmd_themeLight'), action:()=>{ theme='light'; applyTheme(); renderHeader(); saveCache(); } },
+    { icon:'moon', title:t('cmd_themeDark'), action:()=>{ theme='dark'; applyTheme(); renderHeader(); saveCache(); } },
+    { icon:'monitor', title:t('cmd_themeSystem'), action:()=>{ theme='system'; applyTheme(); renderHeader(); saveCache(); } },
+    { icon:'globe', title: lang==='ar' ? 'Switch to English' : 'التبديل إلى العربية', action:()=>{ const b = document.getElementById('langToggleBtn'); if(b) b.click(); } },
+    { icon:'gear', title:t('cmd_openSettings'), action:()=>{ sync.panelOpen = true; renderSyncBar(); const g = document.getElementById('syncGearBtn'); if(g) g.scrollIntoView({behavior:'smooth', block:'center'}); } },
+    { icon:'refresh', title:t('cmd_syncNow'), action:()=> syncNow() },
+    { icon:'download', title:t('cmd_exportData'), action:()=> exportRecords(state.records) },
+    { icon:'filesheet', title:t('cmd_downloadTemplate'), action:()=> downloadTemplate() },
+    { icon:'cloud', title:t('cmd_exportBackup'), action:()=> exportBackup() },
+    { icon:'upload', title:t('cmd_importBackup'), action:()=>{ const f = document.getElementById('backupFileInput'); if(f) f.click(); } },
+  ];
+}
+
+function ensureSpotlight(){
+  let el = document.getElementById('spotlightBackdrop');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'spotlightBackdrop';
+    el.className = 'spotlight-backdrop';
+    el.innerHTML = `
+      <div class="spotlight-modal">
+        <div class="spotlight-input-wrap">
+          ${icon('search',17)}
+          <input class="spotlight-input" id="spotlightInput" placeholder="" autocomplete="off">
+          <span class="spotlight-kbd">Esc</span>
+        </div>
+        <div class="spotlight-results" id="spotlightResults"></div>
+      </div>`;
+    document.body.appendChild(el);
+    el.addEventListener('click', (e)=>{ if(e.target === el) closeSpotlight(); });
+    el.querySelector('#spotlightInput').addEventListener('input', (e)=> renderSpotlightResults(e.target.value));
+  }
+  return el;
+}
+function openSpotlight(){
+  closeCsel();
+  const el = ensureSpotlight();
+  el.querySelector('#spotlightInput').placeholder = t('spotlight_placeholder');
+  requestAnimationFrame(()=> el.classList.add('open'));
+  const input = el.querySelector('#spotlightInput');
+  input.value = '';
+  renderSpotlightResults('');
+  setTimeout(()=> input.focus(), 30);
+}
+function closeSpotlight(){
+  const el = document.getElementById('spotlightBackdrop');
+  if(el) el.classList.remove('open');
+  spotlightIndex = -1; spotlightItems = [];
+}
+function runSpotlightItem(item){
+  closeSpotlight();
+  item.run();
+}
+function renderSpotlightResults(query){
+  const resultsEl = document.getElementById('spotlightResults');
+  const q = query.trim();
+
+  const cmdMatches = spotlightCommands()
+    .map(c=>({ ...c, score: q ? fuzzyScore(q, c.title) : 0 }))
+    .filter(c=> q ? c.score > -Infinity : true)
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,6);
+
+  const recMatches = !q ? [] : state.records
+    .map(r=>({ r, score: Math.max(fuzzyScore(q, r.name), fuzzyScore(q, r.category), fuzzyScore(q, budgetLabel(r.budgetType)) - 200) }))
+    .filter(x=>x.score > -Infinity)
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,7);
+
+  spotlightItems = [];
+  let html = '';
+  if(cmdMatches.length){
+    html += `<div class="spotlight-section-label">${t('spotlight_sectionCommands')}</div>`;
+    cmdMatches.forEach(c=>{
+      const i = spotlightItems.length;
+      spotlightItems.push({ run: c.action });
+      html += `<div class="spotlight-item" data-i="${i}">
+        <span class="spotlight-item-icon">${icon(c.icon,16)}</span>
+        <span class="spotlight-item-title">${esc(c.title)}</span>
+      </div>`;
+    });
+  }
+  if(recMatches.length){
+    html += `<div class="spotlight-section-label">${t('spotlight_sectionRecords')}</div>`;
+    recMatches.forEach(({r})=>{
+      const i = spotlightItems.length;
+      spotlightItems.push({ run: ()=>{ pendingHospitalSearch = r.name; switchTab('hospitals'); } });
+      html += `<div class="spotlight-item" data-i="${i}">
+        <span class="spotlight-item-icon">${icon('building',15)}</span>
+        <span style="min-width:0;flex:1;">
+          <div class="spotlight-item-title">${esc(r.name)}</div>
+          <div class="spotlight-item-sub">${esc(r.category||'—')} · ${esc(budgetLabel(r.budgetType))} · ${esc(monthName(r.month))} ${r.year} · ${fmt(r.after)}${currencyUnit()}</div>
+        </span>
+      </div>`;
+    });
+  }
+  resultsEl.innerHTML = spotlightItems.length ? html : `<div class="spotlight-empty">${t('spotlight_empty')}</div>`;
+  spotlightIndex = spotlightItems.length ? 0 : -1;
+  spotlightHighlight();
+  resultsEl.querySelectorAll('.spotlight-item').forEach(elm=>{
+    elm.addEventListener('click', ()=> runSpotlightItem(spotlightItems[Number(elm.dataset.i)]));
+  });
+}
+function spotlightHighlight(){
+  const resultsEl = document.getElementById('spotlightResults');
+  if(!resultsEl) return;
+  resultsEl.querySelectorAll('.spotlight-item').forEach(elm=>{
+    const on = Number(elm.dataset.i) === spotlightIndex;
+    elm.classList.toggle('hl', on);
+    if(on) elm.scrollIntoView({block:'nearest'});
+  });
+}
+
+document.addEventListener('keydown', (e)=>{
+  /* e.code is the physical key position, so Ctrl+K fires the same regardless of
+     the active keyboard layout (Arabic, English, or anything else) */
+  if(e.code === 'KeyK' && (e.ctrlKey || e.metaKey)){
+    e.preventDefault();
+    const el = document.getElementById('spotlightBackdrop');
+    if(el && el.classList.contains('open')) closeSpotlight(); else openSpotlight();
+    return;
+  }
+  const el = document.getElementById('spotlightBackdrop');
+  if(!el || !el.classList.contains('open')) return;
+  if(e.key === 'Escape'){ closeSpotlight(); }
+  else if(e.key === 'ArrowDown'){ e.preventDefault(); if(spotlightItems.length){ spotlightIndex = Math.min(spotlightItems.length-1, spotlightIndex+1); spotlightHighlight(); } }
+  else if(e.key === 'ArrowUp'){ e.preventDefault(); if(spotlightItems.length){ spotlightIndex = Math.max(0, spotlightIndex-1); spotlightHighlight(); } }
+  else if(e.key === 'Enter'){ e.preventDefault(); if(spotlightIndex>=0 && spotlightItems[spotlightIndex]) runSpotlightItem(spotlightItems[spotlightIndex]); }
+});
+
+/* ============================== INIT ============================== */
+loadCache();
+document.documentElement.lang = lang;
+document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
+document.title = t('appName');
+applyTheme();
+renderHeader();
+renderSyncBar();
+renderTabbar();
+renderMain();
+</script>
+</body>
+</html>
