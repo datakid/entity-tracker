@@ -20,7 +20,6 @@
 <style>
   :root{
     color-scheme: dark;
-    /* calm teal as the primary accent, warm gold reserved as a restrained secondary accent */
     --bg:#0a0d0d;
     --accent-light:#8fd4ea;
     --accent:#2f93b0;
@@ -94,6 +93,8 @@
     --toast-inset:rgba(255,255,255,.2);
 
     --grain-opacity:.035;
+    --scrim-near:rgba(10,13,13,.5);
+    --scrim-far:rgba(4,6,6,.72);
     --dot-badge-bg:rgba(255,255,255,.055);
     --group-head-bg:rgba(255,255,255,.035);
   }
@@ -167,6 +168,8 @@
     --toast-inset:rgba(255,255,255,.7);
 
     --grain-opacity:.022;
+    --scrim-near:rgba(25,26,24,.14);
+    --scrim-far:rgba(25,26,24,.26);
     --dot-badge-bg:rgba(25,26,24,.045);
     --group-head-bg:rgba(25,26,24,.03);
   }
@@ -198,6 +201,7 @@
       --bar-track-bg:rgba(25,26,24,.09);
       --toast-border:rgba(25,26,24,.12); --toast-shadow:rgba(25,26,24,.2); --toast-inset:rgba(255,255,255,.7);
       --grain-opacity:.022; --dot-badge-bg:rgba(25,26,24,.045); --group-head-bg:rgba(25,26,24,.03);
+      --scrim-near:rgba(25,26,24,.14); --scrim-far:rgba(25,26,24,.26);
     }
   }
 
@@ -229,7 +233,6 @@
   @keyframes grow{from{width:0;}}
   @keyframes toastIn{from{opacity:0;transform:translate(-50%,-12px);}to{opacity:1;transform:translate(-50%,0);}}
 
-  /* ---------------- liquid glass: layered depth, crisp center, lensed rim ---------------- */
   .glass{
     position:relative;isolation:isolate;overflow:hidden;border-radius:var(--r-lg);
     border:1px solid var(--glass-border);background:var(--glass-bg);
@@ -237,7 +240,6 @@
     box-shadow:0 30px 60px -26px var(--shadow-ambient),0 9px 22px -12px var(--shadow-contact),inset 0 1px 0 var(--shadow-inset-top),inset 0 -22px 34px -30px var(--shadow-contact);
     transition:box-shadow .4s ease, background .3s ease, border-color .3s ease;
   }
-  /* thin material variant for chrome (tab bar / sync bar) — less opaque, more transparent */
   .glass.thin{backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);background:color-mix(in srgb, var(--glass-bg) 60%, transparent);}
   .glass::before{
     content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:20px;
@@ -315,7 +317,6 @@
   .inp::placeholder{color:var(--placeholder);}
   .inp:focus{border-color:var(--accent-ring);box-shadow:0 0 0 4px var(--accent-soft), inset 0 1px 0 var(--input-shadow);}
 
-  /* ---------------- custom dropdown (fully custom, not a styled native <select>) ---------------- */
   .csel{position:relative;}
   .csel-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;
     border-radius:var(--r-md);border:1px solid var(--input-border);background:var(--input-bg);
@@ -340,13 +341,12 @@
   .csel-option:hover, .csel-option.hl{background:var(--icon-btn-hover-bg);}
   .csel-option.sel{background:var(--accent-soft);color:var(--accent);font-weight:600;}
 
-  /* ---------------- spotlight (Ctrl/Cmd+K) ---------------- */
   .spotlight-trigger-btn{border:1px solid var(--input-border);background:var(--input-bg);color:var(--ink-8);
     border-radius:var(--r-pill);padding:8px 13px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:7px;
     transition:.2s;font-family:inherit;cursor:pointer;}
   .spotlight-trigger-btn:hover{border-color:var(--accent-ring);color:var(--fg);box-shadow:0 0 0 4px var(--accent-soft);}
   .spotlight-kbd{font-size:10.5px;color:var(--muted2);border:1px solid var(--divider);border-radius:5px;padding:1px 5px;flex-shrink:0;}
-  .spotlight-backdrop{position:fixed;inset:0;z-index:1200;background:radial-gradient(120% 100% at 50% 0%, rgba(10,13,13,.5), rgba(4,6,6,.72));
+  .spotlight-backdrop{position:fixed;inset:0;z-index:1200;background:radial-gradient(120% 100% at 50% 0%, var(--scrim-near), var(--scrim-far));
     backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
     display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;
     opacity:0;pointer-events:none;transition:opacity .2s ease;}
@@ -380,6 +380,11 @@
   .spotlight-item-title{font-size:14px;font-weight:600;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .spotlight-item-sub{font-size:12px;color:var(--muted2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;}
   .spotlight-empty{padding:38px 16px;text-align:center;color:var(--muted2);font-size:13px;}
+  .spotlight-footer{display:flex;align-items:center;gap:16px;padding:11px 20px;border-top:1px solid var(--divider-soft);
+    flex-shrink:0;font-size:11px;color:var(--muted2);}
+  .spotlight-footer-hint{display:flex;align-items:center;gap:6px;}
+  @keyframes spotlightItemIn{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
+  .spotlight-item{animation:spotlightItemIn .18s ease backwards;}
 
   .pill-row{display:flex;gap:8px;flex-wrap:wrap;}
   .budget-pill{flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:var(--r-md);
@@ -517,7 +522,6 @@ try{
   }
 }catch(e){}
 
-/* ============================== ICONS ============================== */
 const ICONS = {
   plus:'<path d="M12 5v14M5 12h14"/>',
   upload:'<path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M4 21h16"/>',
@@ -551,7 +555,6 @@ function icon(name, size=16, cls=''){
   return `<svg class="${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||''}</svg>`;
 }
 
-/* ============================== I18N ============================== */
 let lang = 'ar';
 const I18N = {
   ar:{
@@ -610,6 +613,7 @@ const I18N = {
     budget_newborns:'مواليد', budget_students:'طلاب', budget_workforce:'قوى عاملة',
     spotlight_placeholder:'ابحث عن سجل أو اكتب أمرًا...', spotlight_empty:'لا توجد نتائج',
     spotlight_sectionCommands:'أوامر', spotlight_sectionRecords:'السجلات',
+    spotlight_hintNav:'للتنقل', spotlight_hintSelect:'للاختيار', spotlight_hintClose:'للإغلاق',
     cmd_goEntry:'الانتقال إلى إدخال البيانات', cmd_goImport:'الانتقال إلى الاستيراد',
     cmd_goDashboard:'الانتقال إلى لوحة التحكم', cmd_goHospitals:'الانتقال إلى الجهات',
     cmd_themeLight:'التبديل إلى المظهر الفاتح', cmd_themeDark:'التبديل إلى المظهر الداكن', cmd_themeSystem:'التبديل إلى مظهر النظام',
@@ -675,6 +679,7 @@ const I18N = {
     budget_newborns:'Newborns', budget_students:'Students', budget_workforce:'Workforce',
     spotlight_placeholder:'Search records or type a command...', spotlight_empty:'No results',
     spotlight_sectionCommands:'Commands', spotlight_sectionRecords:'Records',
+    spotlight_hintNav:'to navigate', spotlight_hintSelect:'to select', spotlight_hintClose:'to close',
     cmd_goEntry:'Go to Data Entry', cmd_goImport:'Go to Import',
     cmd_goDashboard:'Go to Dashboard', cmd_goHospitals:'Go to Entities',
     cmd_themeLight:'Switch to light theme', cmd_themeDark:'Switch to dark theme', cmd_themeSystem:'Switch to system theme',
@@ -691,7 +696,6 @@ function t(key, vars){
   return str;
 }
 
-/* ============================== DATA MODEL ============================== */
 const BUDGET_KEYS = ['newborns','students','workforce'];
 const BUDGET_HEX = { newborns:'#8fd4ea', students:'#2f93b0', workforce:'#1c6b83' };
 const MONTHS_AR = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
@@ -738,7 +742,6 @@ const uid = () => Math.random().toString(36).slice(2,10);
 const fmt = (n) => new Intl.NumberFormat('en-US').format(Math.round(n||0));
 const esc = (s) => String(s??"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-/* normalized text matching — collapses common Arabic letter variants + diacritics so search "just works" */
 function normalizeText(s){
   return String(s||'')
     .replace(/[\u064B-\u0652\u0670\u0640]/g,'')
@@ -763,8 +766,6 @@ let state = {
   ],
 };
 
-/* ============================== TOAST ============================== */
-/* ============================== CUSTOM DROPDOWN (replaces native <select> entirely) ============================== */
 const cselRegistry = {};
 let cselOpenId = null, cselHighlightIdx = -1;
 
@@ -897,7 +898,6 @@ function toast(text, kind="ok"){
   window.__toastTimer = setTimeout(()=>{ host.innerHTML=''; }, 2800);
 }
 
-/* ============================== SMALL RENDER HELPERS ============================== */
 function budgetTag(key){
   const hex = BUDGET_HEX[key] || BUDGET_HEX.newborns;
   return `<span class="tag"><span class="dot" style="background:${hex}"></span>${esc(budgetLabel(key))}</span>`;
@@ -908,11 +908,9 @@ function varianceTag(before, after){
   return `<span class="var-tag" style="background:${down?'var(--good-soft)':'var(--bad-soft)'};color:${down?'var(--good)':'var(--bad)'}">${icon(down?'trenddown':'trendup',12)}${Math.abs(pct).toFixed(1)}%</span>`;
 }
 
-/* ============================== THEME ============================== */
 let theme = 'system';
 function applyTheme(){ document.documentElement.setAttribute('data-theme', theme); }
 
-/* ============================== HEADER ============================== */
 function renderHeader(){
   const el = document.getElementById('headerBar');
   el.innerHTML = `
@@ -946,7 +944,6 @@ function renderHeader(){
   });
 }
 
-/* ============================== GOOGLE SHEETS SYNC ============================== */
 let appSettings = { currencyUnit: '' };
 function currencyUnit(){ return appSettings.currencyUnit ? ' ' + appSettings.currencyUnit : ''; }
 
@@ -1020,8 +1017,6 @@ function parseSheetRowsToRecords(values){
   });
   return out;
 }
-/* runs once right after a successful connection: reads whatever is already in the sheet first,
-   so we never silently overwrite real spreadsheet data with our local demo/placeholder records */
 async function initialConnectSync(){
   sync.syncing = true; updateSyncBar();
   try{
@@ -1143,7 +1138,6 @@ function renderSyncBar(){
 }
 function updateSyncBar(){ renderSyncBar(); }
 
-/* ============================== CACHE (localStorage autosave) ============================== */
 const CACHE_KEY = 'entitiesStatementApp:cache:v1';
 function saveCache(){
   try{
@@ -1154,7 +1148,7 @@ function saveCache(){
       theme, lang,
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
-  }catch(e){ /* storage unavailable or full — app still works, just without local persistence */ }
+  }catch(e){}
 }
 function loadCache(){
   try{
@@ -1171,10 +1165,9 @@ function loadCache(){
     }
     if(data && data.theme) theme = data.theme;
     if(data && data.lang) lang = data.lang;
-  }catch(e){ /* corrupt cache — fall back to defaults */ }
+  }catch(e){}
 }
 
-/* ============================== BACKUP (full export/import as JSON) ============================== */
 function exportBackup(){
   const payload = {
     app:'entitiesStatementApp', version:1, exportedAt:new Date().toISOString(),
@@ -1220,7 +1213,6 @@ function importBackupFile(file){
   reader.readAsText(file, 'utf-8');
 }
 
-/* ============================== TABS ============================== */
 function switchTab(key){
   if(state.tab === key) return;
   closeCsel();
@@ -1264,7 +1256,6 @@ function renderMain(){
   else if(state.tab==='hospitals') renderHospitalsTab(main);
 }
 
-/* ============================== ENTRY TAB ============================== */
 function renderEntryTab(main){
   main.innerHTML = `
   <div class="grid grid-5">
@@ -1388,7 +1379,6 @@ function renderEntryTab(main){
   });
 }
 
-/* ============================== XLSX HELPERS ============================== */
 function downloadTemplate(){
   const wb = XLSX.utils.book_new();
   const headers = currentHeaders();
@@ -1430,7 +1420,6 @@ function normalizeRow(row){
     after: Number(getColumnValue(row,'after')) || 0,
   };
 }
-/* proper Arabic encoding: CSV needs explicit UTF-8 text decoding; xlsx/xls already store unicode natively */
 function readWorkbookGrid(file){
   return new Promise((resolve, reject)=>{
     const isCsv = /\.csv$/i.test(file.name);
@@ -1462,7 +1451,6 @@ function readWorkbookObjects(file){
   });
 }
 
-/* ============================== IMPORT TAB ============================== */
 let importMode = 'tabular';
 let pendingPreview = null;                 // tabular: array of records
 let tabularIncluded = null;                // tabular: Set of row indices included
@@ -1803,7 +1791,6 @@ function renderFreeformImport(root){
   }
 }
 
-/* ============================== DASHBOARD TAB (actionable, filterable) ============================== */
 function svgArea(data){
   const w=640,h=220,padL=6,padR=6,padT=10,padB=26;
   const innerW=w-padL-padR, innerH=h-padT-padB;
@@ -1946,7 +1933,6 @@ function renderDashboardTab(main){
   render();
 }
 
-/* ============================== HOSPITALS TAB (normalized search + group-by) ============================== */
 function renderHospitalsTab(main){
   let query = pendingHospitalSearch || ''; pendingHospitalSearch = null;
   let sortKey='name', sortDir=1, editingId=null, groupBy='none', trendFilter='all';
@@ -2148,9 +2134,6 @@ function renderHospitalsTab(main){
   updateTable();
 }
 
-/* ============================== FUZZY SEARCH ============================== */
-/* normalized substring match scores highest; otherwise falls back to in-order
-   subsequence matching (typo/partial tolerant) with a bonus for consecutive hits */
 function fuzzyScore(query, target){
   const q = normalizeText(query), t = normalizeText(target);
   if(!q) return 0;
@@ -2170,7 +2153,6 @@ function fuzzyScore(query, target){
   return score;
 }
 
-/* ============================== SPOTLIGHT (Ctrl/Cmd+K) ============================== */
 let pendingHospitalSearch = null;
 let spotlightIndex = -1, spotlightItems = [];
 
@@ -2207,6 +2189,11 @@ function ensureSpotlight(){
           <span class="spotlight-kbd">Esc</span>
         </div>
         <div class="spotlight-results" id="spotlightResults"></div>
+        <div class="spotlight-footer">
+          <span class="spotlight-footer-hint"><span class="spotlight-kbd">↑↓</span><span id="spotlightHintNav"></span></span>
+          <span class="spotlight-footer-hint"><span class="spotlight-kbd">↵</span><span id="spotlightHintSelect"></span></span>
+          <span class="spotlight-footer-hint"><span class="spotlight-kbd">Esc</span><span id="spotlightHintClose"></span></span>
+        </div>
       </div>`;
     document.body.appendChild(el);
     el.addEventListener('click', (e)=>{ if(e.target === el) closeSpotlight(); });
@@ -2218,6 +2205,9 @@ function openSpotlight(){
   closeCsel();
   const el = ensureSpotlight();
   el.querySelector('#spotlightInput').placeholder = t('spotlight_placeholder');
+  el.querySelector('#spotlightHintNav').textContent = t('spotlight_hintNav');
+  el.querySelector('#spotlightHintSelect').textContent = t('spotlight_hintSelect');
+  el.querySelector('#spotlightHintClose').textContent = t('spotlight_hintClose');
   requestAnimationFrame(()=> el.classList.add('open'));
   const input = el.querySelector('#spotlightInput');
   input.value = '';
@@ -2256,7 +2246,7 @@ function renderSpotlightResults(query){
     cmdMatches.forEach(c=>{
       const i = spotlightItems.length;
       spotlightItems.push({ run: c.action });
-      html += `<div class="spotlight-item" data-i="${i}">
+      html += `<div class="spotlight-item" data-i="${i}" style="animation-delay:${Math.min(i,8)*16}ms">
         <span class="spotlight-item-icon">${icon(c.icon,16)}</span>
         <span class="spotlight-item-title">${esc(c.title)}</span>
       </div>`;
@@ -2267,7 +2257,7 @@ function renderSpotlightResults(query){
     recMatches.forEach(({r})=>{
       const i = spotlightItems.length;
       spotlightItems.push({ run: ()=>{ pendingHospitalSearch = r.name; switchTab('hospitals'); } });
-      html += `<div class="spotlight-item" data-i="${i}">
+      html += `<div class="spotlight-item" data-i="${i}" style="animation-delay:${Math.min(i,8)*16}ms">
         <span class="spotlight-item-icon">${icon('building',15)}</span>
         <span style="min-width:0;flex:1;">
           <div class="spotlight-item-title">${esc(r.name)}</div>
@@ -2294,8 +2284,6 @@ function spotlightHighlight(){
 }
 
 document.addEventListener('keydown', (e)=>{
-  /* e.code is the physical key position, so Ctrl+K fires the same regardless of
-     the active keyboard layout (Arabic, English, or anything else) */
   if(e.code === 'KeyK' && (e.ctrlKey || e.metaKey)){
     e.preventDefault();
     const el = document.getElementById('spotlightBackdrop');
@@ -2310,7 +2298,6 @@ document.addEventListener('keydown', (e)=>{
   else if(e.key === 'Enter'){ e.preventDefault(); if(spotlightIndex>=0 && spotlightItems[spotlightIndex]) runSpotlightItem(spotlightItems[spotlightIndex]); }
 });
 
-/* ============================== INIT ============================== */
 loadCache();
 document.documentElement.lang = lang;
 document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
