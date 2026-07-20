@@ -384,7 +384,7 @@
     flex-shrink:0;font-size:11px;color:var(--muted2);}
   .spotlight-footer-hint{display:flex;align-items:center;gap:6px;}
   @keyframes spotlightItemIn{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
-  .spotlight-item{animation:spotlightItemIn .18s ease backwards;}
+  .spotlight-item.spotlight-enter{animation:spotlightItemIn .18s ease backwards;}
 
   .pill-row{display:flex;gap:8px;flex-wrap:wrap;}
   .budget-pill{flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:var(--r-md);
@@ -2154,7 +2154,7 @@ function fuzzyScore(query, target){
 }
 
 let pendingHospitalSearch = null;
-let spotlightIndex = -1, spotlightItems = [];
+let spotlightIndex = -1, spotlightItems = [], spotlightDebounce = null;
 
 function spotlightCommands(){
   return [
@@ -2197,7 +2197,11 @@ function ensureSpotlight(){
       </div>`;
     document.body.appendChild(el);
     el.addEventListener('click', (e)=>{ if(e.target === el) closeSpotlight(); });
-    el.querySelector('#spotlightInput').addEventListener('input', (e)=> renderSpotlightResults(e.target.value));
+    el.querySelector('#spotlightInput').addEventListener('input', (e)=>{
+      const val = e.target.value;
+      clearTimeout(spotlightDebounce);
+      spotlightDebounce = setTimeout(()=> renderSpotlightResults(val), 70);
+    });
   }
   return el;
 }
@@ -2211,19 +2215,20 @@ function openSpotlight(){
   requestAnimationFrame(()=> el.classList.add('open'));
   const input = el.querySelector('#spotlightInput');
   input.value = '';
-  renderSpotlightResults('');
+  renderSpotlightResults('', true);
   setTimeout(()=> input.focus(), 30);
 }
 function closeSpotlight(){
   const el = document.getElementById('spotlightBackdrop');
   if(el) el.classList.remove('open');
+  clearTimeout(spotlightDebounce);
   spotlightIndex = -1; spotlightItems = [];
 }
 function runSpotlightItem(item){
   closeSpotlight();
   item.run();
 }
-function renderSpotlightResults(query){
+function renderSpotlightResults(query, animate=false){
   const resultsEl = document.getElementById('spotlightResults');
   const q = query.trim();
 
@@ -2241,12 +2246,14 @@ function renderSpotlightResults(query){
 
   spotlightItems = [];
   let html = '';
+  const enterCls = animate ? ' spotlight-enter' : '';
+  const enterStyle = i => animate ? ` style="animation-delay:${Math.min(i,8)*16}ms"` : '';
   if(cmdMatches.length){
     html += `<div class="spotlight-section-label">${t('spotlight_sectionCommands')}</div>`;
     cmdMatches.forEach(c=>{
       const i = spotlightItems.length;
       spotlightItems.push({ run: c.action });
-      html += `<div class="spotlight-item" data-i="${i}" style="animation-delay:${Math.min(i,8)*16}ms">
+      html += `<div class="spotlight-item${enterCls}" data-i="${i}"${enterStyle(i)}>
         <span class="spotlight-item-icon">${icon(c.icon,16)}</span>
         <span class="spotlight-item-title">${esc(c.title)}</span>
       </div>`;
@@ -2257,7 +2264,7 @@ function renderSpotlightResults(query){
     recMatches.forEach(({r})=>{
       const i = spotlightItems.length;
       spotlightItems.push({ run: ()=>{ pendingHospitalSearch = r.name; switchTab('hospitals'); } });
-      html += `<div class="spotlight-item" data-i="${i}" style="animation-delay:${Math.min(i,8)*16}ms">
+      html += `<div class="spotlight-item${enterCls}" data-i="${i}"${enterStyle(i)}>
         <span class="spotlight-item-icon">${icon('building',15)}</span>
         <span style="min-width:0;flex:1;">
           <div class="spotlight-item-title">${esc(r.name)}</div>
