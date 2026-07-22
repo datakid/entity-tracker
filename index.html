@@ -558,6 +558,13 @@ const I18N = {
     cloud_codeInvalid:'لا توجد بيانات مرتبطة بهذا الرمز', cloud_linkSuccess:'تم الربط بنجاح',
     cloud_pushFail:'فشل الرفع: ', cloud_pullFail:'فشل السحب: ',
     cloud_unlinked:'تم إلغاء الربط (بيانات السحابة لم تتأثر)', cloud_needsHttps:'المزامنة السحابية تحتاج فتح الصفحة عبر https',
+    cloud_offline:'لا يوجد اتصال بالإنترنت — تحقق من الشبكة وحاول مجددًا',
+    cloud_errPermission:'الوصول مرفوض — تحقق من صلاحيات قاعدة البيانات', cloud_errUnavailable:'تعذّر الوصول إلى الخادم — حاول مجددًا خلال قليل',
+    cloud_errNotFound:'المستند غير موجود', cloud_errQuota:'تم تجاوز الحد المسموح به من الطلبات — حاول لاحقًا',
+    cloud_errTimeout:'انتهت مهلة الاتصال بالخادم', cloud_errGeneric:'حدث خطأ غير متوقع',
+    cloud_remoteNewer:'توجد نسخة أحدث في السحابة — اضغط للمزامنة',
+    cloud_docTooLarge:'حجم البيانات كبير جدًا على مستند سحابي واحد ({n} تقريبًا) — فكّر بأرشفة السجلات القديمة قبل المزامنة',
+    cloud_docNearLimit:'حجم البيانات يقترب من الحد الأقصى لمستند سحابي واحد — فكّر بالأرشفة قريبًا',
     records_approachingLimit:'عدد السجلات ({n}) يقترب من الحد الأقصى — فكّر بالأرشفة قريبًا',
     settings_title:'الإعدادات', settings_generalTitle:'إعدادات عامة',
     settings_currencyUnit:'وحدة العملة (اختياري)', settings_currencyUnitPh:'مثال: ر.س — اتركه فارغًا لعدم إظهار وحدة',
@@ -598,13 +605,17 @@ const I18N = {
     dash_typeTitle:'توزيع أنواع الموازنة', dash_typeSub:'حسب المبلغ بعد المراجعة',
     dash_topTitle:'أعلى الجهات إنفاقًا', dash_topHint:'للتفصيل حسب الزيادة أو النقصان راجع تبويب الجهات',
     dash_noData:'لا توجد بيانات كافية',
+    dash_exportFiltered:'تصدير النتائج (Excel)',
     hosp_title:'إدارة الجهات المتعاقدة', hosp_searchPh:'بحث بالاسم أو التصنيف...', hosp_export:'تصدير', hosp_import:'استيراد',
     hosp_groupBy:'تجميع:', hosp_groupNone:'بدون', hosp_groupType:'الموازنة', hosp_groupMonth:'الشهر', hosp_groupCategory:'التصنيف',
     hosp_trend:'الاتجاه بعد المراجعة:', hosp_trendAll:'الكل', hosp_trendUp:'ازداد', hosp_trendDown:'قلّ',
     col_name:'الاسم', col_category:'التصنيف', col_budget:'الموازنة', col_month:'الشهر', col_year:'السنة', col_before:'قبل المراجعة', col_after:'بعد المراجعة',
     hosp_countSuffix:'{n} من أصل {t} سجل', hosp_noMatch:'لا توجد نتائج مطابقة', hosp_deleted:'تم حذف السجل', hosp_updated:'تم تحديث السجل',
     hosp_groupRecords:'سجل', hosp_groupTotal:'الإجمالي',
-    budget_newborns:'مواليد', budget_students:'طلاب', budget_workforce:'قوى عاملة',
+    budget_newborns:'مواليد', budget_students:'طلاب', budget_workforce:'قوى عاملة', budget_total:'إجمالي',
+    budget_totalHint:'قيمة إجمالية غير مصنّفة حسب الفئة — لم يُحدَّد المصدر ضمن مواليد أو طلاب أو قوى عاملة',
+    dash_totalNoticeOne:'يوجد سجل واحد مسجّل كـ"إجمالي" دون تفصيل حسب الفئة، وهو مضمّن في الأرقام أعلاه',
+    dash_totalNotice:'يوجد {n} سجلات مسجّلة كـ"إجمالي" دون تفصيل حسب الفئة، وهي مضمّنة في الأرقام أعلاه',
     spotlight_placeholder:'ابحث عن سجل أو اكتب أمرًا...', spotlight_empty:'لا توجد نتائج',
     spotlight_sectionCommands:'أوامر', spotlight_sectionRecords:'السجلات',
     spotlight_hintNav:'للتنقل', spotlight_hintSelect:'للاختيار', spotlight_hintClose:'للإغلاق',
@@ -634,6 +645,13 @@ const I18N = {
     cloud_codeInvalid:'No data found for this code', cloud_linkSuccess:'Linked successfully',
     cloud_pushFail:'Push failed: ', cloud_pullFail:'Pull failed: ',
     cloud_unlinked:'Unlinked (cloud data was not affected)', cloud_needsHttps:'Cloud sync requires the page to be opened over https',
+    cloud_offline:'No internet connection — check your network and try again',
+    cloud_errPermission:'Access denied — check database permissions', cloud_errUnavailable:'Could not reach the server — try again shortly',
+    cloud_errNotFound:'Document not found', cloud_errQuota:'Request limit exceeded — try again later',
+    cloud_errTimeout:'The connection to the server timed out', cloud_errGeneric:'An unexpected error occurred',
+    cloud_remoteNewer:'A newer version is available in the cloud — tap to sync',
+    cloud_docTooLarge:'The data is too large for a single cloud document (~{n}) — consider archiving older records before syncing',
+    cloud_docNearLimit:'The data is approaching the size limit for a single cloud document — consider archiving soon',
     records_approachingLimit:'Record count ({n}) is approaching the storage limit — consider archiving soon',
     settings_title:'Settings', settings_generalTitle:'General settings',
     settings_currencyUnit:'Currency unit (optional)', settings_currencyUnitPh:'e.g. SAR — leave blank to show no unit',
@@ -674,13 +692,17 @@ const I18N = {
     dash_typeTitle:'Budget type breakdown', dash_typeSub:'By amount after review',
     dash_topTitle:'Top spenders', dash_topHint:'For increase/decrease detail, see the Entities tab',
     dash_noData:'Not enough data yet',
+    dash_exportFiltered:'Export results (Excel)',
     hosp_title:'Manage contracted entities', hosp_searchPh:'Search by name or category...', hosp_export:'Export', hosp_import:'Import',
     hosp_groupBy:'Group by:', hosp_groupNone:'None', hosp_groupType:'Budget type', hosp_groupMonth:'Month', hosp_groupCategory:'Category',
     hosp_trend:'Trend after review:', hosp_trendAll:'All', hosp_trendUp:'Increased', hosp_trendDown:'Decreased',
     col_name:'Name', col_category:'Category', col_budget:'Budget type', col_month:'Month', col_year:'Year', col_before:'Before review', col_after:'After review',
     hosp_countSuffix:'{n} of {t} records', hosp_noMatch:'No matching results', hosp_deleted:'Record deleted', hosp_updated:'Record updated',
     hosp_groupRecords:'records', hosp_groupTotal:'Total',
-    budget_newborns:'Newborns', budget_students:'Students', budget_workforce:'Workforce',
+    budget_newborns:'Newborns', budget_students:'Students', budget_workforce:'Workforce', budget_total:'Total',
+    budget_totalHint:'An aggregate amount not broken down by category — not specified as Newborns, Students, or Workforce',
+    dash_totalNoticeOne:'1 record is logged as "Total" without a category breakdown, and is included in the figures above',
+    dash_totalNotice:'{n} records are logged as "Total" without a category breakdown, and are included in the figures above',
     spotlight_placeholder:'Search records or type a command...', spotlight_empty:'No results',
     spotlight_sectionCommands:'Commands', spotlight_sectionRecords:'Records',
     spotlight_hintNav:'to navigate', spotlight_hintSelect:'to select', spotlight_hintClose:'to close',
@@ -701,7 +723,8 @@ function t(key, vars){
 }
 
 const BUDGET_KEYS = ['newborns','students','workforce'];
-const BUDGET_HEX = { newborns:'#8fd4ea', students:'#2f93b0', workforce:'#1c6b83' };
+const BUDGET_KEYS_ALL = ['newborns','students','workforce','total'];
+const BUDGET_HEX = { newborns:'#8fd4ea', students:'#2f93b0', workforce:'#1c6b83', total:'#cda15c' };
 const MONTHS_AR = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
 const MONTHS_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const CATEGORY_SUGGESTIONS = {
@@ -718,11 +741,12 @@ function budgetLabel(key){ return t('budget_'+key); }
 function currentHeaders(){ return HEADERS_BY_LANG[lang]; }
 
 function budgetKeyFromLabel(text){
-  const norm = String(text||'').trim();
-  for(const key of BUDGET_KEYS){
-    if(I18N.ar['budget_'+key]===norm || I18N.en['budget_'+key].toLowerCase()===norm.toLowerCase() || key===norm) return key;
+  const raw = String(text||'').trim();
+  if(!raw) return BUDGET_KEYS[0];
+  for(const key of BUDGET_KEYS_ALL){
+    if(I18N.ar['budget_'+key]===raw || I18N.en['budget_'+key].toLowerCase()===raw.toLowerCase() || key===raw) return key;
   }
-  return BUDGET_KEYS[0];
+  return 'total';
 }
 function monthIndexFromLabel(text){
   const norm = String(text||'').trim();
@@ -1007,6 +1031,7 @@ function renderHeader(){
   renderFbStatus();
   const fbBtn = el.querySelector('#fbStatusBtn');
   if(fbBtn) fbBtn.addEventListener('click', ()=>{
+    if(cloudSync.remoteNewer && cloudSync.status!=='busy'){ cloudSyncNow(); return; }
     cloudSync.panelOpen = true;
     renderSyncBar();
     document.getElementById('syncGearBtn')?.scrollIntoView({behavior:'smooth', block:'center'});
@@ -1025,13 +1050,40 @@ const firebaseConfig = {
   appId: "1:126876375989:web:9b69b66856dd29b86297fc",
 };
 const RECORD_SOFT_LIMIT = 3000;
+const FIRESTORE_DOC_SOFT_LIMIT = 900 * 1024;
+const FIRESTORE_DOC_HARD_LIMIT = 990 * 1024;
 let recordCeilingWarned = false;
-let fbApp = null, fbAuth = null, fbDb = null, fbUid = null;
-let cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:false };
+let fbApp = null, fbAuth = null, fbDb = null, fbUid = null, fbAuthReadyPromise = null;
+let cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:false, remoteNewer:false };
 
 function hideBootProgress(){
   const bar = document.getElementById('bootProgress');
   if(bar) bar.classList.add('done');
+}
+
+function isOffline(){ return typeof navigator!=='undefined' && navigator.onLine===false; }
+
+function firestoreErrorMessage(e){
+  const code = e && e.code ? String(e.code) : '';
+  if(code==='permission-denied') return t('cloud_errPermission');
+  if(code==='unavailable' || code==='internal') return t('cloud_errUnavailable');
+  if(code==='not-found') return t('cloud_errNotFound');
+  if(code==='resource-exhausted') return t('cloud_errQuota');
+  if(code==='deadline-exceeded' || code==='cancelled') return t('cloud_errTimeout');
+  return (e && e.message) ? e.message : t('cloud_errGeneric');
+}
+
+function recordsByteSize(records){
+  try{ return new Blob([JSON.stringify(records)]).size; }catch(e){ return JSON.stringify(records).length; }
+}
+function checkDocSizeOk(records){
+  const size = recordsByteSize(records);
+  if(size >= FIRESTORE_DOC_HARD_LIMIT){
+    toast(t('cloud_docTooLarge', {n: Math.round(size/1024)+'KB'}), 'err');
+    return false;
+  }
+  if(size >= FIRESTORE_DOC_SOFT_LIMIT) toast(t('cloud_docNearLimit'), 'err');
+  return true;
 }
 
 function ensureFirebaseApp(){
@@ -1040,11 +1092,20 @@ function ensureFirebaseApp(){
   fbAuth = firebase.auth();
   fbDb = firebase.firestore();
 }
+function waitForAuthRestore(){
+  if(!fbAuthReadyPromise){
+    fbAuthReadyPromise = new Promise(resolve=>{
+      const unsub = fbAuth.onAuthStateChanged(user=>{ unsub(); resolve(user); });
+    });
+  }
+  return fbAuthReadyPromise;
+}
 async function ensureAnonAuth(){
   if(!window.crypto || !crypto.subtle) throw new Error(t('cloud_needsHttps'));
   ensureFirebaseApp();
   if(fbUid) return fbUid;
-  if(fbAuth.currentUser){ fbUid = fbAuth.currentUser.uid; return fbUid; }
+  const restored = await waitForAuthRestore();
+  if(restored){ fbUid = restored.uid; return fbUid; }
   const cred = await fbAuth.signInAnonymously();
   fbUid = cred.user.uid;
   return fbUid;
@@ -1062,10 +1123,11 @@ function cloudDocRef(hash){ return fbDb.collection('syncedRecords').doc(hash); }
 function renderFbStatus(){
   const btn = document.getElementById('fbStatusBtn');
   if(!btn) return;
-  const cls = cloudSync.status==='error' ? 'error' : cloudSync.status==='busy' ? 'syncing' : cloudSync.linked ? 'connected' : 'connecting';
+  const cls = cloudSync.status==='error' ? 'error' : cloudSync.status==='busy' ? 'syncing' : cloudSync.remoteNewer ? 'syncing' : cloudSync.linked ? 'connected' : 'connecting';
   btn.className = 'fb-status ' + cls;
   const label = cloudSync.status==='error' ? t('cloud_errorPrefix')+cloudSync.lastError
     : cloudSync.status==='busy' ? t('cloud_syncingMsg')
+    : cloudSync.remoteNewer ? t('cloud_remoteNewer')
     : cloudSync.linked ? t('cloud_linked') + (cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}) : '')
     : t('cloud_notLinked');
   btn.title = label; btn.setAttribute('aria-label', label);
@@ -1140,26 +1202,31 @@ function saveCodeDialog(code){
 }
 
 async function cloudCreateNew(){
+  if(cloudSync.status==='busy') return;
   const code = generateSyncCode();
   await saveCodeDialog(code);
+  if(isOffline()){ toast(t('cloud_offline'), 'err'); return; }
+  if(!checkDocSizeOk(state.records)) return;
   cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
   try{
     await ensureAnonAuth();
     const hash = await sha256Hex(code);
     await cloudDocRef(hash).set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-    cloudSync.linked = true; cloudSync.code = code; cloudSync.hash = hash;
+    cloudSync.linked = true; cloudSync.code = code; cloudSync.hash = hash; cloudSync.remoteNewer = false;
     cloudSync.lastSyncAt = new Date(); cloudSync.lastError=''; cloudSync.status='idle';
     saveCache();
     toast(t('cloud_linkSuccess'));
   }catch(e){
-    cloudSync.status='error'; cloudSync.lastError = e.message || 'error';
+    cloudSync.status='error'; cloudSync.lastError = firestoreErrorMessage(e);
     toast(t('cloud_pushFail') + cloudSync.lastError, 'err');
   }
   renderFbStatus(); renderSyncBar();
 }
 
 async function cloudLinkExisting(code){
+  if(cloudSync.status==='busy') return;
   if(!code || !code.trim()) return;
+  if(isOffline()){ toast(t('cloud_offline'), 'err'); return; }
   cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
   try{
     await ensureAnonAuth();
@@ -1175,21 +1242,24 @@ async function cloudLinkExisting(code){
     const cloudUpdated = data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null;
     const choice = await syncChoiceDialog({ cloudCount: cloudRecords.length, cloudUpdated, localCount: state.records.length });
     if(choice === 'cancel'){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
-    cloudSync.code = code.trim(); cloudSync.hash = hash; cloudSync.linked = true;
+    if(choice === 'local' && !checkDocSizeOk(state.records)){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
+    cloudSync.code = code.trim(); cloudSync.hash = hash; cloudSync.linked = true; cloudSync.remoteNewer = false;
     if(choice === 'cloud'){ state.records = cloudRecords; renderTabbar(); renderMain(); }
     else { await cloudDocRef(hash).set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); }
     cloudSync.lastSyncAt = new Date(); cloudSync.lastError=''; cloudSync.status='idle';
     saveCache();
     toast(t('cloud_linkSuccess'));
   }catch(e){
-    cloudSync.status='error'; cloudSync.lastError = e.message || 'error';
+    cloudSync.status='error'; cloudSync.lastError = firestoreErrorMessage(e);
     toast(t('cloud_pullFail') + cloudSync.lastError, 'err');
   }
   renderFbStatus(); renderSyncBar();
 }
 
 async function cloudSyncNow(){
+  if(cloudSync.status==='busy') return;
   if(!cloudSync.linked){ cloudSync.panelOpen = true; renderSyncBar(); return; }
+  if(isOffline()){ toast(t('cloud_offline'), 'err'); return; }
   cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
   try{
     await ensureAnonAuth();
@@ -1199,23 +1269,41 @@ async function cloudSyncNow(){
     const cloudUpdated = data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null;
     const choice = await syncChoiceDialog({ cloudCount: cloudRecords.length, cloudUpdated, localCount: state.records.length });
     if(choice === 'cancel'){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
+    if(choice === 'local' && !checkDocSizeOk(state.records)){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
+    cloudSync.remoteNewer = false;
     if(choice === 'cloud'){ state.records = cloudRecords; renderTabbar(); renderMain(); }
     else { await cloudDocRef(cloudSync.hash).set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); }
     cloudSync.lastSyncAt = new Date(); cloudSync.lastError=''; cloudSync.status='idle';
     saveCache();
     toast(t('cloud_linkSuccess'));
   }catch(e){
-    cloudSync.status='error'; cloudSync.lastError = e.message || 'error';
+    cloudSync.status='error'; cloudSync.lastError = firestoreErrorMessage(e);
     toast(t('cloud_pullFail') + cloudSync.lastError, 'err');
   }
   renderFbStatus(); renderSyncBar();
 }
 
 function cloudUnlink(){
-  cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:true };
+  if(cloudSync.status==='busy') return;
+  cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:true, remoteNewer:false };
   saveCache();
   toast(t('cloud_unlinked'));
   renderFbStatus(); renderSyncBar();
+}
+
+async function checkCloudFreshness(){
+  if(!cloudSync.linked || !cloudSync.hash || isOffline()) return;
+  try{
+    await ensureAnonAuth();
+    const snap = await cloudDocRef(cloudSync.hash).get();
+    if(!snap.exists) return;
+    const data = snap.data();
+    const cloudUpdated = data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null;
+    if(cloudUpdated && (!cloudSync.lastSyncAt || cloudUpdated.getTime() > cloudSync.lastSyncAt.getTime() + 2000)){
+      cloudSync.remoteNewer = true;
+      renderFbStatus(); renderSyncBar();
+    }
+  }catch(e){ /* silent — this is a passive background check, surfaced errors would be noise */ }
 }
 
 function afterRecordsChanged(){
@@ -1228,16 +1316,18 @@ function afterRecordsChanged(){
 
 function renderSyncBar(){
   const bar = document.getElementById('syncBar');
+  const busy = cloudSync.status==='busy';
   let dotColor = 'var(--muted2)', text = t('cloud_notLinked');
-  if(cloudSync.status==='busy'){ dotColor='var(--accent)'; text=t('cloud_syncingMsg'); }
+  if(busy){ dotColor='var(--accent)'; text=t('cloud_syncingMsg'); }
   else if(cloudSync.status==='error'){ dotColor='var(--bad)'; text=t('cloud_errorPrefix')+esc(cloudSync.lastError); }
+  else if(cloudSync.remoteNewer){ dotColor='var(--gold)'; text=t('cloud_remoteNewer'); }
   else if(cloudSync.linked){ dotColor='var(--good)'; text = t('cloud_linked') + (cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}) : ''); }
 
   bar.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;">
       <div class="sync-left"><span class="sync-dot" style="background:${dotColor};"></span><span class="sync-text">${text}</span></div>
       <div class="sync-actions">
-        <button class="btn-ghost" id="syncNowBtn" ${cloudSync.status==='busy'?'disabled':''}>${icon('refresh',14)} ${t('cloud_syncNowBtn')}</button>
+        <button class="btn-ghost" id="syncNowBtn" ${busy?'disabled':''}>${icon('refresh',14)} ${t('cloud_syncNowBtn')}</button>
         <button class="icon-btn" id="syncGearBtn" title="${esc(t('settings_title'))}">${icon('gear',17)}</button>
       </div>
     </div>
@@ -1256,15 +1346,15 @@ function renderSyncBar(){
       <p class="card-sub" style="margin:0 0 14px;">${t('cloud_explain')}</p>
       ${cloudSync.linked ? `
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="btn-ghost" id="cloudSyncNowBtn">${icon('refresh',14)} ${t('cloud_syncNowBtn')}</button>
-          <button class="btn-ghost btn-danger" id="cloudUnlinkBtn">${icon('x',14)} ${t('cloud_unlinkBtn')}</button>
+          <button class="btn-ghost" id="cloudSyncNowBtn" ${busy?'disabled':''}>${icon('refresh',14)} ${t('cloud_syncNowBtn')}</button>
+          <button class="btn-ghost btn-danger" id="cloudUnlinkBtn" ${busy?'disabled':''}>${icon('x',14)} ${t('cloud_unlinkBtn')}</button>
         </div>` : `
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
-          <button class="btn-ghost btn-accent" id="cloudCreateBtn">${icon('sparkle',14)} ${t('cloud_createBtn')}</button>
+          <button class="btn-ghost btn-accent" id="cloudCreateBtn" ${busy?'disabled':''}>${icon('sparkle',14)} ${t('cloud_createBtn')}</button>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <input class="inp" id="cloudCodeInput" placeholder="${t('cloud_codePh')}" style="max-width:260px;">
-          <button class="btn-ghost" id="cloudLinkBtn">${icon('link',14)} ${t('cloud_codeSubmit')}</button>
+          <input class="inp" id="cloudCodeInput" placeholder="${t('cloud_codePh')}" style="max-width:260px;" ${busy?'disabled':''}>
+          <button class="btn-ghost" id="cloudLinkBtn" ${busy?'disabled':''}>${icon('link',14)} ${t('cloud_codeSubmit')}</button>
         </div>`}
     </div>`;
 
@@ -1300,7 +1390,7 @@ function saveCache(){
     const payload = {
       records: state.records,
       appSettings,
-      cloudSync: { linked: cloudSync.linked, code: cloudSync.code, hash: cloudSync.hash },
+      cloudSync: { linked: cloudSync.linked, code: cloudSync.code, hash: cloudSync.hash, lastSyncAt: cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toISOString() : null },
       theme, lang,
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
@@ -1317,6 +1407,7 @@ function loadCache(){
       cloudSync.linked = !!data.cloudSync.linked;
       cloudSync.code = data.cloudSync.code || '';
       cloudSync.hash = data.cloudSync.hash || '';
+      cloudSync.lastSyncAt = data.cloudSync.lastSyncAt ? new Date(data.cloudSync.lastSyncAt) : null;
     }
     if(data && data.theme) theme = data.theme;
     if(data && data.lang) lang = data.lang;
@@ -1558,7 +1649,7 @@ function downloadTemplate(){
   const a = document.createElement('a'); a.href = url; a.download = lang==='ar' ? 'قالب_بيانات.xlsx' : 'data_template.xlsx';
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 }
-function exportRecords(records){
+function exportRecords(records, filenameHint){
   const headers = currentHeaders();
   const rows = [headers, ...records.map(r=>[r.name,r.category,budgetLabel(r.budgetType),monthName(r.month),r.year,r.before,r.after])];
   const ws = XLSX.utils.aoa_to_sheet(rows);
@@ -1568,7 +1659,9 @@ function exportRecords(records){
   const out = XLSX.write(wb, {bookType:'xlsx', type:'array'});
   const blob = new Blob([out], {type:'application/octet-stream'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = lang==='ar' ? 'بيانات_الجهات.xlsx' : 'entities_data.xlsx';
+  const a = document.createElement('a');
+  const base = filenameHint || (lang==='ar' ? 'بيانات_الجهات' : 'entities_data');
+  a.href = url; a.download = base + '.xlsx';
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 }
 function normalizeRow(row){
@@ -1643,7 +1736,7 @@ function renderImportTab(main){
   else renderFreeformImport(main.querySelector('#importBody'));
 }
 
-function colChipsBar(colsOnSet, onChange){
+function colChipsBar(colsOnSet){
   return `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
     ${HEADER_KEYS.map(k=>`<span class="col-chip ${colsOnSet.has(k)?'on':'off'}" data-field="${k}">${icon('check',12)}${t('col_'+(k==='budgetType'?'budget':k))}</span>`).join('')}
   </div>`;
@@ -1999,6 +2092,7 @@ function renderDashboardTab(main){
       ${csel('filterType', [{value:'all',label:t('dash_type')+': '+t('dash_all')}, ...BUDGET_KEYS.map(k=>({value:k,label:t('dash_type')+': '+budgetLabel(k)}))], 'all', (v)=>{ filterType=v; render(); }, {width:'180px'})}
       ${csel('filterCategory', [{value:'all',label:t('dash_category')+': '+t('dash_all')}, ...allCategories.map(c=>({value:c,label:t('dash_category')+': '+c}))], 'all', (v)=>{ filterCategory=v; render(); }, {width:'190px'})}
       ${csel('filterEntity', [{value:'all',label:t('dash_entity')+': '+t('dash_all')}, ...allEntities.map(n=>({value:n,label:n}))], 'all', (v)=>{ filterEntity=v; render(); }, {width:'220px'})}
+      <button class="btn-ghost btn-accent" id="dashExportBtn">${icon('download',14)} ${t('dash_exportFiltered')}</button>
       <button class="link-btn" id="resetFiltersBtn">${icon('x',13)} ${t('dash_resetFilters')}</button>
     </div>
     <div id="dashBody"></div>`;
@@ -2091,6 +2185,11 @@ function renderDashboardTab(main){
     setCselDisplay('filterYear','all'); setCselDisplay('filterType','all');
     setCselDisplay('filterCategory','all'); setCselDisplay('filterEntity','all');
     render();
+  });
+  main.querySelector('#dashExportBtn').addEventListener('click', ()=>{
+    const records = compute();
+    if(!records.length){ toast(t('dash_noData'), 'err'); return; }
+    exportRecords(records, lang==='ar' ? 'لوحة_التحكم_مصفّاة' : 'dashboard_filtered');
   });
   render();
 }
@@ -2539,6 +2638,13 @@ renderSyncBar();
 renderTabbar();
 renderMain();
 hideBootProgress();
+if(cloudSync.linked) checkCloudFreshness();
+window.addEventListener('online', ()=>{
+  if(cloudSync.status==='error'){ cloudSync.status='idle'; cloudSync.lastError=''; renderFbStatus(); renderSyncBar(); }
+  if(cloudSync.linked) checkCloudFreshness();
+});
+window.addEventListener('offline', ()=>{ renderFbStatus(); renderSyncBar(); });
+
 </script>
 </body>
 </html>
