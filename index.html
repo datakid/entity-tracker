@@ -19,7 +19,6 @@
 <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore-compat.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   :root{
     color-scheme: dark;
@@ -119,11 +118,11 @@
     --muted:rgba(25,26,24,.58);
     --muted2:rgba(25,26,24,.4);
 
-    --ink-solid:#131412;
     --ink-9:rgba(19,20,18,.9); --ink-85:rgba(19,20,18,.85); --ink-8:rgba(19,20,18,.8);
     --ink-78:rgba(19,20,18,.78); --ink-75:rgba(19,20,18,.75); --ink-6:rgba(19,20,18,.64);
     --ink-55:rgba(19,20,18,.58); --ink-5:rgba(19,20,18,.55); --ink-32:rgba(19,20,18,.44);
     --ink-3:rgba(19,20,18,.42); --ink-2:rgba(19,20,18,.3); --ink-12:rgba(19,20,18,.22);
+    --ink-solid:#131412;
 
     --vignette-edge:rgba(246,244,238,.8);
     --blob-opacity:.45;
@@ -177,37 +176,6 @@
     --group-head-bg:rgba(25,26,24,.03);
   }
 
-  @media (prefers-color-scheme: light){
-    html[data-theme="system"]{
-      color-scheme: light;
-      --bg:#f6f4ee;
-      --accent-light:#5fb8d6; --accent:#1f7a97; --accent-strong:#14566c;
-      --accent-soft:rgba(31,122,151,.1); --accent-ring:rgba(31,122,151,.36);
-      --gold-light:#e0bd82; --gold:#a97d3c; --gold-strong:#87602b; --gold-soft:rgba(169,125,60,.14);
-      --fg:#191a18; --muted:rgba(25,26,24,.58); --muted2:rgba(25,26,24,.4);
-      --ink-solid:#131412;
-      --ink-9:rgba(19,20,18,.9); --ink-85:rgba(19,20,18,.85); --ink-8:rgba(19,20,18,.8);
-      --ink-78:rgba(19,20,18,.78); --ink-75:rgba(19,20,18,.75); --ink-6:rgba(19,20,18,.64);
-      --ink-55:rgba(19,20,18,.58); --ink-5:rgba(19,20,18,.55); --ink-32:rgba(19,20,18,.44);
-      --ink-3:rgba(19,20,18,.42); --ink-2:rgba(19,20,18,.3); --ink-12:rgba(19,20,18,.22);
-      --vignette-edge:rgba(246,244,238,.8); --blob-opacity:.45;
-      --glass-bg:rgba(255,255,255,.56); --glass-border:rgba(255,255,255,.78);
-      --glass-rim-bright:rgba(255,255,255,.96); --glass-rim-mid:rgba(255,255,255,.32); --glass-rim-edge:rgba(255,255,255,.5);
-      --shadow-ambient:rgba(30,28,18,.14); --shadow-contact:rgba(30,28,18,.09); --shadow-inset-top:rgba(255,255,255,.7);
-      --divider:rgba(25,26,24,.09); --divider-soft:rgba(25,26,24,.06);
-      --input-bg:rgba(255,255,255,.64); --input-border:rgba(25,26,24,.13); --input-shadow:rgba(255,255,255,.6); --placeholder:rgba(25,26,24,.36); --scrollbar:rgba(25,26,24,.2);
-      --btn-ghost-bg:rgba(255,255,255,.52); --btn-ghost-border:rgba(25,26,24,.12); --btn-ghost-text:rgba(25,26,24,.8);
-      --row-card-bg:rgba(255,255,255,.54); --row-card-border:rgba(25,26,24,.08); --row-card-border-hover:rgba(25,26,24,.2);
-      --dropzone-bg:rgba(255,255,255,.4); --dropzone-border:rgba(25,26,24,.16);
-      --icon-btn-color:rgba(25,26,24,.6); --icon-btn-hover-bg:rgba(25,26,24,.08);
-      --mini-inp-bg:rgba(255,255,255,.8); --mini-inp-border:rgba(25,26,24,.16);
-      --bar-track-bg:rgba(25,26,24,.09);
-      --toast-border:rgba(25,26,24,.12); --toast-shadow:rgba(25,26,24,.2); --toast-inset:rgba(255,255,255,.7);
-      --grain-opacity:.022; --dot-badge-bg:rgba(25,26,24,.045); --group-head-bg:rgba(25,26,24,.03);
-      --scrim-near:rgba(25,26,24,.14); --scrim-far:rgba(25,26,24,.26);
-    }
-  }
-
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans Arabic','Inter',sans-serif;
     font-size:15px;line-height:1.65;font-variant-numeric:tabular-nums;letter-spacing:0;
@@ -255,7 +223,6 @@
     -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
   }
-  html.supports-distort .glass::before{ backdrop-filter:url(#liquid-refraction) blur(12px) saturate(195%) brightness(1.08); }
   .glass::after{
     content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:1.3px;
     background:linear-gradient(155deg, var(--glass-rim-bright), var(--glass-rim-mid) 28%, transparent 52%, var(--glass-rim-edge) 100%);
@@ -295,10 +262,6 @@
   .sync-panel.open{display:block;}
   .sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
   @media (max-width:700px){.sync-grid{grid-template-columns:1fr;}}
-  .switch{position:relative;width:40px;height:23px;border-radius:99px;background:var(--input-bg);border:1px solid var(--input-border);transition:.2s;flex-shrink:0;}
-  .switch::after{content:"";position:absolute;top:2px;inset-inline-start:2px;width:17px;height:17px;border-radius:50%;background:var(--muted2);transition:inset-inline-start .25s, background .25s;}
-  .switch.on{background:var(--accent);border-color:var(--accent);}
-  .switch.on::after{inset-inline-start:21px;background:#fff;}
 
   nav.tabs{margin-bottom:22px;}
   .tabbar{position:relative;display:inline-flex;gap:2px;padding:6px;flex-wrap:wrap;}
@@ -525,14 +488,6 @@
 
 <div class="boot-progress" id="bootProgress"></div>
 
-<svg class="defs">
-  <filter id="liquid-refraction" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="2" seed="7" result="noise"/>
-    <feGaussianBlur in="noise" stdDeviation="2" result="softNoise"/>
-    <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="60" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
-</svg>
-
 <div class="bg-blob blob-a"></div>
 <div class="bg-blob blob-b"></div>
 <div class="bg-blob blob-c"></div>
@@ -551,12 +506,6 @@
 <div id="toastHost"></div>
 
 <script>
-try{
-  if (CSS && CSS.supports && CSS.supports('backdrop-filter','url(#a) blur(1px)')){
-    document.documentElement.classList.add('supports-distort');
-  }
-}catch(e){}
-
 const ICONS = {
   plus:'<path d="M12 5v14M5 12h14"/>',
   upload:'<path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M4 21h16"/>',
@@ -595,27 +544,23 @@ const I18N = {
   ar:{
     appName:'بيان جهات متعاقدة',
     tab_entry:'إدخال البيانات', tab_import:'الاستيراد', tab_dashboard:'لوحة التحكم', tab_hospitals:'الجهات',
-    sync_notConfigured:'المزامنة غير مُعدّة — اضغط على الإعدادات', sync_notConnected:'غير متصل بـ Google Sheets',
-    fb_connecting:'جارٍ الاتصال بالسحابة...', fb_syncing:'جارٍ الحفظ في السحابة...', fb_connected:'متصل بالسحابة — محفوظ', fb_error:'تعذّر الاتصال — اضغط لإعادة المحاولة',
-    fb_connectedLinked:'متصل بالسحابة (مرتبط بحساب) — محفوظ', fb_notReady:'الاتصال بالسحابة غير جاهز بعد',
-    fb_linked:'تم الربط بنجاح — يمكنك الوصول من أي جهاز', fb_alreadyLinked:'هذا الجهاز مرتبط بالفعل',
-    fb_alreadyLinkedElsewhere:'هذا الحساب مرتبط بجهاز آخر بالفعل', fb_linkFailed:'تعذّر الربط',
-    cmd_linkGoogle:'ربط حساب جوجل للوصول من أي جهاز',
+    cloud_title:'مزامنة سحابية عبر رمز', cloud_notLinked:'غير مرتبط بأي جهاز آخر',
+    cloud_linked:'مرتبط — آخر مزامنة: ', cloud_syncingMsg:'جارٍ التنفيذ...', cloud_errorPrefix:'خطأ: ',
+    cloud_explain:'أنشئ رمز مزامنة أو أدخل رمزًا موجودًا للوصول من جهاز آخر. لا يلزم بريد إلكتروني أو كلمة مرور.',
+    cloud_createBtn:'إنشاء رمز جديد', cloud_linkBtn:'ربط برمز موجود', cloud_unlinkBtn:'إلغاء الربط',
+    cloud_syncNowBtn:'مزامنة الآن', cloud_codePh:'أدخل رمز المزامنة', cloud_codeSubmit:'ربط',
+    cloud_saveTitle:'احفظ رمز المزامنة الآن',
+    cloud_saveMsg:'هذا الرمز هو السبيل الوحيد للوصول إلى بياناتك من جهاز آخر. لا يمكن استرجاعه إن ضاع.',
+    cloud_copyBtn:'نسخ', cloud_copied:'تم النسخ', cloud_savedConfirm:'لقد حفظت هذا الرمز في مكان آمن',
+    cloud_continueBtn:'تم، متابعة', cloud_previewTitle:'اختر البيانات المراد استخدامها',
+    cloud_previewCloud:'السحابة: {n} سجل{u}', cloud_previewLocal:'هذا الجهاز: {n} سجل',
+    cloud_useCloud:'استخدام بيانات السحابة', cloud_useLocal:'استخدام بيانات هذا الجهاز', cloud_cancelBtn:'إلغاء',
+    cloud_codeInvalid:'لا توجد بيانات مرتبطة بهذا الرمز', cloud_linkSuccess:'تم الربط بنجاح',
+    cloud_pushFail:'فشل الرفع: ', cloud_pullFail:'فشل السحب: ',
+    cloud_unlinked:'تم إلغاء الربط (بيانات السحابة لم تتأثر)', cloud_needsHttps:'المزامنة السحابية تحتاج فتح الصفحة عبر https',
     records_approachingLimit:'عدد السجلات ({n}) يقترب من الحد الأقصى — فكّر بالأرشفة قريبًا',
-    sync_waiting:'متصل — بانتظار أول مزامنة', sync_syncing:'جارٍ المزامنة...', sync_failedPrefix:'فشلت آخر مزامنة: ',
-    sync_lastPrefix:'آخر مزامنة: ', sync_nowBtn:'مزامنة الآن', sync_gearTitle:'إعدادات المزامنة',
-    settings_title:'الإعدادات', settings_generalTitle:'إعدادات عامة', settings_syncTitle:'مزامنة Google Sheets',
+    settings_title:'الإعدادات', settings_generalTitle:'إعدادات عامة',
     settings_currencyUnit:'وحدة العملة (اختياري)', settings_currencyUnitPh:'مثال: ر.س — اتركه فارغًا لعدم إظهار وحدة',
-    sync_clientId:'معرف عميل Google OAuth (Client ID)', sync_clientIdPh:'xxxx.apps.googleusercontent.com',
-    sync_sheetId:'معرف جدول Google Sheets (Spreadsheet ID)', sync_sheetIdPh:'من رابط الجدول بين d/ و /edit',
-    sync_sheetName:'اسم الورقة (Sheet name)', sync_sheetNamePh:'Sheet1',
-    sync_autoLabel:'المزامنة التلقائية عند أي تعديل', sync_autoOn:'مفعّلة', sync_autoOff:'متوقفة',
-    sync_connect:'الاتصال بحساب Google', sync_disconnect:'فصل الاتصال', sync_save:'حفظ الإعدادات',
-    sync_helper:'يلزم إنشاء Client ID من Google Cloud Console مع تفعيل Google Sheets API، وإضافة نطاق الصفحة ضمن Authorized JavaScript origins. تسجيل الدخول عبر Google لا يعمل عند فتح الملف مباشرة كملف على الجهاز (file://) — شغّل الملف عبر خادم محلي بسيط أو ارفعه على استضافة. معرف الجدول يوجد داخل رابط الشيت بين d/ و /edit.',
-    sync_missingConfig:'أدخل معرف العميل ومعرف الجدول أولًا', sync_noGoogle:'تعذر تحميل خدمة Google — تأكد من فتح الملف عبر خادم http',
-    sync_success:'تمت المزامنة مع Google Sheets', sync_failPrefix:'فشلت المزامنة: ', sync_disconnected:'تم فصل الاتصال بـ Google Sheets',
-    sync_loadedExisting:'تم الاتصال — تم تحميل {n} سجل موجود في الجدول', sync_clearedPlaceholder:'تم الاتصال — أُزيلت بيانات العرض التجريبية، الجدول جاهز لبياناتك',
-    sync_saved:'تم حفظ إعدادات المزامنة', sync_loginFail:'تعذر إتمام تسجيل الدخول إلى Google',
     theme_system:'النظام', theme_light:'فاتح', theme_dark:'داكن',
     entry_title:'إدخال سريع', entry_sub:'اضغط Enter للحفظ والانتقال للتالي', entry_importShortcut:'استيراد Excel',
     field_name:'الاسم', field_namePh:'مثال: مستشفى الملك فهد', field_category:'التصنيف', field_categoryPh:'مثال: مستشفى عام',
@@ -666,7 +611,7 @@ const I18N = {
     cmd_goEntry:'الانتقال إلى إدخال البيانات', cmd_goImport:'الانتقال إلى الاستيراد',
     cmd_goDashboard:'الانتقال إلى لوحة التحكم', cmd_goHospitals:'الانتقال إلى الجهات',
     cmd_themeLight:'التبديل إلى المظهر الفاتح', cmd_themeDark:'التبديل إلى المظهر الداكن', cmd_themeSystem:'التبديل إلى مظهر النظام',
-    cmd_openSettings:'فتح الإعدادات', cmd_syncNow:'مزامنة الآن مع Google Sheets',
+    cmd_openSettings:'فتح الإعدادات', cmd_syncNow:'مزامنة الآن مع السحابة',
     cmd_exportData:'تصدير البيانات (Excel)', cmd_downloadTemplate:'تنزيل القالب الفارغ',
     cmd_exportBackup:'تصدير نسخة احتياطية كاملة (JSON)', cmd_importBackup:'استيراد نسخة احتياطية (JSON)',
     settings_backupTitle:'النسخ الاحتياطي', backup_exported:'تم تنزيل النسخة الاحتياطية',
@@ -675,27 +620,23 @@ const I18N = {
   en:{
     appName:'Contracted Entities Statement',
     tab_entry:'Data Entry', tab_import:'Import', tab_dashboard:'Dashboard', tab_hospitals:'Entities',
-    sync_notConfigured:'Sync not configured — open settings', sync_notConnected:'Not connected to Google Sheets',
-    fb_connecting:'Connecting to cloud...', fb_syncing:'Saving to cloud...', fb_connected:'Connected — saved to cloud', fb_error:'Could not reach cloud — click to retry',
-    fb_connectedLinked:'Connected (account linked) — saved to cloud', fb_notReady:'Cloud connection not ready yet',
-    fb_linked:'Linked — you can now access this from any device', fb_alreadyLinked:'This session is already linked',
-    fb_alreadyLinkedElsewhere:'That account is already linked to a different session', fb_linkFailed:'Linking failed',
-    cmd_linkGoogle:'Link Google account for cross-device access',
+    cloud_title:'Sync via Code', cloud_notLinked:'Not linked to another device',
+    cloud_linked:'Linked — last synced: ', cloud_syncingMsg:'Working...', cloud_errorPrefix:'Error: ',
+    cloud_explain:'Create a sync code or enter an existing one to access this from another device. No email or password needed.',
+    cloud_createBtn:'Create new code', cloud_linkBtn:'Link existing code', cloud_unlinkBtn:'Unlink',
+    cloud_syncNowBtn:'Sync now', cloud_codePh:'Enter sync code', cloud_codeSubmit:'Link',
+    cloud_saveTitle:'Save your sync code now',
+    cloud_saveMsg:'This code is the only way to access your data from another device. It cannot be recovered if lost.',
+    cloud_copyBtn:'Copy', cloud_copied:'Copied', cloud_savedConfirm:'I saved this code somewhere safe',
+    cloud_continueBtn:'Done, continue', cloud_previewTitle:'Choose which data to use',
+    cloud_previewCloud:'Cloud: {n} records{u}', cloud_previewLocal:'This device: {n} records',
+    cloud_useCloud:'Use cloud data', cloud_useLocal:'Use this device\'s data', cloud_cancelBtn:'Cancel',
+    cloud_codeInvalid:'No data found for this code', cloud_linkSuccess:'Linked successfully',
+    cloud_pushFail:'Push failed: ', cloud_pullFail:'Pull failed: ',
+    cloud_unlinked:'Unlinked (cloud data was not affected)', cloud_needsHttps:'Cloud sync requires the page to be opened over https',
     records_approachingLimit:'Record count ({n}) is approaching the storage limit — consider archiving soon',
-    sync_waiting:'Connected — awaiting first sync', sync_syncing:'Syncing...', sync_failedPrefix:'Last sync failed: ',
-    sync_lastPrefix:'Last sync: ', sync_nowBtn:'Sync now', sync_gearTitle:'Sync settings',
-    settings_title:'Settings', settings_generalTitle:'General settings', settings_syncTitle:'Google Sheets sync',
+    settings_title:'Settings', settings_generalTitle:'General settings',
     settings_currencyUnit:'Currency unit (optional)', settings_currencyUnitPh:'e.g. SAR — leave blank to show no unit',
-    sync_clientId:'Google OAuth Client ID', sync_clientIdPh:'xxxx.apps.googleusercontent.com',
-    sync_sheetId:'Google Sheets Spreadsheet ID', sync_sheetIdPh:'the part of the URL between /d/ and /edit',
-    sync_sheetName:'Sheet name', sync_sheetNamePh:'Sheet1',
-    sync_autoLabel:'Auto-sync on every change', sync_autoOn:'On', sync_autoOff:'Off',
-    sync_connect:'Connect Google account', sync_disconnect:'Disconnect', sync_save:'Save settings',
-    sync_helper:'You need an OAuth Client ID from Google Cloud Console with the Google Sheets API enabled, with this page\'s origin added under Authorized JavaScript origins. Google sign-in does not work when this file is opened directly (file://) — serve it via a local server or hosting first. The Spreadsheet ID is the part of the sheet URL between /d/ and /edit.',
-    sync_missingConfig:'Enter the Client ID and Spreadsheet ID first', sync_noGoogle:'Could not load Google services — open this file over http',
-    sync_success:'Synced with Google Sheets', sync_failPrefix:'Sync failed: ', sync_disconnected:'Disconnected from Google Sheets',
-    sync_loadedExisting:'Connected — loaded {n} existing records from the sheet', sync_clearedPlaceholder:'Connected — placeholder demo data cleared, the sheet is ready for your data',
-    sync_saved:'Sync settings saved', sync_loginFail:'Could not complete Google sign-in',
     theme_system:'System', theme_light:'Light', theme_dark:'Dark',
     entry_title:'Quick entry', entry_sub:'Press Enter to save and move to the next', entry_importShortcut:'Import Excel',
     field_name:'Name', field_namePh:'e.g. King Fahd Hospital', field_category:'Category', field_categoryPh:'e.g. General Hospital',
@@ -746,7 +687,7 @@ const I18N = {
     cmd_goEntry:'Go to Data Entry', cmd_goImport:'Go to Import',
     cmd_goDashboard:'Go to Dashboard', cmd_goHospitals:'Go to Entities',
     cmd_themeLight:'Switch to light theme', cmd_themeDark:'Switch to dark theme', cmd_themeSystem:'Switch to system theme',
-    cmd_openSettings:'Open settings', cmd_syncNow:'Sync now with Google Sheets',
+    cmd_openSettings:'Open settings', cmd_syncNow:'Sync now with cloud',
     cmd_exportData:'Export data (Excel)', cmd_downloadTemplate:'Download blank template',
     cmd_exportBackup:'Export full backup (JSON)', cmd_importBackup:'Import backup (JSON)',
     settings_backupTitle:'Backup', backup_exported:'Backup downloaded',
@@ -809,6 +750,7 @@ function confirmDialog({title, message, confirmLabel, cancelLabel, danger}){
   return new Promise(resolve=>{
     let el = document.getElementById('dialogBackdrop');
     if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
+    const myGen = ++dialogGen;
     el.innerHTML = `
       <div class="dialog-modal">
         <div class="dialog-title">${icon('alert',18)} ${esc(title)}</div>
@@ -822,7 +764,7 @@ function confirmDialog({title, message, confirmLabel, cancelLabel, danger}){
     function close(result){
       el.classList.remove('open');
       document.removeEventListener('keydown', onKey);
-      setTimeout(()=>{ el.innerHTML=''; }, 200);
+      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
       resolve(result);
     }
     function onKey(e){ if(e.key==='Escape') close(false); else if(e.key==='Enter') close(true); }
@@ -887,6 +829,7 @@ let state = {
 
 const cselRegistry = {};
 let cselOpenId = null, cselHighlightIdx = -1;
+let dialogGen = 0;
 
 function csel(id, options, value, onChange, opts){
   opts = opts || {};
@@ -1041,7 +984,7 @@ function renderHeader(){
     </div>
     <div class="header-controls">
       <button class="spotlight-trigger-btn" id="spotlightTriggerBtn" type="button">${icon('search',14)} <span class="spotlight-kbd">${/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent)?'⌘K':'Ctrl+K'}</span></button>
-      <button class="fb-status connecting" id="fbStatusBtn" type="button" title="${esc(t('fb_connecting'))}" aria-label="${esc(t('fb_connecting'))}">${icon('cloud',15)}</button>
+      <button class="fb-status connecting" id="fbStatusBtn" type="button" title="${esc(t('cloud_notLinked'))}" aria-label="${esc(t('cloud_notLinked'))}">${icon('cloud',15)}</button>
       <div class="theme-group" id="themeSeg">
         <button class="theme-icon ${theme==='system'?'active':''}" data-theme="system" title="${esc(t('theme_system'))}" aria-label="${esc(t('theme_system'))}">${icon('monitor',14)}</button>
         <button class="theme-icon ${theme==='light'?'active':''}" data-theme="light" title="${esc(t('theme_light'))}" aria-label="${esc(t('theme_light'))}">${icon('sun',14)}</button>
@@ -1063,202 +1006,15 @@ function renderHeader(){
   });
   renderFbStatus();
   const fbBtn = el.querySelector('#fbStatusBtn');
-  if(fbBtn) fbBtn.addEventListener('click', fbRetry);
+  if(fbBtn) fbBtn.addEventListener('click', ()=>{
+    cloudSync.panelOpen = true;
+    renderSyncBar();
+    document.getElementById('syncGearBtn')?.scrollIntoView({behavior:'smooth', block:'center'});
+  });
 }
 
 let appSettings = { currencyUnit: '' };
 function currencyUnit(){ return appSettings.currencyUnit ? ' ' + appSettings.currencyUnit : ''; }
-
-let sync = {
-  clientId:'', spreadsheetId:'', sheetName:'Sheet1',
-  accessToken:null, tokenClient:null, connected:false,
-  autoSync:true, syncing:false, lastSync:null, lastStatus:null, lastError:'',
-  panelOpen:false,
-};
-let autoSyncTimer = null;
-
-function scheduleAutoSync(){
-  saveCache();
-  if(!sync.autoSync || !sync.connected) return;
-  clearTimeout(autoSyncTimer);
-  autoSyncTimer = setTimeout(syncNow, 1600);
-}
-function ensureTokenClient(){
-  if(sync.tokenClient) return sync.tokenClient;
-  if(!window.google || !google.accounts || !google.accounts.oauth2) return null;
-  sync.tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: sync.clientId,
-    scope: 'https://www.googleapis.com/auth/spreadsheets',
-    callback: (resp)=>{
-      if(resp && resp.access_token){ sync.accessToken = resp.access_token; sync.connected = true; updateSyncBar(); initialConnectSync(); }
-      else toast(t('sync_loginFail'), 'err');
-    },
-  });
-  return sync.tokenClient;
-}
-function connectGoogle(){
-  if(!sync.clientId || !sync.spreadsheetId){ sync.panelOpen = true; renderSyncBar(); toast(t('sync_missingConfig'), 'err'); return; }
-  if(!window.google || !google.accounts){ toast(t('sync_noGoogle'), 'err'); return; }
-  const tc = ensureTokenClient();
-  if(tc) tc.requestAccessToken();
-}
-function disconnectGoogle(){
-  sync.connected = false; sync.accessToken = null; sync.lastStatus=null;
-  renderSyncBar(); toast(t('sync_disconnected'));
-}
-async function readSheetValues(){
-  const range = `${sync.sheetName}!A1:Z20000`;
-  const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sync.spreadsheetId}/values/${encodeURIComponent(range)}`, {
-    headers:{ Authorization:`Bearer ${sync.accessToken}` }
-  });
-  if(!res.ok){ const eb = await res.json().catch(()=>({})); throw new Error((eb.error && eb.error.message) || `HTTP ${res.status}`); }
-  const data = await res.json();
-  return data.values || [];
-}
-function parseSheetRowsToRecords(values){
-  if(!values.length) return [];
-  const mapping = guessMapping(values[0]);
-  if(!mapping.some(Boolean)) return null;
-  const out = [];
-  values.slice(1).forEach(row=>{
-    const rec = { id: uid(), name:'', category:'', budgetType: BUDGET_KEYS[0], month:new Date().getMonth(), year:new Date().getFullYear(), before:0, after:0 };
-    let hasName = false;
-    mapping.forEach((field, colIdx)=>{
-      if(!field) return;
-      const val = row[colIdx];
-      if(val===undefined || val==='') return;
-      if(field==='name'){ rec.name = String(val).trim(); hasName = !!rec.name; }
-      else if(field==='category') rec.category = String(val).trim();
-      else if(field==='budgetType') rec.budgetType = budgetKeyFromLabel(val);
-      else if(field==='month') rec.month = monthIndexFromLabel(val);
-      else if(field==='year') rec.year = Number(val) || new Date().getFullYear();
-      else if(field==='before') rec.before = Number(val) || 0;
-      else if(field==='after') rec.after = Number(val) || 0;
-    });
-    if(hasName) out.push(rec);
-  });
-  return out;
-}
-async function initialConnectSync(){
-  sync.syncing = true; updateSyncBar();
-  try{
-    const values = await readSheetValues();
-    const parsed = values.length > 1 ? parseSheetRowsToRecords(values) : [];
-    if(parsed && parsed.length){
-      state.records = parsed;
-      toast(t('sync_loadedExisting', {n: parsed.length}));
-    } else {
-      state.records = [];
-      toast(t('sync_clearedPlaceholder'));
-    }
-    sync.lastStatus = 'success'; sync.lastSync = new Date(); sync.lastError = '';
-    saveCache();
-    renderMain();
-  }catch(e){
-    sync.lastStatus = 'error'; sync.lastSync = new Date(); sync.lastError = e.message || 'error';
-    toast(t('sync_failPrefix') + sync.lastError, 'err');
-  }
-  sync.syncing = false; updateSyncBar();
-}
-async function syncNow(){
-  if(!sync.connected || !sync.accessToken){ connectGoogle(); return; }
-  if(sync.syncing) return;
-  sync.syncing = true; updateSyncBar();
-  try{
-    const clearRange = `${sync.sheetName}!A1:Z20000`;
-    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sync.spreadsheetId}/values/${encodeURIComponent(clearRange)}:clear`, {
-      method:'POST', headers:{ Authorization:`Bearer ${sync.accessToken}` }
-    });
-    const values = [currentHeaders(), ...state.records.map(r=>[r.name,r.category,budgetLabel(r.budgetType),monthName(r.month),r.year,r.before,r.after])];
-    const updateRange = `${sync.sheetName}!A1`;
-    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sync.spreadsheetId}/values/${encodeURIComponent(updateRange)}?valueInputOption=RAW`, {
-      method:'PUT', headers:{ Authorization:`Bearer ${sync.accessToken}`, 'Content-Type':'application/json' },
-      body: JSON.stringify({ range: updateRange, majorDimension:'ROWS', values })
-    });
-    if(!res.ok){ const eb = await res.json().catch(()=>({})); throw new Error((eb.error && eb.error.message) || `HTTP ${res.status}`); }
-    sync.lastStatus = 'success'; sync.lastSync = new Date(); sync.lastError='';
-    toast(t('sync_success'));
-  }catch(e){
-    sync.lastStatus = 'error'; sync.lastSync = new Date(); sync.lastError = e.message || 'error';
-    if(/401|unauth/i.test(sync.lastError)){ sync.connected=false; sync.accessToken=null; }
-    toast(t('sync_failPrefix') + sync.lastError, 'err');
-  }
-  sync.syncing = false; updateSyncBar();
-}
-function renderSyncBar(){
-  const bar = document.getElementById('syncBar');
-  const configured = sync.clientId && sync.spreadsheetId;
-  let dotColor = 'var(--muted2)', text = t('sync_notConfigured');
-  if(sync.syncing){ dotColor='var(--accent)'; text=t('sync_syncing'); }
-  else if(!configured){ dotColor='var(--muted2)'; text=t('sync_notConfigured'); }
-  else if(!sync.connected){ dotColor='var(--muted2)'; text=t('sync_notConnected'); }
-  else if(sync.lastStatus==='error'){ dotColor='var(--bad)'; text=t('sync_failedPrefix')+esc(sync.lastError); }
-  else if(sync.lastSync){ dotColor='var(--good)'; text=t('sync_lastPrefix')+sync.lastSync.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}); }
-  else { dotColor='var(--accent)'; text=t('sync_waiting'); }
-
-  bar.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;">
-      <div class="sync-left"><span class="sync-dot" style="background:${dotColor};"></span><span class="sync-text">${text}</span></div>
-      <div class="sync-actions">
-        <button class="btn-ghost" id="syncNowBtn" ${sync.syncing?'disabled':''}>${icon('refresh',14)} ${t('sync_nowBtn')}</button>
-        <button class="icon-btn" id="syncGearBtn" title="${esc(t('settings_title'))}">${icon('gear',17)}</button>
-      </div>
-    </div>
-    <div class="sync-panel ${sync.panelOpen?'open':''}" id="syncPanel">
-      <h3 class="card-title" style="margin-bottom:12px;">${t('settings_generalTitle')}</h3>
-      <div class="sync-grid" style="margin-bottom:18px;">
-        <label class="field"><span>${t('settings_currencyUnit')}</span><input class="inp" id="cfgCurrency" placeholder="${t('settings_currencyUnitPh')}" value="${esc(appSettings.currencyUnit)}"></label>
-      </div>
-      <h3 class="card-title" style="margin-bottom:12px;">${t('settings_backupTitle')}</h3>
-      <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
-        <button class="btn-ghost" id="exportBackupBtn" type="button">${icon('download',14)} ${t('cmd_exportBackup')}</button>
-        <button class="btn-ghost" id="importBackupBtn" type="button">${icon('upload',14)} ${t('cmd_importBackup')}</button>
-        <input type="file" id="backupFileInput" accept="application/json,.json" style="display:none;">
-      </div>
-      <h3 class="card-title" style="margin-bottom:12px;">${t('settings_syncTitle')}</h3>
-      <div class="sync-grid">
-        <label class="field"><span>${t('sync_clientId')}</span><input class="inp" id="cfgClientId" placeholder="${t('sync_clientIdPh')}" value="${esc(sync.clientId)}"></label>
-        <label class="field"><span>${t('sync_sheetId')}</span><input class="inp" id="cfgSheetId" placeholder="${t('sync_sheetIdPh')}" value="${esc(sync.spreadsheetId)}"></label>
-        <label class="field"><span>${t('sync_sheetName')}</span><input class="inp" id="cfgSheetName" placeholder="${t('sync_sheetNamePh')}" value="${esc(sync.sheetName)}"></label>
-        <label class="field"><span>${t('sync_autoLabel')}</span>
-          <div style="display:flex;align-items:center;gap:10px;height:44px;">
-            <div class="switch ${sync.autoSync?'on':''}" id="autoSyncSwitch"></div>
-            <span style="font-size:13px;color:var(--muted);">${sync.autoSync?t('sync_autoOn'):t('sync_autoOff')}</span>
-          </div>
-        </label>
-      </div>
-      <div style="display:flex;gap:10px;margin:14px 0;flex-wrap:wrap;">
-        ${sync.connected ? `<button class="btn-ghost" id="disconnectBtn">${icon('x',14)} ${t('sync_disconnect')}</button>`
-                          : `<button class="btn-ghost btn-accent" id="connectBtn">${icon('link',14)} ${t('sync_connect')}</button>`}
-        <button class="btn-ghost" id="saveCfgBtn">${icon('check',14)} ${t('sync_save')}</button>
-      </div>
-      <div class="helper-note">${t('sync_helper')}</div>
-    </div>`;
-
-  document.getElementById('syncNowBtn').addEventListener('click', syncNow);
-  document.getElementById('syncGearBtn').addEventListener('click', ()=>{ sync.panelOpen = !sync.panelOpen; renderSyncBar(); });
-  const cb = document.getElementById('connectBtn'); if(cb) cb.addEventListener('click', connectGoogle);
-  const db = document.getElementById('disconnectBtn'); if(db) db.addEventListener('click', disconnectGoogle);
-  document.getElementById('autoSyncSwitch').addEventListener('click', ()=>{ sync.autoSync = !sync.autoSync; saveCache(); renderSyncBar(); });
-  document.getElementById('exportBackupBtn').addEventListener('click', exportBackup);
-  document.getElementById('importBackupBtn').addEventListener('click', ()=> document.getElementById('backupFileInput').click());
-  document.getElementById('backupFileInput').addEventListener('change', (e)=>{
-    const f = e.target.files[0];
-    if(f) importBackupFile(f);
-    e.target.value = '';
-  });
-  document.getElementById('saveCfgBtn').addEventListener('click', ()=>{
-    appSettings.currencyUnit = document.getElementById('cfgCurrency').value.trim();
-    sync.clientId = document.getElementById('cfgClientId').value.trim();
-    sync.spreadsheetId = document.getElementById('cfgSheetId').value.trim();
-    sync.sheetName = document.getElementById('cfgSheetName').value.trim() || 'Sheet1';
-    sync.tokenClient = null;
-    saveCache();
-    toast(t('sync_saved')); renderSyncBar();
-    if(state.tab==='entry' || state.tab==='dashboard' || state.tab==='hospitals') renderMain();
-  });
-}
-function updateSyncBar(){ renderSyncBar(); }
 
 const firebaseConfig = {
   apiKey: "AIzaSyA04U-mi_6hb9VbPFWFqRhjRtZiAB0jLRY",
@@ -1270,92 +1026,272 @@ const firebaseConfig = {
 };
 const RECORD_SOFT_LIMIT = 3000;
 let recordCeilingWarned = false;
-let fb = { app:null, auth:null, db:null, uid:null, linked:false, status:'connecting', unsub:null, saveTimer:null, initialLoadDone:false, localDirtyBeforeLoad:false };
+let fbApp = null, fbAuth = null, fbDb = null, fbUid = null;
+let cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:false };
+
 function hideBootProgress(){
   const bar = document.getElementById('bootProgress');
   if(bar) bar.classList.add('done');
 }
+
+function ensureFirebaseApp(){
+  if(fbApp) return;
+  fbApp = firebase.initializeApp(firebaseConfig);
+  fbAuth = firebase.auth();
+  fbDb = firebase.firestore();
+}
+async function ensureAnonAuth(){
+  if(!window.crypto || !crypto.subtle) throw new Error(t('cloud_needsHttps'));
+  ensureFirebaseApp();
+  if(fbUid) return fbUid;
+  if(fbAuth.currentUser){ fbUid = fbAuth.currentUser.uid; return fbUid; }
+  const cred = await fbAuth.signInAnonymously();
+  fbUid = cred.user.uid;
+  return fbUid;
+}
+async function sha256Hex(text){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function generateSyncCode(){
+  const bytes = crypto.getRandomValues(new Uint8Array(10));
+  return [...bytes].map(b=>b.toString(16).padStart(2,'0')).join('').match(/.{1,4}/g).join('-');
+}
+function cloudDocRef(hash){ return fbDb.collection('syncedRecords').doc(hash); }
+
 function renderFbStatus(){
   const btn = document.getElementById('fbStatusBtn');
   if(!btn) return;
-  btn.className = 'fb-status ' + fb.status;
-  const label = t(fb.status==='connected' && fb.linked ? 'fb_connectedLinked' : 'fb_' + fb.status);
+  const cls = cloudSync.status==='error' ? 'error' : cloudSync.status==='busy' ? 'syncing' : cloudSync.linked ? 'connected' : 'connecting';
+  btn.className = 'fb-status ' + cls;
+  const label = cloudSync.status==='error' ? t('cloud_errorPrefix')+cloudSync.lastError
+    : cloudSync.status==='busy' ? t('cloud_syncingMsg')
+    : cloudSync.linked ? t('cloud_linked') + (cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}) : '')
+    : t('cloud_notLinked');
   btn.title = label; btn.setAttribute('aria-label', label);
 }
-function fbDocRef(){ return fb.db.collection('entityData').doc(fb.uid); }
-function fbInit(){
-  try{
-    fb.app = firebase.initializeApp(firebaseConfig);
-    fb.auth = firebase.auth();
-    fb.db = firebase.firestore();
-    fb.auth.onAuthStateChanged(user=>{
-      if(user){ fb.uid = user.uid; fb.linked = !user.isAnonymous; fbAttachListener(); }
+
+function syncChoiceDialog({cloudCount, cloudUpdated, localCount}){
+  return new Promise(resolve=>{
+    let el = document.getElementById('dialogBackdrop');
+    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
+    const myGen = ++dialogGen;
+    const cloudWhen = cloudUpdated ? ' · ' + cloudUpdated.toLocaleString(lang==='ar'?'ar-EG':'en-US') : '';
+    el.innerHTML = `
+      <div class="dialog-modal">
+        <div class="dialog-title">${icon('cloud',18)} ${esc(t('cloud_previewTitle'))}</div>
+        <p class="dialog-msg">${esc(t('cloud_previewCloud',{n:cloudCount,u:cloudWhen}))}<br>${esc(t('cloud_previewLocal',{n:localCount}))}</p>
+        <div class="dialog-actions" style="flex-wrap:wrap;">
+          <button class="btn-ghost" id="scCancel">${esc(t('cloud_cancelBtn'))}</button>
+          <button class="btn-ghost" id="scLocal">${esc(t('cloud_useLocal'))}</button>
+          <button class="btn-ghost btn-accent" id="scCloud">${esc(t('cloud_useCloud'))}</button>
+        </div>
+      </div>`;
+    requestAnimationFrame(()=> el.classList.add('open'));
+    function close(result){
+      el.classList.remove('open');
+      document.removeEventListener('keydown', onKey);
+      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
+      resolve(result);
+    }
+    function onKey(e){ if(e.key==='Escape') close('cancel'); }
+    document.addEventListener('keydown', onKey);
+    el.onclick = (e)=>{ if(e.target===el) close('cancel'); };
+    el.querySelector('#scCancel').addEventListener('click', ()=> close('cancel'));
+    el.querySelector('#scLocal').addEventListener('click', ()=> close('local'));
+    el.querySelector('#scCloud').addEventListener('click', ()=> close('cloud'));
+  });
+}
+
+function saveCodeDialog(code){
+  return new Promise(resolve=>{
+    let el = document.getElementById('dialogBackdrop');
+    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
+    const myGen = ++dialogGen;
+    el.innerHTML = `
+      <div class="dialog-modal">
+        <div class="dialog-title">${icon('alert',18)} ${esc(t('cloud_saveTitle'))}</div>
+        <p class="dialog-msg">${esc(t('cloud_saveMsg'))}</p>
+        <div style="display:flex;align-items:center;gap:8px;border:1px solid var(--input-border);background:var(--input-bg);border-radius:var(--r-md);padding:12px 14px;margin-bottom:16px;">
+          <code style="flex:1;font-size:15px;letter-spacing:.03em;color:var(--fg);user-select:all;">${esc(code)}</code>
+          <button class="icon-btn" id="scCopyBtn" type="button" title="${esc(t('cloud_copyBtn'))}">${icon('filesheet',15)}</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:18px;">
+          <input type="checkbox" id="scConfirmChk"> ${esc(t('cloud_savedConfirm'))}
+        </label>
+        <div class="dialog-actions">
+          <button class="btn-ghost btn-accent" id="scContinueBtn" disabled>${esc(t('cloud_continueBtn'))}</button>
+        </div>
+      </div>`;
+    requestAnimationFrame(()=> el.classList.add('open'));
+    const chk = el.querySelector('#scConfirmChk');
+    const continueBtn = el.querySelector('#scContinueBtn');
+    chk.addEventListener('change', ()=>{ continueBtn.disabled = !chk.checked; });
+    el.querySelector('#scCopyBtn').addEventListener('click', ()=>{
+      navigator.clipboard?.writeText(code).then(()=> toast(t('cloud_copied')));
     });
-    fbConnect();
-  }catch(e){ fb.status = 'error'; renderFbStatus(); hideBootProgress(); }
+    function close(){
+      el.classList.remove('open');
+      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
+      resolve();
+    }
+    continueBtn.addEventListener('click', ()=>{ if(!chk.checked) return; close(); });
+  });
 }
-function fbConnect(){
-  fb.status = 'connecting'; renderFbStatus();
-  fb.auth.signInAnonymously().catch(()=>{ fb.status = 'error'; renderFbStatus(); hideBootProgress(); });
+
+async function cloudCreateNew(){
+  const code = generateSyncCode();
+  await saveCodeDialog(code);
+  cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
+  try{
+    await ensureAnonAuth();
+    const hash = await sha256Hex(code);
+    await cloudDocRef(hash).set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    cloudSync.linked = true; cloudSync.code = code; cloudSync.hash = hash;
+    cloudSync.lastSyncAt = new Date(); cloudSync.lastError=''; cloudSync.status='idle';
+    saveCache();
+    toast(t('cloud_linkSuccess'));
+  }catch(e){
+    cloudSync.status='error'; cloudSync.lastError = e.message || 'error';
+    toast(t('cloud_pushFail') + cloudSync.lastError, 'err');
+  }
+  renderFbStatus(); renderSyncBar();
 }
-function fbRetry(){
-  if(fb.status !== 'error') return;
-  fb.status = 'connecting'; renderFbStatus();
-  if(fb.auth && fb.auth.currentUser){ fb.uid = fb.auth.currentUser.uid; fbAttachListener(); }
-  else fbConnect();
-}
-function fbLinkGoogle(){
-  if(!fb.auth || !fb.auth.currentUser){ toast(t('fb_notReady'), 'err'); return; }
-  if(fb.linked){ toast(t('fb_alreadyLinked')); return; }
-  const provider = new firebase.auth.GoogleAuthProvider();
-  fb.auth.currentUser.linkWithPopup(provider)
-    .then(()=>{ fb.linked = true; renderFbStatus(); toast(t('fb_linked')); })
-    .catch(err=>{ toast(err && err.code==='auth/credential-already-in-use' ? t('fb_alreadyLinkedElsewhere') : t('fb_linkFailed'), 'err'); });
-}
-function fbAttachListener(){
-  if(fb.unsub) fb.unsub();
-  fb.status = 'syncing'; renderFbStatus();
-  fb.unsub = fbDocRef().onSnapshot(snap=>{
-    if(snap.metadata.hasPendingWrites && fb.initialLoadDone){ fb.status = 'connected'; renderFbStatus(); return; }
-    if(!fb.initialLoadDone && fb.localDirtyBeforeLoad){
-      fb.initialLoadDone = true; fb.status = 'connected'; renderFbStatus(); hideBootProgress();
-      fbPush();
+
+async function cloudLinkExisting(code){
+  if(!code || !code.trim()) return;
+  cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
+  try{
+    await ensureAnonAuth();
+    const hash = await sha256Hex(code.trim());
+    const snap = await cloudDocRef(hash).get();
+    if(!snap.exists){
+      toast(t('cloud_codeInvalid'), 'err');
+      cloudSync.status='idle'; renderFbStatus(); renderSyncBar();
       return;
     }
-    if(snap.exists){
-      const data = snap.data();
-      if(Array.isArray(data.records)){
-        state.records = data.records;
-        saveCache();
-        if(fb.initialLoadDone){ renderTabbar(); renderMain(); }
-      }
-    } else if(!fb.initialLoadDone){
-      fbPush();
-    }
-    fb.initialLoadDone = true;
-    fb.status = 'connected'; renderFbStatus();
-    hideBootProgress();
-  }, ()=>{ fb.status = 'error'; renderFbStatus(); hideBootProgress(); });
+    const data = snap.data();
+    const cloudRecords = Array.isArray(data.records) ? data.records : [];
+    const cloudUpdated = data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null;
+    const choice = await syncChoiceDialog({ cloudCount: cloudRecords.length, cloudUpdated, localCount: state.records.length });
+    if(choice === 'cancel'){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
+    cloudSync.code = code.trim(); cloudSync.hash = hash; cloudSync.linked = true;
+    if(choice === 'cloud'){ state.records = cloudRecords; renderTabbar(); renderMain(); }
+    else { await cloudDocRef(hash).set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); }
+    cloudSync.lastSyncAt = new Date(); cloudSync.lastError=''; cloudSync.status='idle';
+    saveCache();
+    toast(t('cloud_linkSuccess'));
+  }catch(e){
+    cloudSync.status='error'; cloudSync.lastError = e.message || 'error';
+    toast(t('cloud_pullFail') + cloudSync.lastError, 'err');
+  }
+  renderFbStatus(); renderSyncBar();
 }
-function scheduleFirestoreSync(){
-  if(!fb.uid) return;
-  clearTimeout(fb.saveTimer);
-  fb.saveTimer = setTimeout(fbPush, 900);
+
+async function cloudSyncNow(){
+  if(!cloudSync.linked){ cloudSync.panelOpen = true; renderSyncBar(); return; }
+  cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
+  try{
+    await ensureAnonAuth();
+    const snap = await cloudDocRef(cloudSync.hash).get();
+    const data = snap.exists ? snap.data() : { records: [] };
+    const cloudRecords = Array.isArray(data.records) ? data.records : [];
+    const cloudUpdated = data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null;
+    const choice = await syncChoiceDialog({ cloudCount: cloudRecords.length, cloudUpdated, localCount: state.records.length });
+    if(choice === 'cancel'){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
+    if(choice === 'cloud'){ state.records = cloudRecords; renderTabbar(); renderMain(); }
+    else { await cloudDocRef(cloudSync.hash).set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); }
+    cloudSync.lastSyncAt = new Date(); cloudSync.lastError=''; cloudSync.status='idle';
+    saveCache();
+    toast(t('cloud_linkSuccess'));
+  }catch(e){
+    cloudSync.status='error'; cloudSync.lastError = e.message || 'error';
+    toast(t('cloud_pullFail') + cloudSync.lastError, 'err');
+  }
+  renderFbStatus(); renderSyncBar();
 }
-function fbPush(){
-  if(!fb.uid) return;
-  fb.status = 'syncing'; renderFbStatus();
-  fbDocRef().set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
-    .then(()=>{ fb.status = 'connected'; renderFbStatus(); })
-    .catch(()=>{ fb.status = 'error'; renderFbStatus(); });
+
+function cloudUnlink(){
+  cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:true };
+  saveCache();
+  toast(t('cloud_unlinked'));
+  renderFbStatus(); renderSyncBar();
 }
+
 function afterRecordsChanged(){
-  if(!fb.initialLoadDone) fb.localDirtyBeforeLoad = true;
   if(!recordCeilingWarned && state.records.length >= RECORD_SOFT_LIMIT){
     recordCeilingWarned = true;
     toast(t('records_approachingLimit',{n:state.records.length}), 'err');
   }
-  scheduleAutoSync(); scheduleFirestoreSync();
+  saveCache();
+}
+
+function renderSyncBar(){
+  const bar = document.getElementById('syncBar');
+  let dotColor = 'var(--muted2)', text = t('cloud_notLinked');
+  if(cloudSync.status==='busy'){ dotColor='var(--accent)'; text=t('cloud_syncingMsg'); }
+  else if(cloudSync.status==='error'){ dotColor='var(--bad)'; text=t('cloud_errorPrefix')+esc(cloudSync.lastError); }
+  else if(cloudSync.linked){ dotColor='var(--good)'; text = t('cloud_linked') + (cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}) : ''); }
+
+  bar.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;">
+      <div class="sync-left"><span class="sync-dot" style="background:${dotColor};"></span><span class="sync-text">${text}</span></div>
+      <div class="sync-actions">
+        <button class="btn-ghost" id="syncNowBtn" ${cloudSync.status==='busy'?'disabled':''}>${icon('refresh',14)} ${t('cloud_syncNowBtn')}</button>
+        <button class="icon-btn" id="syncGearBtn" title="${esc(t('settings_title'))}">${icon('gear',17)}</button>
+      </div>
+    </div>
+    <div class="sync-panel ${cloudSync.panelOpen?'open':''}" id="syncPanel">
+      <h3 class="card-title" style="margin-bottom:12px;">${t('settings_generalTitle')}</h3>
+      <div class="sync-grid" style="margin-bottom:18px;">
+        <label class="field"><span>${t('settings_currencyUnit')}</span><input class="inp" id="cfgCurrency" placeholder="${t('settings_currencyUnitPh')}" value="${esc(appSettings.currencyUnit)}"></label>
+      </div>
+      <h3 class="card-title" style="margin-bottom:12px;">${t('settings_backupTitle')}</h3>
+      <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+        <button class="btn-ghost" id="exportBackupBtn" type="button">${icon('download',14)} ${t('cmd_exportBackup')}</button>
+        <button class="btn-ghost" id="importBackupBtn" type="button">${icon('upload',14)} ${t('cmd_importBackup')}</button>
+        <input type="file" id="backupFileInput" accept="application/json,.json" style="display:none;">
+      </div>
+      <h3 class="card-title" style="margin-bottom:12px;">${t('cloud_title')}</h3>
+      <p class="card-sub" style="margin:0 0 14px;">${t('cloud_explain')}</p>
+      ${cloudSync.linked ? `
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-ghost" id="cloudSyncNowBtn">${icon('refresh',14)} ${t('cloud_syncNowBtn')}</button>
+          <button class="btn-ghost btn-danger" id="cloudUnlinkBtn">${icon('x',14)} ${t('cloud_unlinkBtn')}</button>
+        </div>` : `
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+          <button class="btn-ghost btn-accent" id="cloudCreateBtn">${icon('sparkle',14)} ${t('cloud_createBtn')}</button>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <input class="inp" id="cloudCodeInput" placeholder="${t('cloud_codePh')}" style="max-width:260px;">
+          <button class="btn-ghost" id="cloudLinkBtn">${icon('link',14)} ${t('cloud_codeSubmit')}</button>
+        </div>`}
+    </div>`;
+
+  document.getElementById('syncNowBtn').addEventListener('click', cloudSyncNow);
+  document.getElementById('syncGearBtn').addEventListener('click', ()=>{ cloudSync.panelOpen = !cloudSync.panelOpen; renderSyncBar(); });
+  document.getElementById('exportBackupBtn').addEventListener('click', exportBackup);
+  document.getElementById('importBackupBtn').addEventListener('click', ()=> document.getElementById('backupFileInput').click());
+  document.getElementById('backupFileInput').addEventListener('change', (e)=>{
+    const f = e.target.files[0];
+    if(f) importBackupFile(f);
+    e.target.value = '';
+  });
+  document.getElementById('cfgCurrency').addEventListener('change', (e)=>{
+    appSettings.currencyUnit = e.target.value.trim();
+    saveCache();
+    if(state.tab!=='import') renderMain();
+  });
+  if(cloudSync.linked){
+    document.getElementById('cloudSyncNowBtn').addEventListener('click', cloudSyncNow);
+    document.getElementById('cloudUnlinkBtn').addEventListener('click', cloudUnlink);
+  } else {
+    document.getElementById('cloudCreateBtn').addEventListener('click', cloudCreateNew);
+    document.getElementById('cloudLinkBtn').addEventListener('click', ()=>{
+      const val = document.getElementById('cloudCodeInput').value;
+      cloudLinkExisting(val);
+    });
+  }
 }
 
 const CACHE_KEY = 'entitiesStatementApp:cache:v1';
@@ -1364,7 +1300,7 @@ function saveCache(){
     const payload = {
       records: state.records,
       appSettings,
-      sync: { clientId: sync.clientId, spreadsheetId: sync.spreadsheetId, sheetName: sync.sheetName, autoSync: sync.autoSync },
+      cloudSync: { linked: cloudSync.linked, code: cloudSync.code, hash: cloudSync.hash },
       theme, lang,
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
@@ -1377,11 +1313,10 @@ function loadCache(){
     const data = JSON.parse(raw);
     if(data && Array.isArray(data.records)) state.records = data.records;
     if(data && data.appSettings) appSettings = { ...appSettings, ...data.appSettings };
-    if(data && data.sync){
-      sync.clientId = data.sync.clientId || '';
-      sync.spreadsheetId = data.sync.spreadsheetId || '';
-      sync.sheetName = data.sync.sheetName || 'Sheet1';
-      sync.autoSync = data.sync.autoSync !== false;
+    if(data && data.cloudSync){
+      cloudSync.linked = !!data.cloudSync.linked;
+      cloudSync.code = data.cloudSync.code || '';
+      cloudSync.hash = data.cloudSync.hash || '';
     }
     if(data && data.theme) theme = data.theme;
     if(data && data.lang) lang = data.lang;
@@ -1393,7 +1328,7 @@ function exportBackup(){
     app:'entitiesStatementApp', version:1, exportedAt:new Date().toISOString(),
     records: state.records,
     appSettings,
-    sync: { clientId: sync.clientId, spreadsheetId: sync.spreadsheetId, sheetName: sync.sheetName, autoSync: sync.autoSync },
+    cloudSync: { linked: cloudSync.linked, code: cloudSync.code, hash: cloudSync.hash },
     theme, lang,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
@@ -1411,10 +1346,10 @@ function importBackupFile(file){
       if(!data || !Array.isArray(data.records)) throw new Error('invalid');
       state.records = data.records;
       if(data.appSettings) appSettings = { ...appSettings, ...data.appSettings };
-      if(data.sync){
-        sync.clientId = data.sync.clientId || ''; sync.spreadsheetId = data.sync.spreadsheetId || '';
-        sync.sheetName = data.sync.sheetName || 'Sheet1'; sync.autoSync = data.sync.autoSync !== false;
-        sync.tokenClient = null; sync.connected = false; sync.accessToken = null;
+      if(data.cloudSync){
+        cloudSync.linked = !!data.cloudSync.linked;
+        cloudSync.code = data.cloudSync.code || '';
+        cloudSync.hash = data.cloudSync.hash || '';
       }
       if(data.theme){ theme = data.theme; applyTheme(); }
       if(data.lang && data.lang !== lang){
@@ -1683,12 +1618,12 @@ function readWorkbookObjects(file){
 }
 
 let importMode = 'tabular';
-let pendingPreview = null;                 // tabular: array of records
-let tabularIncluded = null;                // tabular: Set of row indices included
-let tabularColsOn = null;                  // tabular: Set of field keys included
+let pendingPreview = null;
+let tabularIncluded = null;
+let tabularColsOn = null;
 let freeGrid = null, freeHeaderRow = 1, freeMapping = [];
-let freeIncluded = null;                   // freeform: Set of row indices included
-let freeColsOn = null;                     // freeform: Set of field keys included
+let freeIncluded = null;
+let freeColsOn = null;
 
 function renderImportTab(main){
   main.innerHTML = `
@@ -2455,13 +2390,12 @@ function spotlightCommands(){
     { icon:'moon', title:t('cmd_themeDark'), action:()=>{ theme='dark'; applyTheme(); renderHeader(); saveCache(); } },
     { icon:'monitor', title:t('cmd_themeSystem'), action:()=>{ theme='system'; applyTheme(); renderHeader(); saveCache(); } },
     { icon:'globe', title: lang==='ar' ? 'Switch to English' : 'التبديل إلى العربية', action:()=>{ const b = document.getElementById('langToggleBtn'); if(b) b.click(); } },
-    { icon:'gear', title:t('cmd_openSettings'), action:()=>{ sync.panelOpen = true; renderSyncBar(); const g = document.getElementById('syncGearBtn'); if(g) g.scrollIntoView({behavior:'smooth', block:'center'}); } },
-    { icon:'refresh', title:t('cmd_syncNow'), action:()=> syncNow() },
+    { icon:'gear', title:t('cmd_openSettings'), action:()=>{ cloudSync.panelOpen = true; renderSyncBar(); const g = document.getElementById('syncGearBtn'); if(g) g.scrollIntoView({behavior:'smooth', block:'center'}); } },
+    { icon:'refresh', title:t('cmd_syncNow'), action:()=> cloudSyncNow() },
     { icon:'download', title:t('cmd_exportData'), action:()=> exportRecords(state.records) },
     { icon:'filesheet', title:t('cmd_downloadTemplate'), action:()=> downloadTemplate() },
     { icon:'cloud', title:t('cmd_exportBackup'), action:()=> exportBackup() },
     { icon:'upload', title:t('cmd_importBackup'), action:()=>{ const f = document.getElementById('backupFileInput'); if(f) f.click(); } },
-    { icon:'link', title:t('cmd_linkGoogle'), action: fbLinkGoogle },
   ];
 }
 
@@ -2604,8 +2538,7 @@ renderHeader();
 renderSyncBar();
 renderTabbar();
 renderMain();
-fbInit();
-setTimeout(hideBootProgress, 8000);
+hideBootProgress();
 </script>
 </body>
 </html>
