@@ -444,12 +444,14 @@
   .icon-btn.cancel{background:var(--icon-btn-hover-bg);color:var(--muted);}
   .mini-inp{width:100%;border-radius:10px;border:1px solid var(--mini-inp-border);background:var(--mini-inp-bg);padding:7px 9px;font-size:12.5px;color:var(--fg);outline:none;}
 
-  .stat-card{display:flex;align-items:center;gap:16px;padding:20px;flex:1;min-width:210px;transition:transform .3s cubic-bezier(.22,1,.36,1);}
+  .stat-card{display:flex;align-items:flex-start;gap:14px;padding:18px 20px 20px;flex:1 1 230px;min-width:230px;max-width:100%;transition:transform .3s cubic-bezier(.22,1,.36,1);overflow:hidden;}
   .stat-card:hover{transform:translateY(-3px);}
-  .stat-icon{height:46px;width:46px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.22);}
-  .stat-label{font-size:12.5px;color:var(--muted2);}
-  .stat-value{font-size:27px;font-weight:800;letter-spacing:-.01em;color:var(--fg);margin-top:2px;}
-  .stat-sub{font-size:12px;color:var(--muted2);margin-top:3px;}
+  .stat-icon{height:42px;width:42px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.22);}
+  .stat-body{min-width:0;flex:1;}
+  .stat-label{font-size:12px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .stat-value{font-weight:800;letter-spacing:-.015em;color:var(--fg);margin-top:4px;line-height:1.15;
+    font-size:clamp(15px, 1.9vw, 25px);overflow-wrap:anywhere;word-break:break-word;white-space:normal;}
+  .stat-sub{font-size:11.5px;color:var(--muted2);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .stats-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px;}
 
   .legend-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;padding:5px 0;color:var(--muted);}
@@ -482,6 +484,20 @@
   .attn-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--divider-soft);}
   .attn-item:last-child{border-bottom:none;}
   input[type="checkbox"]{accent-color:var(--accent);width:16px;height:16px;cursor:pointer;}
+
+  .err-panel{margin-top:14px;border-radius:var(--r-md);border:1px solid var(--bad);background:var(--bad-soft);overflow:hidden;}
+  .err-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;cursor:pointer;}
+  .err-panel-head span{font-size:12.5px;font-weight:700;color:var(--bad);display:flex;align-items:center;gap:8px;}
+  .err-panel-body{display:none;max-height:220px;overflow-y:auto;padding:0 14px 12px;}
+  .err-panel-body.open{display:block;}
+  .err-row{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink-8);padding:6px 0;border-top:1px solid rgba(248,113,113,.18);}
+  .err-row:first-child{border-top:none;}
+  .err-row b{color:var(--bad);flex-shrink:0;}
+
+  .doc-card{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:var(--r-md);
+    border:1px solid var(--row-card-border);background:var(--row-card-bg);padding:14px 16px;margin-bottom:10px;transition:.2s;}
+  .doc-card.active{border-color:var(--accent-ring);background:var(--accent-soft);}
+  .doc-card:hover{border-color:var(--row-card-border-hover);}
 </style>
 </head>
 <body>
@@ -543,7 +559,20 @@ let lang = 'ar';
 const I18N = {
   ar:{
     appName:'بيان جهات متعاقدة',
-    tab_entry:'إدخال البيانات', tab_import:'الاستيراد', tab_dashboard:'لوحة التحكم', tab_hospitals:'الجهات',
+    tab_entry:'إدخال البيانات', tab_import:'الاستيراد', tab_dashboard:'لوحة التحكم', tab_hospitals:'الجهات', tab_account:'الحساب',
+    acc_emailSection:'حساب Google', acc_deviceSection:'رمز جهاز سريع (بدون حساب)',
+    acc_emailExplain:'سجّل الدخول بحساب Google لحفظ عدة مستندات بيانات في السحابة، وتحميلها من أي جهاز بعد تسجيل الدخول — دون كلمة مرور تديرها هذا التطبيق.',
+    acc_deviceExplain:'مزامنة سريعة عبر رمز مشترك بين جهازين — بلا بريد إلكتروني أو حساب. مناسب لجهازين تستخدمهما أنت شخصيًا فقط.',
+    acc_signInGoogle:'تسجيل الدخول باستخدام Google', acc_logout:'تسجيل الخروج',
+    acc_signedInAs:'مسجّل الدخول باسم', acc_yourDocs:'مستنداتك المحفوظة', acc_noDocs:'لا توجد مستندات محفوظة بعد',
+    acc_newDocLabel:'اسم المستند الجديد', acc_newDocPh:'مثال: بيانات 2026', acc_saveAsNew:'حفظ البيانات الحالية كمستند جديد',
+    acc_saveToActive:'حفظ في المستند النشط', acc_active:'نشط الآن', acc_loadReplace:'تحميل (استبدال بياناتي الحالية)',
+    acc_loadAppend:'تحميل (إضافة لبياناتي الحالية)', acc_rename:'إعادة تسمية', acc_delete:'حذف',
+    acc_deleteDocTitle:'حذف هذا المستند؟', acc_deleteDocMsg:'سيُحذف نهائيًا من السحابة ولن يؤثر على بيانات جهازك الحالية.',
+    acc_renamePrompt:'الاسم الجديد للمستند', acc_recordsSuffix:'سجل', acc_updatedPrefix:'آخر حفظ: ',
+    acc_authErrorGeneric:'تعذّر تسجيل الدخول — تحقق من البيانات وحاول مجددًا',
+    acc_signInSuccess:'تم تسجيل الدخول بنجاح', acc_docSaved:'تم الحفظ في السحابة', acc_docCreated:'تم إنشاء المستند وحفظه',
+    acc_docLoaded:'تم تحميل المستند', acc_docDeleted:'تم حذف المستند', acc_docRenamed:'تمت إعادة التسمية',
     cloud_title:'مزامنة سحابية عبر رمز', cloud_notLinked:'غير مرتبط بأي جهاز آخر',
     cloud_linked:'مرتبط — آخر مزامنة: ', cloud_syncingMsg:'جارٍ التنفيذ...', cloud_errorPrefix:'خطأ: ',
     cloud_explain:'أنشئ رمز مزامنة أو أدخل رمزًا موجودًا للوصول من جهاز آخر. لا يلزم بريد إلكتروني أو كلمة مرور.',
@@ -589,6 +618,10 @@ const I18N = {
     import_previewTitle:'معاينة قبل الاستيراد', import_confirm:'تأكيد الاستيراد', import_emptyPreview:'ستظهر معاينة السجلات هنا بعد رفع الملف',
     import_fileEmpty:'الملف فارغ أو لا يحتوي على بيانات صالحة', import_noColumns:'تعذر التعرف على الأعمدة — جرّب وضع "غير جدولي" لتخطيط مخصص',
     import_imported:'تم استيراد {n} سجل بنجاح', import_readError:'حدث خطأ أثناء قراءة الملف',
+    import_rowsRejected:'{n} صف تم تجاهله — اضغط للعرض', import_reasonNoName:'تم تجاهله لعدم وجود اسم للجهة',
+    import_modeTitle:'كيف تريد إضافة هذه البيانات؟',
+    import_modeMsg:'يمكنك إضافة السجلات الجديدة إلى بياناتك الحالية، أو استبدال كل البيانات الحالية (بما فيها بيانات العرض التجريبي) بهذا الملف فقط.',
+    import_modeAppend:'إضافة إلى البيانات الحالية', import_modeReplace:'استبدال كل البيانات الحالية',
     import_freeformTitle:'استيراد غير جدولي', import_freeformSub:'ارفع أي ملف Excel بأي ترتيب أعمدة، ثم حدد يدويًا أي عمود يقابل كل حقل',
     import_freeDzTitle:'اسحب أي ملف Excel هنا', import_freeDzSub:'لا حاجة لمطابقة القالب — سيتم تحديد الأعمدة يدويًا',
     import_step1:'١) حدد صف عناوين الأعمدة', import_step1Sub:'اضغط على أي صف أدناه لتعيينه كصف العناوين (تجاهل صفوف الملاحظات في الأعلى)',
@@ -630,7 +663,20 @@ const I18N = {
   },
   en:{
     appName:'Contracted Entities Statement',
-    tab_entry:'Data Entry', tab_import:'Import', tab_dashboard:'Dashboard', tab_hospitals:'Entities',
+    tab_entry:'Data Entry', tab_import:'Import', tab_dashboard:'Dashboard', tab_hospitals:'Entities', tab_account:'Account',
+    acc_emailSection:'Google account', acc_deviceSection:'Quick device code (no account)',
+    acc_emailExplain:'Sign in with your Google account to save multiple data documents to the cloud, and load any of them from any device after signing in — no password for this app to manage.',
+    acc_deviceExplain:'A quick sync code shared between two devices — no email or account. Best for two devices you personally use.',
+    acc_signInGoogle:'Sign in with Google', acc_logout:'Log out',
+    acc_signedInAs:'Signed in as', acc_yourDocs:'Your saved documents', acc_noDocs:'No saved documents yet',
+    acc_newDocLabel:'New document name', acc_newDocPh:'e.g. 2026 Data', acc_saveAsNew:'Save current data as a new document',
+    acc_saveToActive:'Save to active document', acc_active:'Active now', acc_loadReplace:'Load (replace my current data)',
+    acc_loadAppend:'Load (add to my current data)', acc_rename:'Rename', acc_delete:'Delete',
+    acc_deleteDocTitle:'Delete this document?', acc_deleteDocMsg:'It will be permanently removed from the cloud. Your current device data is not affected.',
+    acc_renamePrompt:'New document name', acc_recordsSuffix:'records', acc_updatedPrefix:'Last saved: ',
+    acc_authErrorGeneric:'Could not sign in — check your details and try again',
+    acc_signInSuccess:'Signed in successfully', acc_docSaved:'Saved to the cloud', acc_docCreated:'Document created and saved',
+    acc_docLoaded:'Document loaded', acc_docDeleted:'Document deleted', acc_docRenamed:'Renamed',
     cloud_title:'Sync via Code', cloud_notLinked:'Not linked to another device',
     cloud_linked:'Linked — last synced: ', cloud_syncingMsg:'Working...', cloud_errorPrefix:'Error: ',
     cloud_explain:'Create a sync code or enter an existing one to access this from another device. No email or password needed.',
@@ -676,6 +722,10 @@ const I18N = {
     import_previewTitle:'Preview before import', import_confirm:'Confirm import', import_emptyPreview:'A preview of the records will appear here after upload',
     import_fileEmpty:'The file is empty or has no valid data', import_noColumns:'Could not detect columns — try "Non-tabular" mode for a custom layout',
     import_imported:'Imported {n} records successfully', import_readError:'An error occurred while reading the file',
+    import_rowsRejected:'{n} rows were skipped — click to view', import_reasonNoName:'Skipped — no entity name found',
+    import_modeTitle:'How should this data be added?',
+    import_modeMsg:'You can add these new records to your existing data, or replace all existing data (including any demo data) with just this file.',
+    import_modeAppend:'Add to existing data', import_modeReplace:'Replace all existing data',
     import_freeformTitle:'Non-tabular import', import_freeformSub:'Upload any Excel file in any column order, then map each column to a field yourself',
     import_freeDzTitle:'Drop any Excel file here', import_freeDzSub:'No need to match the template — columns are mapped manually',
     import_step1:'1) Choose the header row', import_step1Sub:'Click any row below to set it as the header row (skip note/title rows above)',
@@ -809,7 +859,47 @@ function findDuplicateRecord(name, month, year, excludeId){
   const n = normalizeText(name);
   return state.records.find(r => r.id!==excludeId && normalizeText(r.name)===n && r.month===month && r.year===year);
 }
+function importModeDialog(){
+  return new Promise(resolve=>{
+    let el = document.getElementById('dialogBackdrop');
+    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
+    const myGen = ++dialogGen;
+    el.innerHTML = `
+      <div class="dialog-modal">
+        <div class="dialog-title">${icon('layers',18)} ${esc(t('import_modeTitle'))}</div>
+        <p class="dialog-msg">${esc(t('import_modeMsg'))}</p>
+        <div class="dialog-actions" style="flex-wrap:wrap;">
+          <button class="btn-ghost" id="imCancel">${esc(t('cloud_cancelBtn'))}</button>
+          <button class="btn-ghost btn-danger" id="imReplace">${esc(t('import_modeReplace'))}</button>
+          <button class="btn-ghost btn-accent" id="imAppend">${esc(t('import_modeAppend'))}</button>
+        </div>
+      </div>`;
+    requestAnimationFrame(()=> el.classList.add('open'));
+    function close(result){
+      el.classList.remove('open');
+      document.removeEventListener('keydown', onKey);
+      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
+      resolve(result);
+    }
+    function onKey(e){ if(e.key==='Escape') close('cancel'); }
+    document.addEventListener('keydown', onKey);
+    el.onclick = (e)=>{ if(e.target===el) close('cancel'); };
+    el.querySelector('#imCancel').addEventListener('click', ()=> close('cancel'));
+    el.querySelector('#imReplace').addEventListener('click', ()=> close('replace'));
+    el.querySelector('#imAppend').addEventListener('click', ()=> close('append'));
+  });
+}
 async function commitImportedRecords(chosen){
+  const mode = await importModeDialog();
+  if(mode === 'cancel' || !mode) return 0;
+
+  if(mode === 'replace'){
+    state.records = [...chosen];
+    toast(t('import_imported',{n:chosen.length}));
+    afterRecordsChanged();
+    return chosen.length;
+  }
+
   const dupes = chosen.filter(r => findDuplicateRecord(r.name, r.month, r.year, null));
   let toAdd = chosen;
   if(dupes.length){
@@ -1032,9 +1122,7 @@ function renderHeader(){
   const fbBtn = el.querySelector('#fbStatusBtn');
   if(fbBtn) fbBtn.addEventListener('click', ()=>{
     if(cloudSync.remoteNewer && cloudSync.status!=='busy'){ cloudSyncNow(); return; }
-    cloudSync.panelOpen = true;
-    renderSyncBar();
-    document.getElementById('syncGearBtn')?.scrollIntoView({behavior:'smooth', block:'center'});
+    switchTab('account');
   });
 }
 
@@ -1123,11 +1211,13 @@ function cloudDocRef(hash){ return fbDb.collection('syncedRecords').doc(hash); }
 function renderFbStatus(){
   const btn = document.getElementById('fbStatusBtn');
   if(!btn) return;
-  const cls = cloudSync.status==='error' ? 'error' : cloudSync.status==='busy' ? 'syncing' : cloudSync.remoteNewer ? 'syncing' : cloudSync.linked ? 'connected' : 'connecting';
+  const connected = cloudSync.linked || (account.authed && account.activeDocId);
+  const cls = cloudSync.status==='error' ? 'error' : cloudSync.status==='busy' ? 'syncing' : cloudSync.remoteNewer ? 'syncing' : connected ? 'connected' : 'connecting';
   btn.className = 'fb-status ' + cls;
   const label = cloudSync.status==='error' ? t('cloud_errorPrefix')+cloudSync.lastError
     : cloudSync.status==='busy' ? t('cloud_syncingMsg')
     : cloudSync.remoteNewer ? t('cloud_remoteNewer')
+    : account.authed ? t('acc_signedInAs') + ': ' + account.email
     : cloudSync.linked ? t('cloud_linked') + (cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}) : '')
     : t('cloud_notLinked');
   btn.title = label; btn.setAttribute('aria-label', label);
@@ -1258,7 +1348,7 @@ async function cloudLinkExisting(code){
 
 async function cloudSyncNow(){
   if(cloudSync.status==='busy') return;
-  if(!cloudSync.linked){ cloudSync.panelOpen = true; renderSyncBar(); return; }
+  if(!cloudSync.linked){ deviceSectionOpen = true; switchTab('account'); return; }
   if(isOffline()){ toast(t('cloud_offline'), 'err'); return; }
   cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
   try{
@@ -1285,10 +1375,11 @@ async function cloudSyncNow(){
 
 function cloudUnlink(){
   if(cloudSync.status==='busy') return;
-  cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:true, remoteNewer:false };
+  cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:false, remoteNewer:false };
   saveCache();
   toast(t('cloud_unlinked'));
   renderFbStatus(); renderSyncBar();
+  if(state.tab==='account' && deviceSectionOpen){ const b = document.getElementById('deviceSectionBody'); if(b) renderDeviceSection(b); }
 }
 
 async function checkCloudFreshness(){
@@ -1306,6 +1397,118 @@ async function checkCloudFreshness(){
   }catch(e){ /* silent — this is a passive background check, surfaced errors would be noise */ }
 }
 
+let account = { authed:false, email:'', uid:null, status:'idle', lastError:'', documents:[], activeDocId:null, activeLabel:'', docsLoaded:false };
+
+function userDocsCollection(uid){
+  ensureFirebaseApp();
+  return fbDb.collection('users').doc(uid).collection('documents');
+}
+function watchAccountAuthState(){
+  ensureFirebaseApp();
+  fbAuth.onAuthStateChanged(user=>{
+    if(user && !user.isAnonymous){
+      account.authed = true; account.uid = user.uid; account.email = user.email || '';
+      accountRefreshDocuments().then(()=>{ if(state.tab==='account') renderMain(); });
+    } else if(user && user.isAnonymous){
+      /* anonymous session used only by the quick device-code feature; not an account */
+    } else {
+      account.authed = false; account.uid = null; account.email = '';
+    }
+    if(state.tab==='account') renderMain();
+  });
+}
+function authErrorMessage(e){
+  const code = e && e.code ? String(e.code) : '';
+  if(code==='auth/email-already-in-use') return lang==='ar' ? 'هذا البريد الإلكتروني مستخدم بالفعل' : 'This email is already in use';
+  if(code==='auth/invalid-email') return lang==='ar' ? 'صيغة البريد الإلكتروني غير صحيحة' : 'Invalid email address';
+  if(code==='auth/weak-password') return lang==='ar' ? 'كلمة المرور ضعيفة جدًا (٦ أحرف على الأقل)' : 'Password is too weak (6+ characters)';
+  if(code==='auth/user-not-found' || code==='auth/wrong-password' || code==='auth/invalid-credential') return lang==='ar' ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة' : 'Incorrect email or password';
+  if(code==='auth/too-many-requests') return lang==='ar' ? 'محاولات كثيرة جدًا — حاول لاحقًا' : 'Too many attempts — try again later';
+  if(code==='auth/network-request-failed') return t('cloud_offline');
+  if(code==='auth/popup-blocked') return lang==='ar' ? 'المتصفح منع النافذة المنبثقة — يرجى السماح بالنوافذ المنبثقة والمحاولة مجددًا' : 'Your browser blocked the popup — allow popups for this site and try again';
+  if(code==='auth/account-exists-with-different-credential') return lang==='ar' ? 'هذا البريد مرتبط بطريقة تسجيل دخول أخرى' : 'This email is already linked to a different sign-in method';
+  if(code==='auth/unauthorized-domain') return lang==='ar' ? 'هذا النطاق غير مصرّح له بتسجيل الدخول عبر Google في إعدادات Firebase' : 'This domain is not authorized for Google sign-in in the Firebase settings';
+  return t('acc_authErrorGeneric');
+}
+async function accountSignInWithGoogle(){
+  ensureFirebaseApp();
+  account.status='busy'; account.lastError='';
+  try{
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const cred = await fbAuth.signInWithPopup(provider);
+    account.authed = true; account.uid = cred.user.uid; account.email = cred.user.email || '';
+    account.status='idle';
+    await accountRefreshDocuments();
+    return { ok:true };
+  }catch(e){
+    account.status='idle';
+    const code = e && e.code ? String(e.code) : '';
+    if(code==='auth/popup-closed-by-user' || code==='auth/cancelled-popup-request') return { ok:false, cancelled:true };
+    account.lastError = authErrorMessage(e);
+    return { ok:false, cancelled:false };
+  }
+}
+async function accountLogOut(){
+  ensureFirebaseApp();
+  await fbAuth.signOut();
+  account = { authed:false, email:'', uid:null, status:'idle', lastError:'', documents:[], activeDocId:null, activeLabel:'', docsLoaded:false };
+  saveCache();
+}
+async function accountRefreshDocuments(){
+  if(!account.uid) return;
+  try{
+    const snap = await userDocsCollection(account.uid).get();
+    account.documents = snap.docs.map(d=>{
+      const data = d.data();
+      return {
+        id: d.id,
+        label: data.label || '',
+        count: Array.isArray(data.records) ? data.records.length : 0,
+        updatedAt: data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null,
+      };
+    }).sort((a,b)=> (b.updatedAt?b.updatedAt.getTime():0) - (a.updatedAt?a.updatedAt.getTime():0));
+    account.docsLoaded = true;
+  }catch(e){ account.lastError = firestoreErrorMessage(e); }
+}
+async function accountCreateDocument(label){
+  if(!checkDocSizeOk(state.records)) return null;
+  const ref = userDocsCollection(account.uid).doc();
+  await ref.set({ label: label || (lang==='ar'?'مستند بدون اسم':'Untitled document'), records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+  account.activeDocId = ref.id; account.activeLabel = label;
+  saveCache();
+  await accountRefreshDocuments();
+  return ref.id;
+}
+async function accountSaveActive(){
+  if(!account.activeDocId) return false;
+  if(!checkDocSizeOk(state.records)) return false;
+  await userDocsCollection(account.uid).doc(account.activeDocId).set({ label: account.activeLabel, records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, {merge:true});
+  await accountRefreshDocuments();
+  return true;
+}
+async function accountLoadDocument(docId, mode){
+  const snap = await userDocsCollection(account.uid).doc(docId).get();
+  if(!snap.exists) return false;
+  const data = snap.data();
+  const cloudRecords = Array.isArray(data.records) ? data.records : [];
+  if(mode === 'replace') state.records = cloudRecords;
+  else state.records = [...cloudRecords, ...state.records];
+  account.activeDocId = docId; account.activeLabel = data.label || '';
+  saveCache(); afterRecordsChanged();
+  renderTabbar(); renderMain();
+  return true;
+}
+async function accountRenameDocument(docId, label){
+  await userDocsCollection(account.uid).doc(docId).set({ label }, {merge:true});
+  if(account.activeDocId === docId) account.activeLabel = label;
+  await accountRefreshDocuments();
+}
+async function accountDeleteDocument(docId){
+  await userDocsCollection(account.uid).doc(docId).delete();
+  if(account.activeDocId === docId){ account.activeDocId = null; account.activeLabel=''; }
+  await accountRefreshDocuments();
+}
+
 function afterRecordsChanged(){
   if(!recordCeilingWarned && state.records.length >= RECORD_SOFT_LIMIT){
     recordCeilingWarned = true;
@@ -1318,16 +1521,18 @@ function renderSyncBar(){
   const bar = document.getElementById('syncBar');
   const busy = cloudSync.status==='busy';
   let dotColor = 'var(--muted2)', text = t('cloud_notLinked');
-  if(busy){ dotColor='var(--accent)'; text=t('cloud_syncingMsg'); }
+  if(account.authed && account.activeDocId){ dotColor='var(--good)'; text = t('acc_signedInAs') + ': ' + account.email; }
+  else if(busy){ dotColor='var(--accent)'; text=t('cloud_syncingMsg'); }
   else if(cloudSync.status==='error'){ dotColor='var(--bad)'; text=t('cloud_errorPrefix')+esc(cloudSync.lastError); }
   else if(cloudSync.remoteNewer){ dotColor='var(--gold)'; text=t('cloud_remoteNewer'); }
   else if(cloudSync.linked){ dotColor='var(--good)'; text = t('cloud_linked') + (cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}) : ''); }
+  else if(account.authed){ dotColor='var(--accent-light)'; text = t('acc_signedInAs') + ': ' + account.email; }
 
   bar.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;">
-      <div class="sync-left"><span class="sync-dot" style="background:${dotColor};"></span><span class="sync-text">${text}</span></div>
+      <div class="sync-left" style="cursor:pointer;" id="syncBarGoAccount"><span class="sync-dot" style="background:${dotColor};"></span><span class="sync-text">${text}</span></div>
       <div class="sync-actions">
-        <button class="btn-ghost" id="syncNowBtn" ${busy?'disabled':''}>${icon('refresh',14)} ${t('cloud_syncNowBtn')}</button>
+        <button class="btn-ghost" id="syncBarAccountBtn">${icon('user',14)} ${t('tab_account')}</button>
         <button class="icon-btn" id="syncGearBtn" title="${esc(t('settings_title'))}">${icon('gear',17)}</button>
       </div>
     </div>
@@ -1337,28 +1542,16 @@ function renderSyncBar(){
         <label class="field"><span>${t('settings_currencyUnit')}</span><input class="inp" id="cfgCurrency" placeholder="${t('settings_currencyUnitPh')}" value="${esc(appSettings.currencyUnit)}"></label>
       </div>
       <h3 class="card-title" style="margin-bottom:12px;">${t('settings_backupTitle')}</h3>
-      <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn-ghost" id="exportBackupBtn" type="button">${icon('download',14)} ${t('cmd_exportBackup')}</button>
         <button class="btn-ghost" id="importBackupBtn" type="button">${icon('upload',14)} ${t('cmd_importBackup')}</button>
         <input type="file" id="backupFileInput" accept="application/json,.json" style="display:none;">
       </div>
-      <h3 class="card-title" style="margin-bottom:12px;">${t('cloud_title')}</h3>
-      <p class="card-sub" style="margin:0 0 14px;">${t('cloud_explain')}</p>
-      ${cloudSync.linked ? `
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="btn-ghost" id="cloudSyncNowBtn" ${busy?'disabled':''}>${icon('refresh',14)} ${t('cloud_syncNowBtn')}</button>
-          <button class="btn-ghost btn-danger" id="cloudUnlinkBtn" ${busy?'disabled':''}>${icon('x',14)} ${t('cloud_unlinkBtn')}</button>
-        </div>` : `
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
-          <button class="btn-ghost btn-accent" id="cloudCreateBtn" ${busy?'disabled':''}>${icon('sparkle',14)} ${t('cloud_createBtn')}</button>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <input class="inp" id="cloudCodeInput" placeholder="${t('cloud_codePh')}" style="max-width:260px;" ${busy?'disabled':''}>
-          <button class="btn-ghost" id="cloudLinkBtn" ${busy?'disabled':''}>${icon('link',14)} ${t('cloud_codeSubmit')}</button>
-        </div>`}
     </div>`;
 
-  document.getElementById('syncNowBtn').addEventListener('click', cloudSyncNow);
+  const goAccount = ()=> switchTab('account');
+  document.getElementById('syncBarGoAccount').addEventListener('click', goAccount);
+  document.getElementById('syncBarAccountBtn').addEventListener('click', goAccount);
   document.getElementById('syncGearBtn').addEventListener('click', ()=>{ cloudSync.panelOpen = !cloudSync.panelOpen; renderSyncBar(); });
   document.getElementById('exportBackupBtn').addEventListener('click', exportBackup);
   document.getElementById('importBackupBtn').addEventListener('click', ()=> document.getElementById('backupFileInput').click());
@@ -1372,15 +1565,10 @@ function renderSyncBar(){
     saveCache();
     if(state.tab!=='import') renderMain();
   });
-  if(cloudSync.linked){
-    document.getElementById('cloudSyncNowBtn').addEventListener('click', cloudSyncNow);
-    document.getElementById('cloudUnlinkBtn').addEventListener('click', cloudUnlink);
-  } else {
-    document.getElementById('cloudCreateBtn').addEventListener('click', cloudCreateNew);
-    document.getElementById('cloudLinkBtn').addEventListener('click', ()=>{
-      const val = document.getElementById('cloudCodeInput').value;
-      cloudLinkExisting(val);
-    });
+
+  if(state.tab==='account' && deviceSectionOpen){
+    const devBody = document.getElementById('deviceSectionBody');
+    if(devBody) renderDeviceSection(devBody);
   }
 }
 
@@ -1391,6 +1579,7 @@ function saveCache(){
       records: state.records,
       appSettings,
       cloudSync: { linked: cloudSync.linked, code: cloudSync.code, hash: cloudSync.hash, lastSyncAt: cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toISOString() : null },
+      account: { activeDocId: account.activeDocId, activeLabel: account.activeLabel },
       theme, lang,
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
@@ -1408,6 +1597,10 @@ function loadCache(){
       cloudSync.code = data.cloudSync.code || '';
       cloudSync.hash = data.cloudSync.hash || '';
       cloudSync.lastSyncAt = data.cloudSync.lastSyncAt ? new Date(data.cloudSync.lastSyncAt) : null;
+    }
+    if(data && data.account){
+      account.activeDocId = data.account.activeDocId || null;
+      account.activeLabel = data.account.activeLabel || '';
     }
     if(data && data.theme) theme = data.theme;
     if(data && data.lang) lang = data.lang;
@@ -1475,6 +1668,7 @@ function renderTabbar(){
     {key:"import", label:t('tab_import'), ic:"upload"},
     {key:"dashboard", label:t('tab_dashboard'), ic:"grid"},
     {key:"hospitals", label:t('tab_hospitals'), ic:"building"},
+    {key:"account", label:t('tab_account'), ic:"user"},
   ];
   el.innerHTML = `<div id="tabIndicator"></div>` + TABS.map(tb => `<button class="tab-btn ${state.tab===tb.key?'active':''}" data-tab="${tb.key}">${icon(tb.ic,15)}${tb.label}</button>`).join('');
   el.querySelectorAll('.tab-btn').forEach(btn=>{
@@ -1500,6 +1694,7 @@ function renderMain(){
   else if(state.tab==='import') renderImportTab(main);
   else if(state.tab==='dashboard') renderDashboardTab(main);
   else if(state.tab==='hospitals') renderHospitalsTab(main);
+  else if(state.tab==='account') renderAccountTab(main);
 }
 
 function renderEntryTab(main){
@@ -1714,9 +1909,34 @@ let importMode = 'tabular';
 let pendingPreview = null;
 let tabularIncluded = null;
 let tabularColsOn = null;
+let tabularErrors = [];
 let freeGrid = null, freeHeaderRow = 1, freeMapping = [];
 let freeIncluded = null;
 let freeColsOn = null;
+let freeErrors = [];
+
+function errPanelHtml(errors, idPrefix){
+  if(!errors.length) return '';
+  return `<div class="err-panel" id="${idPrefix}ErrPanel">
+    <div class="err-panel-head" data-toggle="${idPrefix}">
+      <span>${icon('alert',14)}${t('import_rowsRejected',{n:errors.length})}</span>
+      ${icon('chevron',14,idPrefix+'ErrChev')}
+    </div>
+    <div class="err-panel-body" id="${idPrefix}ErrBody">
+      ${errors.map(e=>`<div class="err-row"><b>${t('import_row')} ${e.rowNum}</b><span>${esc(e.reason)}${e.preview?' — '+esc(e.preview):''}</span></div>`).join('')}
+    </div>
+  </div>`;
+}
+function wireErrPanel(root, idPrefix){
+  const head = root.querySelector(`[data-toggle="${idPrefix}"]`);
+  if(!head) return;
+  head.addEventListener('click', ()=>{
+    const body = root.querySelector('#'+idPrefix+'ErrBody');
+    const chev = root.querySelector('.'+idPrefix+'ErrChev');
+    const open = body.classList.toggle('open');
+    if(chev) chev.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+  });
+}
 
 function renderImportTab(main){
   main.innerHTML = `
@@ -1825,7 +2045,8 @@ function renderTabularImport(root){
         <td><input type="checkbox" class="row-chk" data-i="${i}" ${tabularIncluded.has(i)?'checked':''}></td>
         <td style="font-weight:600;color:var(--fg);">${esc(r.name)}</td><td>${esc(r.category)}</td><td>${budgetTag(r.budgetType)}</td>
         <td>${monthName(r.month)}</td><td>${r.year}</td><td>${fmt(r.before)}</td><td>${fmt(r.after)}</td></tr>`).join('')}</tbody>
-    </table></div>`;
+    </table></div>
+    ${errPanelHtml(tabularErrors, 'tab')}`;
 
     previewArea.querySelectorAll('.row-chk').forEach(chk=>{
       chk.addEventListener('change', ()=>{
@@ -1836,12 +2057,13 @@ function renderTabularImport(root){
     });
     previewArea.querySelector('#selAllBtn').addEventListener('click', ()=>{ tabularIncluded = new Set(pendingPreview.map((_,i)=>i)); renderPreview(); });
     previewArea.querySelector('#deselAllBtn').addEventListener('click', ()=>{ tabularIncluded = new Set(); renderPreview(); });
+    wireErrPanel(previewArea, 'tab');
 
     root.querySelector('#confirmBtn').addEventListener('click', async ()=>{
       const chosen = pendingPreview.filter((_,i)=>tabularIncluded.has(i)).map(r=>applyColumnMask(r, tabularColsOn));
       if(!chosen.length){ toast(t('import_noValidRows'), 'err'); return; }
       await commitImportedRecords(chosen);
-      pendingPreview = null; tabularIncluded=null; tabularColsOn=null; fileStatus.innerHTML=''; renderPreview();
+      pendingPreview = null; tabularIncluded=null; tabularColsOn=null; tabularErrors=[]; fileStatus.innerHTML=''; renderPreview();
     });
   }
 
@@ -1850,8 +2072,14 @@ function renderTabularImport(root){
     fileStatus.innerHTML = '';
     try{
       const rows = await readWorkbookObjects(file);
-      if(!rows.length){ fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_fileEmpty')}</span>`; pendingPreview=null; renderPreview(); return; }
-      const normalized = rows.map(normalizeRow).filter(r=>r.name);
+      if(!rows.length){ fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_fileEmpty')}</span>`; pendingPreview=null; tabularErrors=[]; renderPreview(); return; }
+      const allNormalized = rows.map((row,i)=>({ rec: normalizeRow(row), i, row }));
+      const normalized = allNormalized.filter(x=>x.rec.name).map(x=>x.rec);
+      tabularErrors = allNormalized.filter(x=>!x.rec.name).map(x=>({
+        rowNum: x.i + 2,
+        reason: t('import_reasonNoName'),
+        preview: Object.values(x.row).filter(v=>String(v||'').trim()).slice(0,4).join(' · '),
+      }));
       if(!normalized.length){ fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_noColumns')}</span>`; pendingPreview=null; renderPreview(); return; }
       pendingPreview = normalized;
       tabularIncluded = new Set(normalized.map((_,i)=>i));
@@ -1927,13 +2155,15 @@ function renderFreeformImport(root){
     const headerIdx = freeHeaderRow - 1;
     const dataRows = freeGrid.slice(headerIdx+1);
     const out = [];
-    dataRows.forEach(row=>{
+    freeErrors = [];
+    dataRows.forEach((row, di)=>{
       const rec = { id: uid(), name:'', category:'', budgetType: BUDGET_KEYS[0], month:new Date().getMonth(), year:new Date().getFullYear(), before:0, after:0 };
-      let hasName = false;
+      let hasName = false, hasAnyValue = false;
       freeMapping.forEach((field, colIdx)=>{
         if(!field) return;
         const val = row[colIdx];
         if(val===undefined || val==="") return;
+        hasAnyValue = true;
         if(field==='name'){ rec.name = String(val).trim(); hasName = !!rec.name; }
         else if(field==='category') rec.category = String(val).trim();
         else if(field==='budgetType') rec.budgetType = budgetKeyFromLabel(val);
@@ -1943,6 +2173,13 @@ function renderFreeformImport(root){
         else if(field==='after') rec.after = Number(val) || 0;
       });
       if(hasName) out.push(rec);
+      else if(hasAnyValue){
+        freeErrors.push({
+          rowNum: freeHeaderRow + di + 1,
+          reason: t('import_reasonNoName'),
+          preview: row.filter(v=>String(v||'').trim()).slice(0,4).join(' · '),
+        });
+      }
     });
     return out;
   }
@@ -2023,7 +2260,8 @@ function renderFreeformImport(root){
           <td><input type="checkbox" class="free-row-chk" data-i="${i}" ${freeIncluded.has(i)?'checked':''}></td>
           <td style="font-weight:600;color:var(--fg);">${esc(r.name)}</td><td>${esc(r.category)}</td><td>${budgetTag(r.budgetType)}</td>
           <td>${esc(monthName(r.month))}</td><td>${r.year}</td><td>${fmt(r.before)}</td><td>${fmt(r.after)}</td></tr>`).join('')}</tbody>
-        </table></div>`;
+        </table></div>
+        ${errPanelHtml(freeErrors, 'free')}`;
       tableEl.querySelectorAll('.free-row-chk').forEach(chk=>{
         chk.addEventListener('change', ()=>{
           const i = Number(chk.dataset.i);
@@ -2033,6 +2271,7 @@ function renderFreeformImport(root){
       });
       tableEl.querySelector('#freeSelAll').addEventListener('click', ()=>{ freeIncluded = new Set(freeRecordsCache.map((_,i)=>i)); refreshFreePreview(false); });
       tableEl.querySelector('#freeDeselAll').addEventListener('click', ()=>{ freeIncluded = new Set(); refreshFreePreview(false); });
+      wireErrPanel(tableEl, 'free');
     }
     refreshFreePreview(true);
 
@@ -2040,7 +2279,7 @@ function renderFreeformImport(root){
       const chosen = freeRecordsCache.filter((_,i)=>freeIncluded.has(i)).map(r=>applyColumnMask(r, freeColsOn));
       if(!chosen.length){ toast(t('import_noValidRows'), 'err'); return; }
       await commitImportedRecords(chosen);
-      freeGrid = null; freeMapping = []; freeHeaderRow = 1; freeIncluded=null; freeColsOn=null;
+      freeGrid = null; freeMapping = []; freeHeaderRow = 1; freeIncluded=null; freeColsOn=null; freeErrors=[];
       mapArea.innerHTML = ''; freeStatus.innerHTML='';
     });
   }
@@ -2134,15 +2373,15 @@ function renderDashboardTab(main){
     body.innerHTML = `
       <div class="stats-row">
         <div class="glass stat-card" style="animation:rise .45s ease both;"><div class="stat-icon" style="background:var(--divider-soft);color:var(--ink-6);">${icon('filesheet',18)}</div>
-          <div><div class="stat-label">${t('dash_kpiBefore')}</div><div class="stat-value">${fmt(totalBefore)}${currencyUnit()}</div><div class="stat-sub">${records.length} ${t('entry_recordsSuffix')}</div></div></div>
+          <div class="stat-body"><div class="stat-label">${t('dash_kpiBefore')}</div><div class="stat-value" title="${fmt(totalBefore)}${currencyUnit()}">${fmt(totalBefore)}${currencyUnit()}</div><div class="stat-sub">${records.length} ${t('entry_recordsSuffix')}</div></div></div>
         <div class="glass stat-card" style="animation:rise .45s ease .06s both;"><div class="stat-icon" style="background:var(--accent-soft);color:var(--accent-light);">${icon('arrowup',19)}</div>
-          <div><div class="stat-label">${t('dash_kpiAfter')}</div><div class="stat-value">${fmt(totalAfter)}${currencyUnit()}</div><div class="stat-sub">${new Set(records.map(r=>r.name)).size} ${t('dash_kpiEntitiesSuffix')}</div></div></div>
+          <div class="stat-body"><div class="stat-label">${t('dash_kpiAfter')}</div><div class="stat-value" title="${fmt(totalAfter)}${currencyUnit()}">${fmt(totalAfter)}${currencyUnit()}</div><div class="stat-sub">${new Set(records.map(r=>r.name)).size} ${t('dash_kpiEntitiesSuffix')}</div></div></div>
         <div class="glass stat-card" style="animation:rise .45s ease .12s both;"><div class="stat-icon" style="background:${totalDiff>=0?'var(--good-soft)':'var(--bad-soft)'};color:${totalDiff>=0?'var(--good)':'var(--bad)'};">${icon(totalDiff>=0?'trenddown':'trendup',18)}</div>
-          <div><div class="stat-label">${t('dash_kpiDiff')}</div><div class="stat-value" style="color:${totalDiff>=0?'var(--good)':'var(--bad)'};">${totalDiff>=0?'−':'+'}${fmt(Math.abs(totalDiff))}${currencyUnit()}</div><div class="stat-sub">${Math.abs(diffPct).toFixed(1)}%</div></div></div>
+          <div class="stat-body"><div class="stat-label">${t('dash_kpiDiff')}</div><div class="stat-value" style="color:${totalDiff>=0?'var(--good)':'var(--bad)'};" title="${totalDiff>=0?'−':'+'}${fmt(Math.abs(totalDiff))}${currencyUnit()}">${totalDiff>=0?'−':'+'}${fmt(Math.abs(totalDiff))}${currencyUnit()}</div><div class="stat-sub">${Math.abs(diffPct).toFixed(1)}%</div></div></div>
         <div class="glass stat-card" style="animation:rise .45s ease .18s both;"><div class="stat-icon" style="background:var(--divider-soft);color:var(--ink-6);">${icon('trendup',18)}</div>
-          <div><div class="stat-label">${t('dash_kpiIncreased')}</div><div class="stat-value">${increasedCount}</div><div class="stat-sub">${t('dash_kpiChangeSub')}</div></div></div>
+          <div class="stat-body"><div class="stat-label">${t('dash_kpiIncreased')}</div><div class="stat-value">${increasedCount}</div><div class="stat-sub">${t('dash_kpiChangeSub')}</div></div></div>
         <div class="glass stat-card" style="animation:rise .45s ease .24s both;"><div class="stat-icon" style="background:var(--divider-soft);color:var(--ink-6);">${icon('trenddown',18)}</div>
-          <div><div class="stat-label">${t('dash_kpiDecreased')}</div><div class="stat-value">${decreasedCount}</div><div class="stat-sub">${t('dash_kpiChangeSub')}</div></div></div>
+          <div class="stat-body"><div class="stat-label">${t('dash_kpiDecreased')}</div><div class="stat-value">${decreasedCount}</div><div class="stat-sub">${t('dash_kpiChangeSub')}</div></div></div>
       </div>
 
       <div class="grid grid-5">
@@ -2457,6 +2696,191 @@ function renderHospitalsTab(main){
   updateTable();
 }
 
+let deviceSectionOpen = false;
+let accountAuthMode = 'signin';
+
+function renderAccountTab(main){
+  main.innerHTML = `
+    <div class="glass p" style="margin-bottom:20px;">
+      <h2 class="card-title"><span style="height:32px;width:32px;border-radius:var(--r-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent-light);">${icon('user',16)}</span>${t('acc_emailSection')}</h2>
+      <p class="card-sub">${t('acc_emailExplain')}</p>
+      <div id="emailAccountBody" style="margin-top:18px;"></div>
+    </div>
+    <div class="glass p">
+      <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" id="deviceSectionToggle">
+        <h3 class="card-title"><span style="height:28px;width:28px;border-radius:var(--r-sm);background:var(--divider-soft);display:flex;align-items:center;justify-content:center;color:var(--ink-6);">${icon('link',14)}</span>${t('acc_deviceSection')}</h3>
+        <span style="transform:rotate(${deviceSectionOpen?'180deg':'0deg'});transition:transform .2s;display:inline-flex;color:var(--muted2);">${icon('chevron',15)}</span>
+      </div>
+      <div id="deviceSectionBody" style="${deviceSectionOpen?'':'display:none;'}margin-top:16px;"></div>
+    </div>`;
+
+  main.querySelector('#deviceSectionToggle').addEventListener('click', ()=>{
+    deviceSectionOpen = !deviceSectionOpen;
+    const body = main.querySelector('#deviceSectionBody');
+    body.style.display = deviceSectionOpen ? 'block' : 'none';
+    main.querySelector('#deviceSectionToggle span:last-child').style.transform = deviceSectionOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    if(deviceSectionOpen) renderDeviceSection(body);
+  });
+  if(deviceSectionOpen) renderDeviceSection(main.querySelector('#deviceSectionBody'));
+
+  renderEmailAccountBody(main.querySelector('#emailAccountBody'));
+}
+
+const GOOGLE_ICON_SVG = `<svg width="18" height="18" viewBox="0 0 48 48" style="flex-shrink:0;"><path fill="#EA4335" d="M24 9.5c3.4 0 6.4 1.2 8.8 3.5l6.6-6.6C35.3 2.6 30 0.5 24 0.5 14.9 0.5 7.1 5.7 3.3 13.3l7.7 6C12.8 13.6 17.9 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.6c-.5 2.9-2.2 5.4-4.7 7l7.4 5.7c4.3-4 6.8-9.9 6.8-17.2z"/><path fill="#FBBC05" d="M11 27.3c-.5-1.5-.8-3.1-.8-4.8s.3-3.3.8-4.8l-7.7-6C1.5 15.3.5 19.5.5 24s1 8.7 2.8 12.3l7.7-6z"/><path fill="#34A853" d="M24 47.5c6 0 11.3-2 15-5.4l-7.4-5.7c-2 1.4-4.6 2.2-7.6 2.2-6.1 0-11.2-4.1-13-9.6l-7.7 6C7.1 42.3 14.9 47.5 24 47.5z"/></svg>`;
+
+function renderEmailAccountBody(body){
+  const busy = account.status==='busy';
+  if(!account.authed){
+    body.innerHTML = `
+      <div style="max-width:360px;">
+        <button class="btn-ghost" id="accGoogleBtn" style="width:100%;justify-content:center;gap:10px;padding:13px;font-size:14px;font-weight:600;" ${busy?'disabled':''}>
+          ${GOOGLE_ICON_SVG}
+          <span>${t('acc_signInGoogle')}</span>
+        </button>
+      </div>`;
+    const btn = body.querySelector('#accGoogleBtn');
+    btn.addEventListener('click', async ()=>{
+      btn.disabled = true;
+      const res = await accountSignInWithGoogle();
+      if(res.ok) toast(t('acc_signInSuccess'));
+      else if(!res.cancelled) toast(account.lastError || t('acc_authErrorGeneric'), 'err');
+      renderEmailAccountBody(body);
+    });
+    return;
+  }
+
+  body.innerHTML = `
+    <div class="row-card" style="margin-bottom:18px;">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+        <span style="height:34px;width:34px;border-radius:var(--r-pill);background:var(--good-soft);color:var(--good);display:flex;align-items:center;justify-content:center;flex-shrink:0;">${icon('check',16)}</span>
+        <div style="min-width:0;">
+          <div style="font-size:11.5px;color:var(--muted2);">${t('acc_signedInAs')}</div>
+          <div style="font-size:14px;font-weight:700;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(account.email)}</div>
+        </div>
+      </div>
+      <button class="btn-ghost btn-danger" id="accLogoutBtn">${icon('logout',14)}${t('acc_logout')}</button>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
+      <h3 class="card-title">${t('acc_yourDocs')}</h3>
+    </div>
+    <div id="docsList" style="margin-bottom:20px;"></div>
+
+    <div class="glass thin p" style="background:var(--divider-soft);">
+      <label class="field" style="margin-bottom:12px;"><span>${t('acc_newDocLabel')}</span><input class="inp" id="newDocLabel" placeholder="${t('acc_newDocPh')}"></label>
+      <button class="btn-ghost btn-accent" id="createDocBtn" style="width:100%;justify-content:center;">${icon('plus',14)}${t('acc_saveAsNew')}</button>
+    </div>`;
+
+  body.querySelector('#accLogoutBtn').addEventListener('click', async ()=>{
+    await accountLogOut();
+    renderEmailAccountBody(body);
+    renderHeader();
+  });
+
+  function renderDocsList(){
+    const listEl = body.querySelector('#docsList');
+    const docs = account.documents;
+    if(!account.docsLoaded){ listEl.innerHTML = `<div class="empty">${icon('refresh',20)}</div>`; return; }
+    if(!docs.length){ listEl.innerHTML = `<div class="empty">${t('acc_noDocs')}</div>`; return; }
+    listEl.innerHTML = docs.map(d=>{
+      const isActive = d.id === account.activeDocId;
+      const updated = d.updatedAt ? d.updatedAt.toLocaleString(lang==='ar'?'ar-EG':'en-US') : '';
+      return `<div class="doc-card ${isActive?'active':''}" data-id="${d.id}">
+        <div style="min-width:0;display:flex;align-items:center;gap:10px;">
+          <span style="height:34px;width:34px;border-radius:var(--r-sm);background:var(--accent-soft);color:var(--accent-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;">${icon('folder',16)}</span>
+          <div style="min-width:0;">
+            <div style="font-size:14px;font-weight:700;color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(d.label)} ${isActive?`<span class="badge" style="margin-inline-start:6px;">${t('acc_active')}</span>`:''}</div>
+            <div style="font-size:11.5px;color:var(--muted2);margin-top:3px;">${d.count} ${t('acc_recordsSuffix')}${updated?' · '+esc(t('acc_updatedPrefix'))+esc(updated):''}</div>
+          </div>
+        </div>
+        <div class="tbl-actions" style="opacity:1;flex-wrap:wrap;justify-content:flex-end;gap:8px;">
+          <button class="icon-btn" data-act="replace" title="${esc(t('acc_loadReplace'))}">${icon('download',14)}</button>
+          <button class="icon-btn" data-act="append" title="${esc(t('acc_loadAppend'))}">${icon('upload',14)}</button>
+          <button class="icon-btn" data-act="rename" title="${esc(t('acc_rename'))}">${icon('pencil',13)}</button>
+          <button class="icon-btn danger" data-act="delete" title="${esc(t('acc_delete'))}">${icon('trash',13)}</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    listEl.querySelectorAll('.doc-card').forEach(card=>{
+      const id = card.dataset.id;
+      const doc = docs.find(d=>d.id===id);
+      card.querySelector('[data-act="replace"]').addEventListener('click', async ()=>{
+        const ok = await confirmDialog({ title:t('cloud_previewTitle'), message:t('import_modeMsg'), confirmLabel:t('acc_loadReplace'), cancelLabel:t('cloud_cancelBtn'), danger:true });
+        if(!ok) return;
+        await accountLoadDocument(id, 'replace');
+        toast(t('acc_docLoaded'));
+      });
+      card.querySelector('[data-act="append"]').addEventListener('click', async ()=>{
+        await accountLoadDocument(id, 'append');
+        toast(t('acc_docLoaded'));
+      });
+      card.querySelector('[data-act="rename"]').addEventListener('click', async ()=>{
+        const name = prompt(t('acc_renamePrompt'), doc.label);
+        if(name === null) return;
+        await accountRenameDocument(id, name.trim() || doc.label);
+        toast(t('acc_docRenamed'));
+        renderDocsList();
+      });
+      card.querySelector('[data-act="delete"]').addEventListener('click', async ()=>{
+        const ok = await confirmDialog({ title:t('acc_deleteDocTitle'), message:t('acc_deleteDocMsg'), confirmLabel:t('del_confirmBtn'), cancelLabel:t('del_cancelBtn'), danger:true });
+        if(!ok) return;
+        await accountDeleteDocument(id);
+        toast(t('acc_docDeleted'),'err');
+        renderDocsList();
+      });
+    });
+
+    if(account.activeDocId && docs.some(d=>d.id===account.activeDocId)){
+      const saveBar = document.createElement('div');
+      saveBar.innerHTML = `<button class="btn-ghost btn-accent" id="saveActiveBtn" style="width:100%;justify-content:center;margin-bottom:16px;">${icon('check',14)}${t('acc_saveToActive')}</button>`;
+      listEl.prepend(saveBar.firstChild);
+      listEl.querySelector('#saveActiveBtn').addEventListener('click', async ()=>{
+        await accountSaveActive();
+        toast(t('acc_docSaved'));
+        renderDocsList();
+      });
+    }
+  }
+  renderDocsList();
+  if(!account.docsLoaded){ accountRefreshDocuments().then(renderDocsList); }
+
+  body.querySelector('#createDocBtn').addEventListener('click', async ()=>{
+    const labelI = body.querySelector('#newDocLabel');
+    const id = await accountCreateDocument(labelI.value.trim());
+    if(id){ toast(t('acc_docCreated')); labelI.value=''; renderDocsList(); }
+  });
+}
+
+function renderDeviceSection(body){
+  const busy = cloudSync.status==='busy';
+  body.innerHTML = `
+    <p class="card-sub" style="margin:0 0 16px;margin-inline-start:0;">${t('acc_deviceExplain')}</p>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <span class="sync-dot" style="background:${cloudSync.linked?'var(--good)':'var(--muted2)'};"></span>
+      <span class="sync-text">${cloudSync.linked ? t('cloud_linked') + (cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}) : '') : t('cloud_notLinked')}</span>
+    </div>
+    ${cloudSync.linked ? `
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn-ghost" id="devSyncNowBtn" ${busy?'disabled':''}>${icon('refresh',14)} ${t('cloud_syncNowBtn')}</button>
+        <button class="btn-ghost btn-danger" id="devUnlinkBtn" ${busy?'disabled':''}>${icon('x',14)} ${t('cloud_unlinkBtn')}</button>
+      </div>` : `
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+        <button class="btn-ghost btn-accent" id="devCreateBtn" ${busy?'disabled':''}>${icon('sparkle',14)} ${t('cloud_createBtn')}</button>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <input class="inp" id="devCodeInput" placeholder="${t('cloud_codePh')}" style="max-width:260px;" ${busy?'disabled':''}>
+        <button class="btn-ghost" id="devLinkBtn" ${busy?'disabled':''}>${icon('link',14)} ${t('cloud_codeSubmit')}</button>
+      </div>`}`;
+  if(cloudSync.linked){
+    body.querySelector('#devSyncNowBtn').addEventListener('click', cloudSyncNow);
+    body.querySelector('#devUnlinkBtn').addEventListener('click', cloudUnlink);
+  } else {
+    body.querySelector('#devCreateBtn').addEventListener('click', cloudCreateNew);
+    body.querySelector('#devLinkBtn').addEventListener('click', ()=> cloudLinkExisting(body.querySelector('#devCodeInput').value));
+  }
+}
+
 function fuzzyScore(query, target){
   const q = normalizeText(query), t = normalizeText(target);
   if(!q) return 0;
@@ -2485,6 +2909,7 @@ function spotlightCommands(){
     { icon:'upload', title:t('cmd_goImport'), action:()=>switchTab('import') },
     { icon:'grid', title:t('cmd_goDashboard'), action:()=>switchTab('dashboard') },
     { icon:'building', title:t('cmd_goHospitals'), action:()=>switchTab('hospitals') },
+    { icon:'user', title:t('tab_account'), action:()=>switchTab('account') },
     { icon:'sun', title:t('cmd_themeLight'), action:()=>{ theme='light'; applyTheme(); renderHeader(); saveCache(); } },
     { icon:'moon', title:t('cmd_themeDark'), action:()=>{ theme='dark'; applyTheme(); renderHeader(); saveCache(); } },
     { icon:'monitor', title:t('cmd_themeSystem'), action:()=>{ theme='system'; applyTheme(); renderHeader(); saveCache(); } },
@@ -2638,6 +3063,7 @@ renderSyncBar();
 renderTabbar();
 renderMain();
 hideBootProgress();
+watchAccountAuthState();
 if(cloudSync.linked) checkCloudFreshness();
 window.addEventListener('online', ()=>{
   if(cloudSync.status==='error'){ cloudSync.status='idle'; cloudSync.lastError=''; renderFbStatus(); renderSyncBar(); }
