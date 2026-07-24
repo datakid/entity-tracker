@@ -2841,26 +2841,24 @@ function renderEmailAccountBody(body){
       card.querySelector('[data-act="replace"]').addEventListener('click', async ()=>{
         const ok = await confirmDialog({ title:t('cloud_previewTitle'), message:t('import_modeMsg'), confirmLabel:t('acc_loadReplace'), cancelLabel:t('cloud_cancelBtn'), danger:true });
         if(!ok) return;
-        await accountLoadDocument(id, 'replace');
-        toast(t('acc_docLoaded'));
+        try{ await accountLoadDocument(id, 'replace'); toast(t('acc_docLoaded')); }
+        catch(e){ toast(firestoreErrorMessage(e), 'err'); }
       });
       card.querySelector('[data-act="append"]').addEventListener('click', async ()=>{
-        await accountLoadDocument(id, 'append');
-        toast(t('acc_docLoaded'));
+        try{ await accountLoadDocument(id, 'append'); toast(t('acc_docLoaded')); }
+        catch(e){ toast(firestoreErrorMessage(e), 'err'); }
       });
       card.querySelector('[data-act="rename"]').addEventListener('click', async ()=>{
         const name = prompt(t('acc_renamePrompt'), doc.label);
         if(name === null) return;
-        await accountRenameDocument(id, name.trim() || doc.label);
-        toast(t('acc_docRenamed'));
-        renderDocsList();
+        try{ await accountRenameDocument(id, name.trim() || doc.label); toast(t('acc_docRenamed')); renderDocsList(); }
+        catch(e){ toast(firestoreErrorMessage(e), 'err'); }
       });
       card.querySelector('[data-act="delete"]').addEventListener('click', async ()=>{
         const ok = await confirmDialog({ title:t('acc_deleteDocTitle'), message:t('acc_deleteDocMsg'), confirmLabel:t('del_confirmBtn'), cancelLabel:t('del_cancelBtn'), danger:true });
         if(!ok) return;
-        await accountDeleteDocument(id);
-        toast(t('acc_docDeleted'),'err');
-        renderDocsList();
+        try{ await accountDeleteDocument(id); toast(t('acc_docDeleted'),'err'); renderDocsList(); }
+        catch(e){ toast(firestoreErrorMessage(e), 'err'); }
       });
     });
 
@@ -2869,9 +2867,8 @@ function renderEmailAccountBody(body){
       saveBar.innerHTML = `<button class="btn-ghost btn-accent" id="saveActiveBtn" style="width:100%;justify-content:center;margin-bottom:16px;">${icon('check',14)}${t('acc_saveToActive')}</button>`;
       listEl.prepend(saveBar.firstChild);
       listEl.querySelector('#saveActiveBtn').addEventListener('click', async ()=>{
-        await accountSaveActive();
-        toast(t('acc_docSaved'));
-        renderDocsList();
+        try{ await accountSaveActive(); toast(t('acc_docSaved')); renderDocsList(); }
+        catch(e){ toast(firestoreErrorMessage(e), 'err'); }
       });
     }
   }
@@ -2880,8 +2877,10 @@ function renderEmailAccountBody(body){
 
   body.querySelector('#createDocBtn').addEventListener('click', async ()=>{
     const labelI = body.querySelector('#newDocLabel');
-    const id = await accountCreateDocument(labelI.value.trim());
-    if(id){ toast(t('acc_docCreated')); labelI.value=''; renderDocsList(); }
+    try{
+      const id = await accountCreateDocument(labelI.value.trim());
+      if(id){ toast(t('acc_docCreated')); labelI.value=''; renderDocsList(); }
+    }catch(e){ toast(firestoreErrorMessage(e), 'err'); }
   });
 }
 
