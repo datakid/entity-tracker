@@ -450,7 +450,7 @@
   .stat-body{min-width:0;flex:1;}
   .stat-label{font-size:12px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .stat-value{font-weight:800;letter-spacing:-.015em;color:var(--fg);margin-top:4px;line-height:1.15;
-    font-size:clamp(15px, 1.9vw, 25px);overflow-wrap:anywhere;word-break:break-word;white-space:normal;}
+    font-size:clamp(15px, 1.9vw, 25px);white-space:nowrap;overflow:hidden;font-variant-numeric:tabular-nums;}
   .stat-sub{font-size:11.5px;color:var(--muted2);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .stats-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px;}
 
@@ -618,7 +618,8 @@ const I18N = {
     import_previewTitle:'معاينة قبل الاستيراد', import_confirm:'تأكيد الاستيراد', import_emptyPreview:'ستظهر معاينة السجلات هنا بعد رفع الملف',
     import_fileEmpty:'الملف فارغ أو لا يحتوي على بيانات صالحة', import_noColumns:'تعذر التعرف على الأعمدة — جرّب وضع "غير جدولي" لتخطيط مخصص',
     import_imported:'تم استيراد {n} سجل بنجاح', import_readError:'حدث خطأ أثناء قراءة الملف',
-    import_rowsRejected:'{n} صف تم تجاهله — اضغط للعرض', import_reasonNoName:'تم تجاهله لعدم وجود اسم للجهة',
+    import_rowsRejected:'{n} صف تم تجاهله — اضغط للعرض', import_reasonNoName:'تم تجاهله لعدم وجود اسم للجهة', import_reasonEmptyRow:'تم تجاهله لأنه صف فارغ',
+    import_readSummary:'{n} صف مقروء، {v} صالح، {s} متجاهَل',
     import_modeTitle:'كيف تريد إضافة هذه البيانات؟',
     import_modeMsg:'يمكنك إضافة السجلات الجديدة إلى بياناتك الحالية، أو استبدال كل البيانات الحالية (بما فيها بيانات العرض التجريبي) بهذا الملف فقط.',
     import_modeAppend:'إضافة إلى البيانات الحالية', import_modeReplace:'استبدال كل البيانات الحالية',
@@ -722,7 +723,8 @@ const I18N = {
     import_previewTitle:'Preview before import', import_confirm:'Confirm import', import_emptyPreview:'A preview of the records will appear here after upload',
     import_fileEmpty:'The file is empty or has no valid data', import_noColumns:'Could not detect columns — try "Non-tabular" mode for a custom layout',
     import_imported:'Imported {n} records successfully', import_readError:'An error occurred while reading the file',
-    import_rowsRejected:'{n} rows were skipped — click to view', import_reasonNoName:'Skipped — no entity name found',
+    import_rowsRejected:'{n} rows were skipped — click to view', import_reasonNoName:'Skipped — no entity name found', import_reasonEmptyRow:'Skipped — empty row',
+    import_readSummary:'{n} rows read, {v} valid, {s} skipped',
     import_modeTitle:'How should this data be added?',
     import_modeMsg:'You can add these new records to your existing data, or replace all existing data (including any demo data) with just this file.',
     import_modeAppend:'Add to existing data', import_modeReplace:'Replace all existing data',
@@ -818,6 +820,26 @@ function getColumnValue(row, fieldKey){
 
 const uid = () => Math.random().toString(36).slice(2,10);
 const fmt = (n) => new Intl.NumberFormat('en-US').format(Math.round(n||0));
+function fitStatValues(container){
+  if(!container) return;
+  container.querySelectorAll('.stat-value').forEach(el=>{
+    el.style.fontSize = '';
+    const max = parseFloat(getComputedStyle(el).fontSize);
+    let size = max;
+    const min = 12;
+    while(el.scrollWidth > el.clientWidth + 1 && size > min){
+      size -= 1;
+      el.style.fontSize = size + 'px';
+    }
+  });
+}
+let fitStatValuesResizeTimer = null;
+window.addEventListener('resize', ()=>{
+  clearTimeout(fitStatValuesResizeTimer);
+  fitStatValuesResizeTimer = setTimeout(()=>{
+    document.querySelectorAll('.stats-row').forEach(row=>fitStatValues(row));
+  }, 120);
+});
 const esc = (s) => String(s??"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function confirmDialog({title, message, confirmLabel, cancelLabel, danger}){
@@ -1922,7 +1944,7 @@ function errPanelHtml(errors, idPrefix){
       <span>${icon('alert',14)}${t('import_rowsRejected',{n:errors.length})}</span>
       ${icon('chevron',14,idPrefix+'ErrChev')}
     </div>
-    <div class="err-panel-body" id="${idPrefix}ErrBody">
+    <div class="err-panel-body open" id="${idPrefix}ErrBody">
       ${errors.map(e=>`<div class="err-row"><b>${t('import_row')} ${e.rowNum}</b><span>${esc(e.reason)}${e.preview?' — '+esc(e.preview):''}</span></div>`).join('')}
     </div>
   </div>`;
@@ -1930,9 +1952,10 @@ function errPanelHtml(errors, idPrefix){
 function wireErrPanel(root, idPrefix){
   const head = root.querySelector(`[data-toggle="${idPrefix}"]`);
   if(!head) return;
+  const chev = root.querySelector('.'+idPrefix+'ErrChev');
+  if(chev) chev.style.transform = 'rotate(180deg)';
   head.addEventListener('click', ()=>{
     const body = root.querySelector('#'+idPrefix+'ErrBody');
-    const chev = root.querySelector('.'+idPrefix+'ErrChev');
     const open = body.classList.toggle('open');
     if(chev) chev.style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
   });
@@ -2084,7 +2107,7 @@ function renderTabularImport(root){
       pendingPreview = normalized;
       tabularIncluded = new Set(normalized.map((_,i)=>i));
       tabularColsOn = new Set(HEADER_KEYS);
-      fileStatus.innerHTML = `<span style="color:var(--good);display:flex;align-items:center;gap:6px;">${icon('check',14)}${esc(file.name)}</span>`;
+      fileStatus.innerHTML = `<span style="color:var(--good);display:flex;align-items:center;gap:6px;">${icon('check',14)}${esc(file.name)} — ${t('import_readSummary',{n:rows.length,v:normalized.length,s:tabularErrors.length})}</span>`;
       renderPreview();
     }catch(err){
       fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_readError')}</span>`;
@@ -2173,10 +2196,10 @@ function renderFreeformImport(root){
         else if(field==='after') rec.after = Number(val) || 0;
       });
       if(hasName) out.push(rec);
-      else if(hasAnyValue){
+      else{
         freeErrors.push({
           rowNum: freeHeaderRow + di + 1,
-          reason: t('import_reasonNoName'),
+          reason: hasAnyValue ? t('import_reasonNoName') : t('import_reasonEmptyRow'),
           preview: row.filter(v=>String(v||'').trim()).slice(0,4).join(' · '),
         });
       }
@@ -2417,6 +2440,7 @@ function renderDashboardTab(main){
             </div>`).join('') : `<div class="empty">${t('dash_noData')}</div>`}
         </div>
       </div>`;
+    fitStatValues(body);
   }
 
   main.querySelector('#resetFiltersBtn').addEventListener('click', ()=>{
