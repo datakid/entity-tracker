@@ -218,7 +218,7 @@
   }
   .glass.thin{backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);background:color-mix(in srgb, var(--glass-bg) 60%, transparent);}
   .glass::before{
-    content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:20px;
+    content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:1.3px;
     backdrop-filter:blur(12px) saturate(185%) brightness(1.06);-webkit-backdrop-filter:blur(12px) saturate(185%) brightness(1.06);
     -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
@@ -617,7 +617,7 @@ const I18N = {
     import_downloadTpl:'تنزيل القالب الفارغ', import_dzTitle:'اسحب ملف Excel هنا', import_dzSub:'أو اضغط للاختيار — xlsx, xls, csv',
     import_previewTitle:'معاينة قبل الاستيراد', import_confirm:'تأكيد الاستيراد', import_emptyPreview:'ستظهر معاينة السجلات هنا بعد رفع الملف',
     import_fileEmpty:'الملف فارغ أو لا يحتوي على بيانات صالحة', import_noColumns:'تعذر التعرف على الأعمدة — جرّب وضع "غير جدولي" لتخطيط مخصص',
-    import_imported:'تم استيراد {n} سجل بنجاح', import_readError:'حدث خطأ أثناء قراءة الملف',
+    import_imported:'تم استيراد {n} سجل بنجاح', import_importedBreakdown:'تم استيراد {n} من {t} — تم تجاهل {s}', import_readError:'حدث خطأ أثناء قراءة الملف',
     import_rowsRejected:'{n} صف تم تجاهله — اضغط للعرض', import_reasonNoName:'تم تجاهله لعدم وجود اسم للجهة', import_reasonEmptyRow:'تم تجاهله لأنه صف فارغ',
     import_readSummary:'{n} صف مقروء، {v} صالح، {s} متجاهَل',
     import_modeTitle:'كيف تريد إضافة هذه البيانات؟',
@@ -722,7 +722,7 @@ const I18N = {
     import_downloadTpl:'Download blank template', import_dzTitle:'Drop an Excel file here', import_dzSub:'or click to choose — xlsx, xls, csv',
     import_previewTitle:'Preview before import', import_confirm:'Confirm import', import_emptyPreview:'A preview of the records will appear here after upload',
     import_fileEmpty:'The file is empty or has no valid data', import_noColumns:'Could not detect columns — try "Non-tabular" mode for a custom layout',
-    import_imported:'Imported {n} records successfully', import_readError:'An error occurred while reading the file',
+    import_imported:'Imported {n} records successfully', import_importedBreakdown:'Imported {n} of {t} — {s} skipped', import_readError:'An error occurred while reading the file',
     import_rowsRejected:'{n} rows were skipped — click to view', import_reasonNoName:'Skipped — no entity name found', import_reasonEmptyRow:'Skipped — empty row',
     import_readSummary:'{n} rows read, {v} valid, {s} skipped',
     import_modeTitle:'How should this data be added?',
@@ -915,9 +915,14 @@ async function commitImportedRecords(chosen){
   const mode = await importModeDialog();
   if(mode === 'cancel' || !mode) return 0;
 
+  const say = (n)=>{
+    if(chosen.length > n) toast(t('import_importedBreakdown',{n, t:chosen.length, s:chosen.length-n}));
+    else toast(t('import_imported',{n}));
+  };
+
   if(mode === 'replace'){
     state.records = [...chosen];
-    toast(t('import_imported',{n:chosen.length}));
+    say(chosen.length);
     afterRecordsChanged();
     return chosen.length;
   }
@@ -934,7 +939,7 @@ async function commitImportedRecords(chosen){
     if(!ok) toAdd = chosen.filter(r => !dupes.includes(r));
   }
   state.records = [...toAdd, ...state.records];
-  toast(t('import_imported',{n:toAdd.length}));
+  say(toAdd.length);
   afterRecordsChanged();
   return toAdd.length;
 }
@@ -1416,7 +1421,7 @@ async function checkCloudFreshness(){
       cloudSync.remoteNewer = true;
       renderFbStatus(); renderSyncBar();
     }
-  }catch(e){ /* silent — this is a passive background check, surfaced errors would be noise */ }
+  }catch(e){}
 }
 
 let account = { authed:false, email:'', uid:null, status:'idle', lastError:'', documents:[], activeDocId:null, activeLabel:'', docsLoaded:false };
@@ -1432,7 +1437,6 @@ function watchAccountAuthState(){
       account.authed = true; account.uid = user.uid; account.email = user.email || '';
       accountRefreshDocuments().then(()=>{ if(state.tab==='account') renderMain(); });
     } else if(user && user.isAnonymous){
-      /* anonymous session used only by the quick device-code feature; not an account */
     } else {
       account.authed = false; account.uid = null; account.email = '';
     }
@@ -2054,7 +2058,7 @@ function renderTabularImport(root){
     colChipsWrap.innerHTML = colChipsBar(tabularColsOn);
     wireColChips(colChipsWrap, tabularColsOn, renderPreview);
 
-    const selectedCount = [...tabularIncluded].filter(Boolean).length;
+    const selectedCount = tabularIncluded.size;
     confirmWrap.innerHTML = `<button class="btn-ghost btn-accent" id="confirmBtn">${icon('check',14)} ${t('import_confirm')} (${selectedCount})</button>`;
     const headers = HEADER_KEYS.map(k=>t('col_'+(k==='budgetType'?'budget':k)));
     previewArea.innerHTML = `
@@ -2270,7 +2274,7 @@ function renderFreeformImport(root){
 
       const tableEl = mapArea.querySelector('#freePreviewTable');
       if(!freeRecordsCache.length){ tableEl.innerHTML = `<div class="empty">${t('import_noValidRows')}</div>`; return; }
-      const selectedCount = [...freeIncluded].filter(Boolean).length;
+      const selectedCount = freeIncluded.size;
       const headers = HEADER_KEYS.map(k=>t('col_'+(k==='budgetType'?'budget':k)));
       tableEl.innerHTML = `
         <div style="font-size:12px;color:var(--muted2);margin-bottom:10px;">${t('import_rowsSelected',{n:selectedCount,t:freeRecordsCache.length})}
@@ -2318,8 +2322,7 @@ function svgArea(data){
   const toArea=(pts)=> `M ${pts[0][0]},${h-padB} L ${pts.map(p=>p.join(',')).join(' L ')} L ${pts[pts.length-1][0]},${h-padB} Z`;
   const beforePts = pts('before'), afterPts = pts('after');
   const gridLines = [0,0.25,0.5,0.75,1].map(f=>{ const y = padT + innerH*f; return `<line x1="${padL}" y1="${y}" x2="${w-padR}" y2="${y}" stroke="rgba(128,128,140,0.14)" stroke-dasharray="3 6"/>`; }).join('');
-  const labels = data.map((d,i)=>{ const x = padL + (i/n)*innerW; return `<text x="${x}" y="${h-6}" text-anchor="middle" font-size="10.5" fill="var(--muted2)">${d.label}</text>`; }).join('');
-  return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="overflow:visible;">
+  return `<svg width="100%" viewBox="0 0 ${w} ${h-padB+8}" preserveAspectRatio="none" style="overflow:visible;">
     <defs>
       <linearGradient id="gAfter" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2f93b0" stop-opacity="0.5"/><stop offset="100%" stop-color="#2f93b0" stop-opacity="0"/></linearGradient>
       <linearGradient id="gBefore" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#cda15c" stop-opacity="0.28"/><stop offset="100%" stop-color="#cda15c" stop-opacity="0"/></linearGradient>
@@ -2327,7 +2330,6 @@ function svgArea(data){
     ${gridLines}
     <path d="${toArea(beforePts)}" fill="url(#gBefore)"/><path d="${toPath(beforePts)}" fill="none" stroke="#cda15c" stroke-width="2"/>
     <path d="${toArea(afterPts)}" fill="url(#gAfter)"/><path d="${toPath(afterPts)}" fill="none" stroke="#2f93b0" stroke-width="2.5"/>
-    ${labels}
   </svg>`;
 }
 function svgDonut(data){
@@ -2386,6 +2388,13 @@ function renderDashboardTab(main){
       monthMap[key].before += r.before; monthMap[key].after += r.after;
     });
     const byMonth = Object.values(monthMap).sort((a,b)=>a.order-b.order);
+    const trendChips = [];
+    if(filterYear!=='all') trendChips.push(String(filterYear));
+    if(filterType!=='all') trendChips.push(budgetLabel(filterType));
+    if(filterCategory!=='all') trendChips.push(filterCategory);
+    if(filterEntity!=='all') trendChips.push(filterEntity);
+    const trendRange = byMonth.length ? `${byMonth[0].label} – ${byMonth[byMonth.length-1].label}` : '';
+    const trendSubText = [trendChips.join(' · '), trendRange].filter(Boolean).join(' — ') || t('dash_trendSub');
 
     const hMap = {};
     records.forEach(r=>{ if(!hMap[r.name]) hMap[r.name] = {name:r.name, total:0}; hMap[r.name].total += r.after; });
@@ -2410,7 +2419,7 @@ function renderDashboardTab(main){
       <div class="grid grid-5">
         <div class="glass p col-3">
           <h3 class="card-title">${t('dash_trendTitle')}</h3>
-          <p style="font-size:12.5px;color:var(--muted2);margin:5px 0 16px;">${t('dash_trendSub')}</p>
+          <p style="font-size:12.5px;color:var(--muted2);margin:5px 0 16px;">${esc(trendSubText)}</p>
           ${byMonth.length ? svgArea(byMonth) : `<div class="empty">${t('dash_noData')}</div>`}
         </div>
         <div class="glass p col-2" style="display:flex;flex-direction:column;">
