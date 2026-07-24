@@ -569,7 +569,7 @@ const I18N = {
     acc_saveToActive:'حفظ في المستند النشط', acc_active:'نشط الآن', acc_loadReplace:'تحميل (استبدال بياناتي الحالية)',
     acc_loadAppend:'تحميل (إضافة لبياناتي الحالية)', acc_rename:'إعادة تسمية', acc_delete:'حذف',
     acc_deleteDocTitle:'حذف هذا المستند؟', acc_deleteDocMsg:'سيُحذف نهائيًا من السحابة ولن يؤثر على بيانات جهازك الحالية.',
-    acc_renamePrompt:'الاسم الجديد للمستند', acc_recordsSuffix:'سجل', acc_updatedPrefix:'آخر حفظ: ',
+    acc_renamePrompt:'الاسم الجديد للمستند', acc_renameConfirm:'إعادة التسمية', acc_recordsSuffix:'سجل', acc_updatedPrefix:'آخر حفظ: ',
     acc_authErrorGeneric:'تعذّر تسجيل الدخول — تحقق من البيانات وحاول مجددًا',
     acc_signInSuccess:'تم تسجيل الدخول بنجاح', acc_docSaved:'تم الحفظ في السحابة', acc_docCreated:'تم إنشاء المستند وحفظه',
     acc_docLoaded:'تم تحميل المستند', acc_docDeleted:'تم حذف المستند', acc_docRenamed:'تمت إعادة التسمية',
@@ -674,7 +674,7 @@ const I18N = {
     acc_saveToActive:'Save to active document', acc_active:'Active now', acc_loadReplace:'Load (replace my current data)',
     acc_loadAppend:'Load (add to my current data)', acc_rename:'Rename', acc_delete:'Delete',
     acc_deleteDocTitle:'Delete this document?', acc_deleteDocMsg:'It will be permanently removed from the cloud. Your current device data is not affected.',
-    acc_renamePrompt:'New document name', acc_recordsSuffix:'records', acc_updatedPrefix:'Last saved: ',
+    acc_renamePrompt:'New document name', acc_renameConfirm:'Rename', acc_recordsSuffix:'records', acc_updatedPrefix:'Last saved: ',
     acc_authErrorGeneric:'Could not sign in — check your details and try again',
     acc_signInSuccess:'Signed in successfully', acc_docSaved:'Saved to the cloud', acc_docCreated:'Document created and saved',
     acc_docLoaded:'Document loaded', acc_docDeleted:'Document deleted', acc_docRenamed:'Renamed',
@@ -868,6 +868,36 @@ function confirmDialog({title, message, confirmLabel, cancelLabel, danger}){
     el.onclick = (e)=>{ if(e.target===el) close(false); };
     el.querySelector('#dlgCancel').addEventListener('click', ()=> close(false));
     el.querySelector('#dlgConfirm').addEventListener('click', ()=> close(true));
+  });
+}
+function promptDialog({title, message, value, placeholder, confirmLabel, cancelLabel}){
+  return new Promise(resolve=>{
+    let el = document.getElementById('dialogBackdrop');
+    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
+    const myGen = ++dialogGen;
+    el.innerHTML = `
+      <div class="dialog-modal">
+        <div class="dialog-title">${icon('pencil',18)} ${esc(title)}</div>
+        ${message ? `<p class="dialog-msg">${esc(message)}</p>` : ''}
+        <input class="inp" id="dlgPromptInput" type="text" value="${esc(value||'')}" placeholder="${esc(placeholder||'')}" style="margin:4px 0 18px;padding:12px 14px;"/>
+        <div class="dialog-actions">
+          <button class="btn-ghost" id="dlgCancel">${esc(cancelLabel)}</button>
+          <button class="btn-ghost btn-accent" id="dlgConfirm">${esc(confirmLabel)}</button>
+        </div>
+      </div>`;
+    requestAnimationFrame(()=>{ el.classList.add('open'); const inp = el.querySelector('#dlgPromptInput'); inp.focus(); inp.select(); });
+    function close(result){
+      el.classList.remove('open');
+      document.removeEventListener('keydown', onKey);
+      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
+      resolve(result);
+    }
+    function onKey(e){ if(e.key==='Escape') close(null); }
+    document.addEventListener('keydown', onKey);
+    el.onclick = (e)=>{ if(e.target===el) close(null); };
+    el.querySelector('#dlgCancel').addEventListener('click', ()=> close(null));
+    el.querySelector('#dlgConfirm').addEventListener('click', ()=> close(el.querySelector('#dlgPromptInput').value));
+    el.querySelector('#dlgPromptInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); close(el.querySelector('#dlgPromptInput').value); } });
   });
 }
 function parseAmount(raw){
@@ -2849,7 +2879,7 @@ function renderEmailAccountBody(body){
         catch(e){ toast(firestoreErrorMessage(e), 'err'); }
       });
       card.querySelector('[data-act="rename"]').addEventListener('click', async ()=>{
-        const name = prompt(t('acc_renamePrompt'), doc.label);
+        const name = await promptDialog({ title:t('acc_renamePrompt'), value:doc.label, placeholder:t('acc_newDocPh'), confirmLabel:t('acc_renameConfirm'), cancelLabel:t('cloud_cancelBtn') });
         if(name === null) return;
         try{ await accountRenameDocument(id, name.trim() || doc.label); toast(t('acc_docRenamed')); renderDocsList(); }
         catch(e){ toast(firestoreErrorMessage(e), 'err'); }
