@@ -3,10 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0a0d0d">
 <script>
 (function(){
-  var m = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  document.documentElement.setAttribute('data-theme', m ? 'dark' : 'light');
+  var mode = 'system', lang = 'ar';
+  try{
+    var c = JSON.parse(localStorage.getItem('entitiesStatementApp:cache:v1') || 'null');
+    if(c && (c.theme === 'light' || c.theme === 'dark' || c.theme === 'system')) mode = c.theme;
+    if(c && (c.lang === 'ar' || c.lang === 'en')) lang = c.lang;
+  }catch(e){}
+  var sysDark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  var root = document.documentElement;
+  root.setAttribute('data-theme', mode === 'system' ? (sysDark ? 'dark' : 'light') : mode);
+  root.lang = lang;
+  root.dir = lang === 'ar' ? 'rtl' : 'ltr';
 })();
 </script>
 <title>بيان جهات متعاقدة</title>
@@ -14,11 +25,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore-compat.js"></script>
 <style>
   :root{
     color-scheme: dark;
@@ -40,8 +48,8 @@
     --r-lg:28px; --r-md:18px; --r-sm:13px; --r-pill:999px;
 
     --fg:#f1f2f2;
-    --muted:rgba(241,242,242,.56);
-    --muted2:rgba(241,242,242,.37);
+    --muted:rgba(241,242,242,.7);
+    --muted2:rgba(241,242,242,.54);
 
     --ink-solid:#fff;
     --ink-9:rgba(255,255,255,.92); --ink-85:rgba(255,255,255,.85); --ink-8:rgba(255,255,255,.8);
@@ -51,6 +59,9 @@
 
     --vignette-edge:rgba(10,13,13,.64);
     --blob-opacity:.85;
+    --blob-a:rgba(47,147,176,.34);
+    --blob-b:rgba(205,161,92,.26);
+    --blob-c:rgba(28,107,131,.3);
 
     --glass-bg:rgba(255,255,255,.045);
     --glass-border:rgba(255,255,255,.09);
@@ -67,7 +78,7 @@
     --input-bg:rgba(255,255,255,.05);
     --input-border:rgba(255,255,255,.13);
     --input-shadow:rgba(255,255,255,.06);
-    --placeholder:rgba(255,255,255,.32);
+    --placeholder:rgba(255,255,255,.44);
     --scrollbar:rgba(255,255,255,.16);
 
     --btn-ghost-bg:rgba(255,255,255,.045);
@@ -116,7 +127,7 @@
 
     --fg:#191a18;
     --muted:rgba(25,26,24,.58);
-    --muted2:rgba(25,26,24,.4);
+    --muted2:rgba(25,26,24,.58);
 
     --ink-9:rgba(19,20,18,.9); --ink-85:rgba(19,20,18,.85); --ink-8:rgba(19,20,18,.8);
     --ink-78:rgba(19,20,18,.78); --ink-75:rgba(19,20,18,.75); --ink-6:rgba(19,20,18,.64);
@@ -126,6 +137,8 @@
 
     --vignette-edge:rgba(246,244,238,.8);
     --blob-opacity:.45;
+    --good:#0b8a5d; --good-soft:rgba(11,138,93,.12);
+    --bad:#c93a3a;  --bad-soft:rgba(201,58,58,.11);
 
     --glass-bg:rgba(255,255,255,.56);
     --glass-border:rgba(255,255,255,.78);
@@ -191,9 +204,9 @@
   svg.defs{position:absolute;width:0;height:0;overflow:hidden;}
 
   .bg-blob{position:fixed;border-radius:50%;z-index:-2;pointer-events:none;opacity:var(--blob-opacity);transition:opacity .4s ease;}
-  .blob-a{width:640px;height:640px;top:-160px;inset-inline-end:-180px;background:radial-gradient(circle at 30% 30%, rgba(201,111,74,.3), transparent 65%);filter:blur(90px);animation:driftA 42s ease-in-out infinite;}
-  .blob-b{width:560px;height:560px;bottom:-180px;inset-inline-start:-160px;background:radial-gradient(circle at 60% 60%, rgba(224,169,110,.24), transparent 65%);filter:blur(90px);animation:driftB 48s ease-in-out infinite;}
-  .blob-c{width:460px;height:460px;top:14%;inset-inline-start:8%;background:radial-gradient(circle, rgba(156,79,48,.18), transparent 70%);filter:blur(95px);animation:driftC 46s ease-in-out infinite;}
+  .blob-a{width:640px;height:640px;top:-160px;inset-inline-end:-180px;background:radial-gradient(circle at 30% 30%, var(--blob-a), transparent 68%);animation:driftA 42s ease-in-out infinite;}
+  .blob-b{width:560px;height:560px;bottom:-180px;inset-inline-start:-160px;background:radial-gradient(circle at 60% 60%, var(--blob-b), transparent 68%);animation:driftB 48s ease-in-out infinite;}
+  .blob-c{width:460px;height:460px;top:14%;inset-inline-start:8%;background:radial-gradient(circle, var(--blob-c), transparent 72%);animation:driftC 46s ease-in-out infinite;}
   .vignette{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 0%, transparent 35%, var(--vignette-edge) 100%);}
   .boot-progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:2000;pointer-events:none;
     background:linear-gradient(90deg, transparent, var(--accent), var(--accent-light), var(--accent), transparent);
@@ -217,12 +230,6 @@
     transition:box-shadow .4s ease, background .3s ease, border-color .3s ease;
   }
   .glass.thin{backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%);background:color-mix(in srgb, var(--glass-bg) 60%, transparent);}
-  .glass::before{
-    content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:1.3px;
-    backdrop-filter:blur(12px) saturate(185%) brightness(1.06);-webkit-backdrop-filter:blur(12px) saturate(185%) brightness(1.06);
-    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
-  }
   .glass::after{
     content:"";position:absolute;inset:0;z-index:0;border-radius:inherit;padding:1.3px;
     background:linear-gradient(155deg, var(--glass-rim-bright), var(--glass-rim-mid) 28%, transparent 52%, var(--glass-rim-edge) 100%);
@@ -264,12 +271,13 @@
   @media (max-width:700px){.sync-grid{grid-template-columns:1fr;}}
 
   nav.tabs{margin-bottom:22px;}
-  .tabbar{position:relative;display:inline-flex;gap:2px;padding:6px;flex-wrap:wrap;}
-  #tabIndicator{position:absolute;top:6px;bottom:6px;left:0;border-radius:var(--r-sm);
+  .tabbar{position:relative;display:flex;gap:2px;padding:6px;width:max-content;max-width:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;}
+  .tabbar::-webkit-scrollbar{display:none;}
+  #tabIndicator{position:absolute;top:0;left:0;height:0;border-radius:var(--r-sm);
     background:linear-gradient(135deg,var(--accent),var(--accent-strong));
     box-shadow:0 8px 22px -8px var(--accent-ring), inset 0 1px 0 rgba(255,255,255,.4);
     transition:transform .45s cubic-bezier(.22,1,.36,1), width .45s cubic-bezier(.22,1,.36,1);z-index:0;}
-  .tab-btn{position:relative;z-index:1;display:flex;align-items:center;gap:8px;border:none;background:transparent;color:var(--muted);
+  .tab-btn{position:relative;z-index:1;flex-shrink:0;white-space:nowrap;display:flex;align-items:center;gap:8px;border:none;background:transparent;color:var(--muted);
     border-radius:var(--r-sm);padding:10px 18px;font-size:14px;font-weight:500;transition:color .3s;}
   .tab-btn.active{color:var(--btn-onaccent);}
   .tab-btn:not(.active):hover{color:var(--fg);}
@@ -450,7 +458,7 @@
   .stat-body{min-width:0;flex:1;}
   .stat-label{font-size:12px;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .stat-value{font-weight:800;letter-spacing:-.015em;color:var(--fg);margin-top:4px;line-height:1.15;
-    font-size:clamp(15px, 1.9vw, 25px);white-space:nowrap;overflow:hidden;font-variant-numeric:tabular-nums;}
+    font-size:clamp(18px, 1.9vw, 25px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;}
   .stat-sub{font-size:11.5px;color:var(--muted2);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .stats-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px;}
 
@@ -498,6 +506,63 @@
     border:1px solid var(--row-card-border);background:var(--row-card-bg);padding:14px 16px;margin-bottom:10px;transition:.2s;}
   .doc-card.active{border-color:var(--accent-ring);background:var(--accent-soft);}
   .doc-card:hover{border-color:var(--row-card-border-hover);}
+  .dialog-msg{white-space:pre-line;}
+  .toast{gap:12px;width:max-content;max-width:min(92vw,520px);}
+  .toast-action{border:1px solid currentColor;background:transparent;color:inherit;border-radius:var(--r-pill);padding:4px 13px;font-size:12.5px;font-weight:700;flex-shrink:0;}
+  .toast-action:hover{background:rgba(255,255,255,.12);}
+
+  .tbl-wrap{overflow:auto;max-height:68vh;border-radius:var(--r-md);}
+  .tbl-wrap thead th{position:sticky;top:0;z-index:2;background:color-mix(in srgb, var(--bg) 90%, transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+  th.num,td.num{text-align:end;}
+  th[aria-sort]{color:var(--fg);}
+  th .sort-ind{display:inline-flex;vertical-align:middle;margin-inline-start:4px;color:var(--accent);}
+  th:focus-visible{outline-offset:-2px;border-radius:var(--r-sm);}
+  .pager{display:flex;justify-content:center;padding:16px 0 4px;}
+  .row-tag-new{background:var(--divider-soft);color:var(--muted);}
+
+  .empty-hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:60px 24px;}
+  .empty-hero h2{margin:0;font-size:21px;font-weight:700;}
+  .empty-hero p{margin:0;max-width:460px;color:var(--muted);font-size:14px;line-height:1.8;}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+  .hero-actions .btn-primary{width:auto;padding:12px 22px;font-size:14px;}
+
+  .chart-wrap{position:relative;}
+  .chart-wrap svg{display:block;width:100%;height:auto;direction:ltr;overflow:visible;}
+  .chart-axis{fill:var(--muted2);font-size:11px;font-family:inherit;}
+  .chart-grid{stroke:var(--divider);stroke-dasharray:3 6;}
+  .chart-guide{stroke:var(--accent-ring);stroke-width:1;opacity:0;transition:opacity .12s;}
+  .chart-tip{position:absolute;top:6px;z-index:3;pointer-events:none;min-width:168px;padding:10px 13px;border-radius:var(--r-sm);border:1px solid var(--glass-border);
+    background:color-mix(in srgb, var(--bg) 84%, transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    box-shadow:0 18px 36px -18px var(--shadow-ambient);font-size:12px;opacity:0;transition:opacity .12s;}
+  .chart-tip b{display:block;font-size:12.5px;margin-bottom:6px;color:var(--fg);}
+  .chart-tip div{display:flex;justify-content:space-between;gap:14px;color:var(--muted);line-height:1.7;}
+  .chart-tip div span:last-child{color:var(--fg);font-weight:700;font-variant-numeric:tabular-nums;}
+  .chart-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted);}
+  .chart-legend span{display:inline-flex;align-items:center;}
+  .donut-wrap{position:relative;display:flex;justify-content:center;}
+  .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+  .donut-center b{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .donut-center span{font-size:11px;color:var(--muted2);}
+  .legend-row .pct{color:var(--muted2);font-size:11.5px;font-weight:500;}
+  .legend-val{display:inline-flex;align-items:baseline;gap:10px;color:var(--ink-85);font-weight:700;}
+  .mover-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--divider-soft);}
+  .mover-item:last-child{border-bottom:none;}
+  .mover-name{font-size:13px;font-weight:600;color:var(--ink-8);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .mover-meta{font-size:11.5px;color:var(--muted2);margin-top:2px;}
+  .mover-val{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;flex-shrink:0;}
+  .stat-note{margin-bottom:20px;}
+
+  @media (max-width:700px){
+    .bg-blob{animation:none;}
+    .grain{display:none;}
+    .wrap{padding:18px 14px 48px;}
+    .p{padding:18px;}
+    .search-wrap input{width:100%;}
+    .search-wrap{flex:1 1 180px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important;}
+  }
 </style>
 </head>
 <body>
@@ -514,15 +579,18 @@
   <header class="top" id="headerBar"></header>
   <div class="glass thin syncbar" id="syncBar"></div>
   <nav class="tabs">
-    <div class="glass thin tabbar" id="tabbar"></div>
+    <div class="glass thin tabbar" id="tabbar" role="tablist"></div>
   </nav>
-  <main id="mainContent"></main>
+  <main id="mainContent" role="tabpanel"></main>
 </div>
 
-<div id="toastHost"></div>
+<div id="toastHost" role="status" aria-live="polite"></div>
 
 <script>
 const ICONS = {
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"/>',
+  logout:'<path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4"/><path d="M16 8l4 4-4 4"/><path d="M20 12H9"/>',
+  folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',
   upload:'<path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M4 21h16"/>',
   download:'<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/>',
@@ -573,10 +641,10 @@ const I18N = {
     acc_authErrorGeneric:'تعذّر تسجيل الدخول — تحقق من البيانات وحاول مجددًا',
     acc_signInSuccess:'تم تسجيل الدخول بنجاح', acc_docSaved:'تم الحفظ في السحابة', acc_docCreated:'تم إنشاء المستند وحفظه',
     acc_docLoaded:'تم تحميل المستند', acc_docDeleted:'تم حذف المستند', acc_docRenamed:'تمت إعادة التسمية',
-    cloud_title:'مزامنة سحابية عبر رمز', cloud_notLinked:'غير مرتبط بأي جهاز آخر',
+    cloud_notLinked:'غير مرتبط بأي جهاز آخر',
     cloud_linked:'مرتبط — آخر مزامنة: ', cloud_syncingMsg:'جارٍ التنفيذ...', cloud_errorPrefix:'خطأ: ',
-    cloud_explain:'أنشئ رمز مزامنة أو أدخل رمزًا موجودًا للوصول من جهاز آخر. لا يلزم بريد إلكتروني أو كلمة مرور.',
-    cloud_createBtn:'إنشاء رمز جديد', cloud_linkBtn:'ربط برمز موجود', cloud_unlinkBtn:'إلغاء الربط',
+    
+    cloud_createBtn:'إنشاء رمز جديد', cloud_unlinkBtn:'إلغاء الربط',
     cloud_syncNowBtn:'مزامنة الآن', cloud_codePh:'أدخل رمز المزامنة', cloud_codeSubmit:'ربط',
     cloud_saveTitle:'احفظ رمز المزامنة الآن',
     cloud_saveMsg:'هذا الرمز هو السبيل الوحيد للوصول إلى بياناتك من جهاز آخر. لا يمكن استرجاعه إن ضاع.',
@@ -602,11 +670,11 @@ const I18N = {
     field_name:'الاسم', field_namePh:'مثال: مستشفى الملك فهد', field_category:'التصنيف', field_categoryPh:'مثال: مستشفى عام',
     field_budget:'الموازنة', field_month:'الشهر', field_year:'السنة', field_before:'المبلغ قبل المراجعة', field_after:'المبلغ بعد المراجعة',
     entry_save:'حفظ السجل', entry_variance:'الفرق بعد المراجعة', entry_recent:'أحدث الإدخالات', entry_recordsSuffix:'سجل',
-    entry_empty:'لا توجد سجلات بعد', entry_nameRequired:'يرجى إدخال الاسم', entry_added:'تمت الإضافة بنجاح', currency:'ر.س',
+    entry_empty:'لا توجد سجلات بعد', entry_nameRequired:'يرجى إدخال الاسم', entry_added:'تمت الإضافة بنجاح', 
     entry_invalidNumber:'قيمة الميزانية غير صالحة', entry_negativeNumber:'لا يمكن أن تكون الميزانية سالبة',
     dup_title:'سجل مشابه موجود بالفعل', dup_msg:'يوجد سجل بنفس الاسم والشهر والسنة. هل تريد الإضافة رغم ذلك؟',
     dup_confirmBtn:'إضافة رغم ذلك', dup_cancelBtn:'إلغاء',
-    del_title:'حذف السجل؟', del_msg:'لا يمكن التراجع عن هذا الإجراء.', del_confirmBtn:'حذف', del_cancelBtn:'إلغاء',
+    del_title:'حذف السجل؟', del_msg:'سيُحذف من بياناتك، ويمكنك التراجع مباشرة بعد الحذف.', del_confirmBtn:'حذف', del_cancelBtn:'إلغاء',
     bulk_deleteSelected:'حذف المحدد', bulk_clearSelection:'إلغاء التحديد', bulk_selectedCount:'{n} محدد',
     bulk_deleteTitle:'حذف {n} سجل؟', bulk_deleted:'تم حذف السجلات المحددة',
     import_dupTitle:'سجلات مكررة محتملة', import_dupMsg:'{n} من أصل {t} سجل تبدو مكررة لسجلات موجودة. ماذا تريد أن تفعل؟',
@@ -618,10 +686,10 @@ const I18N = {
     import_previewTitle:'معاينة قبل الاستيراد', import_confirm:'تأكيد الاستيراد', import_emptyPreview:'ستظهر معاينة السجلات هنا بعد رفع الملف',
     import_fileEmpty:'الملف فارغ أو لا يحتوي على بيانات صالحة', import_noColumns:'تعذر التعرف على الأعمدة — جرّب وضع "غير جدولي" لتخطيط مخصص',
     import_imported:'تم استيراد {n} سجل بنجاح', import_importedBreakdown:'تم استيراد {n} من {t} — تم تجاهل {s}', import_readError:'حدث خطأ أثناء قراءة الملف',
-    import_rowsRejected:'{n} صف تم تجاهله — اضغط للعرض', import_reasonNoName:'تم تجاهله لعدم وجود اسم للجهة', import_reasonEmptyRow:'تم تجاهله لأنه صف فارغ',
+    import_rowsRejected:'{n} صف تم تجاهله — اضغط للعرض', import_reasonNoName:'تم تجاهله لعدم وجود اسم للجهة', 
     import_readSummary:'{n} صف مقروء، {v} صالح، {s} متجاهَل',
     import_modeTitle:'كيف تريد إضافة هذه البيانات؟',
-    import_modeMsg:'يمكنك إضافة السجلات الجديدة إلى بياناتك الحالية، أو استبدال كل البيانات الحالية (بما فيها بيانات العرض التجريبي) بهذا الملف فقط.',
+    import_modeMsg:'يمكنك إضافة السجلات الجديدة إلى بياناتك الحالية، أو استبدال كل البيانات الحالية بهذا الملف فقط.',
     import_modeAppend:'إضافة إلى البيانات الحالية', import_modeReplace:'استبدال كل البيانات الحالية',
     import_freeformTitle:'استيراد غير جدولي', import_freeformSub:'ارفع أي ملف Excel بأي ترتيب أعمدة، ثم حدد يدويًا أي عمود يقابل كل حقل',
     import_freeDzTitle:'اسحب أي ملف Excel هنا', import_freeDzSub:'لا حاجة لمطابقة القالب — سيتم تحديد الأعمدة يدويًا',
@@ -629,11 +697,11 @@ const I18N = {
     import_step2:'٢) طابق كل عمود مع الحقل المناسب', import_step2Sub:'تم تخمين بعض المطابقات تلقائيًا — يمكنك تعديلها',
     import_step3:'٣) اختر الأعمدة والصفوف ثم عاين النتيجة', import_row:'صف', import_col:'عمود ',
     import_ignoreColumn:'تجاهل هذا العمود', import_noValidRows:'لا توجد سجلات صالحة للاستيراد — تأكد من تعيين عمود الاسم',
-    import_columnsControl:'الأعمدة المُدرجة في الاستيراد', import_selectAll:'تحديد الكل', import_deselectAll:'إلغاء التحديد',
-    import_rowsSelected:'{n} من {t} صف محدد للاستيراد', import_readyCount:'{n} سجل جاهز للاستيراد',
+    import_selectAll:'تحديد الكل', import_deselectAll:'إلغاء التحديد',
+    import_rowsSelected:'{n} من {t} صف محدد للاستيراد', 
     dash_year:'السنة', dash_type:'الموازنة', dash_all:'الكل', dash_category:'التصنيف', dash_entity:'الجهة', dash_resetFilters:'إعادة تعيين الفلاتر',
     dash_kpiBefore:'الإجمالي قبل المراجعة', dash_kpiAfter:'الإجمالي بعد المراجعة', dash_kpiDiff:'الفرق الإجمالي',
-    dash_kpiTotal:'إجمالي المبالغ بعد المراجعة', dash_kpiRecords:'عدد السجلات', dash_kpiEntitiesSuffix:'جهة',
+    dash_kpiEntitiesSuffix:'جهة',
     dash_kpiIncreased:'سجلات زاد مبلغها', dash_kpiDecreased:'سجلات قلّ مبلغها', dash_kpiChangeSub:'بعد المراجعة',
     dash_trendTitle:'الاتجاه الشهري — قبل وبعد المراجعة', dash_trendSub:'مقارنة المبالغ عبر الأشهر (حسب عوامل التصفية)',
     dash_typeTitle:'توزيع أنواع الموازنة', dash_typeSub:'حسب المبلغ بعد المراجعة',
@@ -661,6 +729,23 @@ const I18N = {
     cmd_exportBackup:'تصدير نسخة احتياطية كاملة (JSON)', cmd_importBackup:'استيراد نسخة احتياطية (JSON)',
     settings_backupTitle:'النسخ الاحتياطي', backup_exported:'تم تنزيل النسخة الاحتياطية',
     backup_imported:'تم استيراد {n} سجل من النسخة الاحتياطية', backup_importError:'ملف النسخة الاحتياطية غير صالح',
+    variance_fromZero:'من صفر', undo:'تراجع', undo_done:'تم التراجع',
+    cloud_pulled:'تم تحديث بياناتك من السحابة', cloud_pushed:'تم رفع تعديلاتك إلى السحابة', cloud_upToDate:'كل شيء محدّث',
+    cloud_unsynced:'توجد تعديلات لم تُزامَن بعد',
+    cloud_conflict:'تم تعديل هذه البيانات من جهاز آخر — حمّل النسخة السحابية أولًا ثم أعد المحاولة',
+    cache_saveFailed:'تعذّر حفظ البيانات على هذا الجهاز — مساحة التخزين ممتلئة أو محظورة',
+    xlsx_loadFailed:'تعذّر تحميل مكتبة Excel — تحقق من الاتصال وحاول مجددًا',
+    backup_confirmTitle:'استبدال البيانات بالنسخة الاحتياطية؟', backup_confirmMsg:'سيتم استبدال {c} سجل حالي بـ {n} سجل من الملف.', backup_confirmBtn:'استبدال',
+    acc_replaceConfirmMsg:'ستُستبدل بيانات هذا الجهاز الحالية بمحتوى هذا المستند.',
+    import_reasonBadMonth:'تم تجاهله — الشهر غير معروف', import_reasonBadYear:'تم تجاهله — السنة غير صالحة',
+    import_reasonBadAmount:'تم تجاهله — مبلغ غير رقمي', import_reasonNegative:'تم تجاهله — مبلغ سالب', import_reasonBadBudget:'تم تجاهله — نوع الموازنة غير معروف',
+    import_previewCapped:'المعروض أول {n} صف من {t} — يشمل الاستيراد كل الصفوف المحددة',
+    entry_invalidYear:'السنة يجب أن تكون بين 2000 و 2100',
+    hosp_showMore:'عرض المزيد ({n} متبقٍ)', action_edit:'تعديل', action_save:'حفظ', action_cancel:'إلغاء', bulk_select:'تحديد الصف',
+    empty_title:'ابدأ ببيانات جهاتك المتعاقدة', empty_sub:'أضف سجلًا يدويًا، أو استورد ملف Excel، أو حمّل بيانات تجريبية لاستكشاف لوحة التحكم.',
+    empty_loadSample:'تحميل بيانات تجريبية', sample_loaded:'تم تحميل البيانات التجريبية',
+    dash_entityPh:'الجهة: الكل — اكتب للبحث',
+    dash_moversTitle:'أكبر التغييرات بعد المراجعة', dash_moversSub:'حسب قيمة الفرق عن المبلغ قبل المراجعة',
   },
   en:{
     appName:'Contracted Entities Statement',
@@ -678,10 +763,10 @@ const I18N = {
     acc_authErrorGeneric:'Could not sign in — check your details and try again',
     acc_signInSuccess:'Signed in successfully', acc_docSaved:'Saved to the cloud', acc_docCreated:'Document created and saved',
     acc_docLoaded:'Document loaded', acc_docDeleted:'Document deleted', acc_docRenamed:'Renamed',
-    cloud_title:'Sync via Code', cloud_notLinked:'Not linked to another device',
+    cloud_notLinked:'Not linked to another device',
     cloud_linked:'Linked — last synced: ', cloud_syncingMsg:'Working...', cloud_errorPrefix:'Error: ',
-    cloud_explain:'Create a sync code or enter an existing one to access this from another device. No email or password needed.',
-    cloud_createBtn:'Create new code', cloud_linkBtn:'Link existing code', cloud_unlinkBtn:'Unlink',
+    
+    cloud_createBtn:'Create new code', cloud_unlinkBtn:'Unlink',
     cloud_syncNowBtn:'Sync now', cloud_codePh:'Enter sync code', cloud_codeSubmit:'Link',
     cloud_saveTitle:'Save your sync code now',
     cloud_saveMsg:'This code is the only way to access your data from another device. It cannot be recovered if lost.',
@@ -707,11 +792,11 @@ const I18N = {
     field_name:'Name', field_namePh:'e.g. King Fahd Hospital', field_category:'Category', field_categoryPh:'e.g. General Hospital',
     field_budget:'Budget type', field_month:'Month', field_year:'Year', field_before:'Amount before review', field_after:'Amount after review',
     entry_save:'Save record', entry_variance:'Difference after review', entry_recent:'Recent entries', entry_recordsSuffix:'records',
-    entry_empty:'No records yet', entry_nameRequired:'Please enter a name', entry_added:'Added successfully', currency:'SAR',
+    entry_empty:'No records yet', entry_nameRequired:'Please enter a name', entry_added:'Added successfully', 
     entry_invalidNumber:'Budget value is invalid', entry_negativeNumber:'Budget cannot be negative',
     dup_title:'A similar record already exists', dup_msg:'A record with the same name, month, and year exists. Add it anyway?',
     dup_confirmBtn:'Add anyway', dup_cancelBtn:'Cancel',
-    del_title:'Delete this record?', del_msg:'This action cannot be undone.', del_confirmBtn:'Delete', del_cancelBtn:'Cancel',
+    del_title:'Delete this record?', del_msg:'It will be removed from your data. You can undo right after.', del_confirmBtn:'Delete', del_cancelBtn:'Cancel',
     bulk_deleteSelected:'Delete selected', bulk_clearSelection:'Clear selection', bulk_selectedCount:'{n} selected',
     bulk_deleteTitle:'Delete {n} records?', bulk_deleted:'Selected records deleted',
     import_dupTitle:'Possible duplicate records', import_dupMsg:'{n} of {t} rows look like duplicates of existing records. What would you like to do?',
@@ -723,10 +808,10 @@ const I18N = {
     import_previewTitle:'Preview before import', import_confirm:'Confirm import', import_emptyPreview:'A preview of the records will appear here after upload',
     import_fileEmpty:'The file is empty or has no valid data', import_noColumns:'Could not detect columns — try "Non-tabular" mode for a custom layout',
     import_imported:'Imported {n} records successfully', import_importedBreakdown:'Imported {n} of {t} — {s} skipped', import_readError:'An error occurred while reading the file',
-    import_rowsRejected:'{n} rows were skipped — click to view', import_reasonNoName:'Skipped — no entity name found', import_reasonEmptyRow:'Skipped — empty row',
+    import_rowsRejected:'{n} rows were skipped — click to view', import_reasonNoName:'Skipped — no entity name found', 
     import_readSummary:'{n} rows read, {v} valid, {s} skipped',
     import_modeTitle:'How should this data be added?',
-    import_modeMsg:'You can add these new records to your existing data, or replace all existing data (including any demo data) with just this file.',
+    import_modeMsg:'You can add these new records to your existing data, or replace all existing data with just this file.',
     import_modeAppend:'Add to existing data', import_modeReplace:'Replace all existing data',
     import_freeformTitle:'Non-tabular import', import_freeformSub:'Upload any Excel file in any column order, then map each column to a field yourself',
     import_freeDzTitle:'Drop any Excel file here', import_freeDzSub:'No need to match the template — columns are mapped manually',
@@ -734,11 +819,11 @@ const I18N = {
     import_step2:'2) Map each column to the right field', import_step2Sub:'Some matches were guessed automatically — adjust as needed',
     import_step3:'3) Choose columns and rows, then review the result', import_row:'Row', import_col:'Column ',
     import_ignoreColumn:'Ignore this column', import_noValidRows:'No valid rows to import — make sure the Name column is mapped',
-    import_columnsControl:'Columns included in import', import_selectAll:'Select all', import_deselectAll:'Deselect all',
-    import_rowsSelected:'{n} of {t} rows selected for import', import_readyCount:'{n} records ready to import',
+    import_selectAll:'Select all', import_deselectAll:'Deselect all',
+    import_rowsSelected:'{n} of {t} rows selected for import', 
     dash_year:'Year', dash_type:'Budget type', dash_all:'All', dash_category:'Category', dash_entity:'Entity', dash_resetFilters:'Reset filters',
     dash_kpiBefore:'Total before review', dash_kpiAfter:'Total after review', dash_kpiDiff:'Total difference',
-    dash_kpiTotal:'Total amount after review', dash_kpiRecords:'Records', dash_kpiEntitiesSuffix:'entities',
+    dash_kpiEntitiesSuffix:'entities',
     dash_kpiIncreased:'Records that increased', dash_kpiDecreased:'Records that decreased', dash_kpiChangeSub:'after review',
     dash_trendTitle:'Monthly trend — before vs. after review', dash_trendSub:'Amounts across months (respects filters)',
     dash_typeTitle:'Budget type breakdown', dash_typeSub:'By amount after review',
@@ -766,11 +851,28 @@ const I18N = {
     cmd_exportBackup:'Export full backup (JSON)', cmd_importBackup:'Import backup (JSON)',
     settings_backupTitle:'Backup', backup_exported:'Backup downloaded',
     backup_imported:'{n} records imported from backup', backup_importError:'Invalid backup file',
+    variance_fromZero:'From zero', undo:'Undo', undo_done:'Undone',
+    cloud_pulled:'Your data was updated from the cloud', cloud_pushed:'Your changes were uploaded to the cloud', cloud_upToDate:'Everything is up to date',
+    cloud_unsynced:'You have changes that are not synced yet',
+    cloud_conflict:'These data were changed from another device — load the cloud version first, then try again',
+    cache_saveFailed:'Could not save data on this device — storage is full or blocked',
+    xlsx_loadFailed:'Could not load the Excel library — check your connection and try again',
+    backup_confirmTitle:'Replace data with this backup?', backup_confirmMsg:'{c} current records will be replaced by {n} records from the file.', backup_confirmBtn:'Replace',
+    acc_replaceConfirmMsg:'The data currently on this device will be replaced by this document.',
+    import_reasonBadMonth:'Skipped — unrecognized month', import_reasonBadYear:'Skipped — invalid year',
+    import_reasonBadAmount:'Skipped — amount is not a number', import_reasonNegative:'Skipped — negative amount', import_reasonBadBudget:'Skipped — unrecognized budget type',
+    import_previewCapped:'Showing the first {n} of {t} rows — the import includes every selected row',
+    entry_invalidYear:'Year must be between 2000 and 2100',
+    hosp_showMore:'Show more ({n} remaining)', action_edit:'Edit', action_save:'Save', action_cancel:'Cancel', bulk_select:'Select row',
+    empty_title:'Start with your contracted entities', empty_sub:'Add a record by hand, import an Excel file, or load sample data to explore the dashboard.',
+    empty_loadSample:'Load sample data', sample_loaded:'Sample data loaded',
+    dash_entityPh:'Entity: all — type to search',
+    dash_moversTitle:'Largest changes after review', dash_moversSub:'By absolute difference from the pre-review amount',
   },
 };
 function t(key, vars){
-  let str = (I18N[lang] && I18N[lang][key]) || key;
-  if(vars) Object.keys(vars).forEach(k=>{ str = str.replace(`{${k}}`, vars[k]); });
+  let str = (I18N[lang] && I18N[lang][key]) || (I18N.en && I18N.en[key]) || key;
+  if(vars) Object.keys(vars).forEach(k=>{ str = str.split('{' + k + '}').join(String(vars[k])); });
   return str;
 }
 
@@ -778,6 +880,7 @@ const BUDGET_KEYS = ['newborns','students','workforce'];
 const BUDGET_KEYS_ALL = ['newborns','students','workforce','total'];
 const BUDGET_HEX = { newborns:'#8fd4ea', students:'#2f93b0', workforce:'#1c6b83', total:'#cda15c' };
 const MONTHS_AR = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const MONTHS_AR_ALT = ["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"];
 const MONTHS_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const CATEGORY_SUGGESTIONS = {
   ar:["مستشفى عام","مستشفى تخصصي","مستشفى خاص","مركز صحي","عيادة"],
@@ -788,116 +891,269 @@ const HEADERS_BY_LANG = {
   ar:["الاسم","التصنيف","الموازنة","الشهر","السنة","المبلغ قبل المراجعة","المبلغ بعد المراجعة"],
   en:["Name","Category","Budget Type","Month","Year","Amount Before Review","Amount After Review"],
 };
+const YEAR_MIN = 2000, YEAR_MAX = 2100;
+const PREVIEW_CAP = 200;
+const TABLE_PAGE = 100;
+const SAMPLE_RECORDS = [
+  {name:"مستشفى الملك فهد",category:"مستشفى عام",budgetType:"newborns",month:0,year:2026,before:185000,after:172500},
+  {name:"مستشفى الأمل",category:"مركز صحي",budgetType:"students",month:0,year:2026,before:96000,after:91200},
+  {name:"مستشفى الرحمة التخصصي",category:"مستشفى تخصصي",budgetType:"workforce",month:1,year:2026,before:240000,after:233800},
+  {name:"مستشفى النور",category:"مستشفى عام",budgetType:"newborns",month:1,year:2026,before:205000,after:198000},
+  {name:"المجمع الطبي التخصصي",category:"مستشفى خاص",budgetType:"students",month:2,year:2026,before:132000,after:129500},
+  {name:"مستشفى الشفاء",category:"مركز صحي",budgetType:"workforce",month:2,year:2026,before:178000,after:186400},
+  {name:"مستشفى دار الشفاء",category:"مستشفى عام",budgetType:"newborns",month:3,year:2026,before:221000,after:210300},
+  {name:"عيادات الوفاء التخصصية",category:"عيادة",budgetType:"students",month:3,year:2026,before:87000,after:89600},
+];
+
 function monthName(idx){ return (lang==='ar'?MONTHS_AR:MONTHS_EN)[idx] ?? ''; }
 function budgetLabel(key){ return t('budget_'+key); }
 function currentHeaders(){ return HEADERS_BY_LANG[lang]; }
 
-function budgetKeyFromLabel(text){
-  const raw = String(text||'').trim();
-  if(!raw) return BUDGET_KEYS[0];
-  for(const key of BUDGET_KEYS_ALL){
-    if(I18N.ar['budget_'+key]===raw || I18N.en['budget_'+key].toLowerCase()===raw.toLowerCase() || key===raw) return key;
-  }
-  return 'total';
+const uid = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+const NUM_FMT = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 });
+const COMPACT_FMT = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 });
+const fmt = (n) => NUM_FMT.format(Number.isFinite(n) ? n : 0);
+const fmtCompact = (n) => COMPACT_FMT.format(Number.isFinite(n) ? n : 0);
+const fmtStat = (n) => Math.abs(n) >= 1e7 ? fmtCompact(n) : fmt(n);
+const esc = (s) => String(s??"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const collators = {};
+function collate(a, b){
+  const key = lang === 'ar' ? 'ar' : 'en';
+  if(!collators[key]) collators[key] = new Intl.Collator(key, { numeric:true, sensitivity:'base' });
+  return collators[key].compare(a, b);
 }
-function monthIndexFromLabel(text){
-  const norm = String(text||'').trim();
-  let idx = MONTHS_AR.indexOf(norm);
-  if(idx===-1) idx = MONTHS_EN.findIndex(m=>m.toLowerCase()===norm.toLowerCase());
-  if(idx===-1){ const n = Number(norm); if(n>=1 && n<=12) idx = n-1; }
-  if(idx===-1) idx = new Date().getMonth();
+
+function toLatinDigits(v){
+  return String(v ?? '')
+    .replace(/[\u0660-\u0669]/g, d => d.charCodeAt(0) - 0x0660)
+    .replace(/[\u06F0-\u06F9]/g, d => d.charCodeAt(0) - 0x06F0)
+    .replace(/\u066B/g, '.')
+    .replace(/\u066C/g, ',');
+}
+function shiftedDate(d){ return new Date(d.getTime() + 12 * 3600 * 1000); }
+function parseLooseNumber(raw){
+  if(typeof raw === 'number') return Number.isFinite(raw) ? raw : NaN;
+  if(raw instanceof Date) return NaN;
+  let v = toLatinDigits(raw).trim();
+  if(v === '') return null;
+  let negative = false;
+  if(/^\(.*\)$/.test(v)){ negative = true; v = v.slice(1, -1); }
+  v = v.replace(/[\s\u00A0,]/g, '').replace(/[^\d.+\-]/g, '');
+  if(!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(v)) return NaN;
+  const n = Number(v);
+  if(!Number.isFinite(n)) return NaN;
+  return negative ? -n : n;
+}
+function monthIndexFromLabel(value){
+  if(value instanceof Date) return shiftedDate(value).getMonth();
+  const raw = toLatinDigits(value).trim();
+  if(!raw) return null;
+  const norm = normalizeText(raw);
+  let idx = MONTHS_AR.findIndex(m => normalizeText(m) === norm);
+  if(idx === -1) idx = MONTHS_AR_ALT.findIndex(m => normalizeText(m) === norm);
+  if(idx === -1) idx = MONTHS_EN.findIndex(m => m.toLowerCase() === norm || m.slice(0,3).toLowerCase() === norm);
+  if(idx === -1 && /^\d{1,2}$/.test(raw)){ const n = Number(raw); if(n >= 1 && n <= 12) idx = n - 1; }
+  if(idx === -1){ const iso = raw.match(/^\d{4}-(\d{1,2})(?:-\d{1,2})?/); if(iso){ const n = Number(iso[1]); if(n >= 1 && n <= 12) idx = n - 1; } }
   return idx;
 }
-function getColumnValue(row, fieldKey){
-  const i = HEADER_KEYS.indexOf(fieldKey);
-  const arH = HEADERS_BY_LANG.ar[i], enH = HEADERS_BY_LANG.en[i];
-  const foundKey = Object.keys(row).find(k=>{
-    const kt = k.trim();
-    return kt===arH || kt.toLowerCase()===enH.toLowerCase();
-  });
-  return foundKey ? row[foundKey] : '';
+function stripArticle(text){
+  return normalizeText(toLatinDigits(text)).replace(/(^|\s)ال/g, '$1').replace(/\s+/g, ' ').trim();
+}
+function budgetKeyFromLabel(value){
+  const raw = stripArticle(value);
+  if(!raw) return 'total';
+  for(const key of BUDGET_KEYS_ALL){
+    if(raw === stripArticle(I18N.ar['budget_'+key]) || raw === I18N.en['budget_'+key].toLowerCase() || raw === key) return key;
+  }
+  return null;
 }
 
-const uid = () => Math.random().toString(36).slice(2,10);
-const fmt = (n) => new Intl.NumberFormat('en-US').format(Math.round(n||0));
-function fitStatValues(container){
-  if(!container) return;
-  container.querySelectorAll('.stat-value').forEach(el=>{
-    el.style.fontSize = '';
-    const max = parseFloat(getComputedStyle(el).fontSize);
-    let size = max;
-    const min = 12;
-    while(el.scrollWidth > el.clientWidth + 1 && size > min){
-      size -= 1;
-      el.style.fontSize = size + 'px';
-    }
-  });
+function sanitizeRecord(raw){
+  if(!raw || typeof raw !== 'object') return null;
+  const name = String(raw.name ?? '').trim().slice(0, 200);
+  if(!name) return null;
+  const amount = (v) => { const n = Number(v); return Number.isFinite(n) && n >= 0 ? n : 0; };
+  let month = Number(raw.month);
+  if(!(Number.isInteger(month) && month >= 0 && month <= 11)) month = new Date().getMonth();
+  let year = Number(raw.year);
+  if(!(Number.isInteger(year) && year >= YEAR_MIN && year <= YEAR_MAX)) year = new Date().getFullYear();
+  const iso = (v) => (typeof v === 'string' && !Number.isNaN(Date.parse(v))) ? v : null;
+  const out = {
+    id: (typeof raw.id === 'string' && /^[\w-]{1,64}$/.test(raw.id)) ? raw.id : uid(),
+    name,
+    category: String(raw.category ?? '').trim().slice(0, 100),
+    budgetType: BUDGET_KEYS_ALL.includes(raw.budgetType) ? raw.budgetType : 'total',
+    month, year,
+    before: amount(raw.before),
+    after: amount(raw.after),
+  };
+  const created = iso(raw.createdAt), updated = iso(raw.updatedAt);
+  if(created) out.createdAt = created;
+  if(updated) out.updatedAt = updated;
+  return out;
 }
-let fitStatValuesResizeTimer = null;
-window.addEventListener('resize', ()=>{
-  clearTimeout(fitStatValuesResizeTimer);
-  fitStatValuesResizeTimer = setTimeout(()=>{
-    document.querySelectorAll('.stats-row').forEach(row=>fitStatValues(row));
-  }, 120);
-});
-const esc = (s) => String(s??"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function sanitizeRecords(list){
+  if(!Array.isArray(list)) return [];
+  const seen = new Set(), out = [];
+  for(const raw of list){
+    const rec = sanitizeRecord(raw);
+    if(!rec) continue;
+    if(seen.has(rec.id)) rec.id = uid();
+    seen.add(rec.id);
+    out.push(rec);
+  }
+  return out;
+}
 
-function confirmDialog({title, message, confirmLabel, cancelLabel, danger}){
+const hayCache = new WeakMap();
+function haystack(r){
+  let h = hayCache.get(r);
+  if(h === undefined){
+    h = normalizeText([r.name, r.category, I18N.ar['budget_'+r.budgetType], I18N.en['budget_'+r.budgetType], MONTHS_AR[r.month], MONTHS_EN[r.month], r.year].join(' '));
+    hayCache.set(r, h);
+  }
+  return h;
+}
+function queryTokens(q){ return normalizeText(toLatinDigits(q)).split(/\s+/).filter(Boolean); }
+function matchesTokens(r, tokens){
+  if(!tokens.length) return true;
+  const h = haystack(r);
+  return tokens.every(tk => h.includes(tk));
+}
+
+function recordsFromGrid(grid, startIdx, mapping){
+  const records = [], errors = [];
+  if(!mapping.includes('name')) return { records, errors };
+  const now = new Date();
+  const nowIso = now.toISOString();
+  for(let r = startIdx; r < grid.length; r++){
+    const row = grid[r] || [];
+    if(!row.some(v => String(v ?? '').trim() !== '')) continue;
+    const rowNum = r + 1;
+    const preview = row.filter(v => String(v ?? '').trim() !== '').slice(0, 4).map(v => v instanceof Date ? v.toISOString().slice(0,10) : v).join(' · ');
+    const reject = (key) => errors.push({ rowNum, reason: t(key), preview });
+    const f = {};
+    mapping.forEach((field, c) => { if(field && f[field] === undefined) f[field] = row[c]; });
+
+    const name = String(f.name ?? '').trim();
+    if(!name){ reject('import_reasonNoName'); continue; }
+
+    const monthIdx = monthIndexFromLabel(f.month);
+    if(monthIdx === -1){ reject('import_reasonBadMonth'); continue; }
+
+    let year;
+    if(f.year instanceof Date) year = shiftedDate(f.year).getFullYear();
+    else year = parseLooseNumber(f.year);
+    if(year === null || year === undefined) year = now.getFullYear();
+    if(!(Number.isInteger(year) && year >= YEAR_MIN && year <= YEAR_MAX)){ reject('import_reasonBadYear'); continue; }
+
+    const budgetType = budgetKeyFromLabel(f.budgetType);
+    if(budgetType === null){ reject('import_reasonBadBudget'); continue; }
+
+    const before = parseLooseNumber(f.before), after = parseLooseNumber(f.after);
+    if(Number.isNaN(before) || Number.isNaN(after)){ reject('import_reasonBadAmount'); continue; }
+    if((before !== null && before < 0) || (after !== null && after < 0)){ reject('import_reasonNegative'); continue; }
+
+    records.push({
+      id: uid(),
+      name: name.slice(0, 200),
+      category: String(f.category ?? '').trim().slice(0, 100),
+      budgetType,
+      month: monthIdx === null ? now.getMonth() : monthIdx,
+      year,
+      before: before ?? 0,
+      after: after ?? 0,
+      createdAt: nowIso, updatedAt: nowIso,
+    });
+  }
+  return { records, errors };
+}
+
+let activeModal = null;
+function openModal({ iconName, title, message, html, actions, dismissValue, dismissible, focus, onMount }){
   return new Promise(resolve=>{
-    let el = document.getElementById('dialogBackdrop');
-    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
-    const myGen = ++dialogGen;
-    el.innerHTML = `
-      <div class="dialog-modal">
-        <div class="dialog-title">${icon('alert',18)} ${esc(title)}</div>
-        <p class="dialog-msg">${esc(message)}</p>
-        <div class="dialog-actions">
-          <button class="btn-ghost" id="dlgCancel">${esc(cancelLabel)}</button>
-          <button class="btn-ghost ${danger?'btn-danger':'btn-accent'}" id="dlgConfirm">${esc(confirmLabel)}</button>
+    if(activeModal) activeModal.finish(activeModal.dismissValue);
+    const previouslyFocused = document.activeElement;
+    let host = document.getElementById('dialogBackdrop');
+    if(!host){ host = document.createElement('div'); host.id = 'dialogBackdrop'; host.className = 'dialog-backdrop'; document.body.appendChild(host); }
+    const gen = ++dialogGen;
+    host.innerHTML = `
+      <div class="dialog-modal" role="dialog" aria-modal="true" aria-labelledby="dlgTitle"${message ? ' aria-describedby="dlgMsg"' : ''}>
+        <div class="dialog-title" id="dlgTitle">${icon(iconName || 'alert', 18)} ${esc(title)}</div>
+        ${message ? `<p class="dialog-msg" id="dlgMsg">${esc(message)}</p>` : ''}
+        ${html || ''}
+        <div class="dialog-actions" style="flex-wrap:wrap;">
+          ${actions.map((a,i)=>`<button type="button" class="btn-ghost ${a.cls || ''}" data-i="${i}"${a.disabled ? ' disabled' : ''}>${esc(a.label)}</button>`).join('')}
         </div>
       </div>`;
-    requestAnimationFrame(()=> el.classList.add('open'));
-    function close(result){
-      el.classList.remove('open');
-      document.removeEventListener('keydown', onKey);
-      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
-      resolve(result);
+    const modal = host.firstElementChild;
+    const buttons = [...modal.querySelectorAll('.dialog-actions button')];
+    const canDismiss = dismissible !== false;
+    let done = false;
+    function finish(value){
+      if(done) return;
+      done = true;
+      document.removeEventListener('keydown', onKey, true);
+      host.classList.remove('open');
+      host.onclick = null;
+      activeModal = null;
+      setTimeout(()=>{ if(dialogGen === gen) host.innerHTML = ''; }, 200);
+      if(previouslyFocused && previouslyFocused.focus && document.contains(previouslyFocused)) previouslyFocused.focus();
+      resolve(value);
     }
-    function onKey(e){ if(e.key==='Escape') close(false); else if(e.key==='Enter') close(true); }
-    document.addEventListener('keydown', onKey);
-    el.onclick = (e)=>{ if(e.target===el) close(false); };
-    el.querySelector('#dlgCancel').addEventListener('click', ()=> close(false));
-    el.querySelector('#dlgConfirm').addEventListener('click', ()=> close(true));
+    function onKey(e){
+      if(e.key === 'Escape'){
+        e.preventDefault(); e.stopPropagation();
+        if(canDismiss) finish(dismissValue);
+        return;
+      }
+      if(e.key === 'Tab'){
+        const focusables = [...modal.querySelectorAll('button:not([disabled]), input:not([disabled])')];
+        if(!focusables.length) return;
+        const first = focusables[0], last = focusables[focusables.length - 1];
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+    }
+    document.addEventListener('keydown', onKey, true);
+    host.onclick = (e)=>{ if(e.target === host && canDismiss) finish(dismissValue); };
+    buttons.forEach(b=> b.addEventListener('click', ()=>{
+      const a = actions[Number(b.dataset.i)];
+      finish(typeof a.value === 'function' ? a.value(modal) : a.value);
+    }));
+    activeModal = { finish, dismissValue };
+    if(onMount) onMount(modal);
+    requestAnimationFrame(()=>{
+      host.classList.add('open');
+      const primary = actions.findIndex(a => a.primary);
+      const target = focus ? modal.querySelector(focus) : (buttons[primary] || buttons[buttons.length - 1]);
+      if(target) target.focus();
+    });
+  });
+}
+
+function confirmDialog({title, message, confirmLabel, cancelLabel, danger}){
+  return openModal({
+    iconName: 'alert', title, message, dismissValue: false,
+    actions: [
+      { label: cancelLabel, value: false, primary: !!danger },
+      { label: confirmLabel, value: true, cls: danger ? 'btn-danger' : 'btn-accent', primary: !danger },
+    ],
   });
 }
 function promptDialog({title, message, value, placeholder, confirmLabel, cancelLabel}){
-  return new Promise(resolve=>{
-    let el = document.getElementById('dialogBackdrop');
-    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
-    const myGen = ++dialogGen;
-    el.innerHTML = `
-      <div class="dialog-modal">
-        <div class="dialog-title">${icon('pencil',18)} ${esc(title)}</div>
-        ${message ? `<p class="dialog-msg">${esc(message)}</p>` : ''}
-        <input class="inp" id="dlgPromptInput" type="text" value="${esc(value||'')}" placeholder="${esc(placeholder||'')}" style="margin:4px 0 18px;padding:12px 14px;"/>
-        <div class="dialog-actions">
-          <button class="btn-ghost" id="dlgCancel">${esc(cancelLabel)}</button>
-          <button class="btn-ghost btn-accent" id="dlgConfirm">${esc(confirmLabel)}</button>
-        </div>
-      </div>`;
-    requestAnimationFrame(()=>{ el.classList.add('open'); const inp = el.querySelector('#dlgPromptInput'); inp.focus(); inp.select(); });
-    function close(result){
-      el.classList.remove('open');
-      document.removeEventListener('keydown', onKey);
-      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
-      resolve(result);
-    }
-    function onKey(e){ if(e.key==='Escape') close(null); }
-    document.addEventListener('keydown', onKey);
-    el.onclick = (e)=>{ if(e.target===el) close(null); };
-    el.querySelector('#dlgCancel').addEventListener('click', ()=> close(null));
-    el.querySelector('#dlgConfirm').addEventListener('click', ()=> close(el.querySelector('#dlgPromptInput').value));
-    el.querySelector('#dlgPromptInput').addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); close(el.querySelector('#dlgPromptInput').value); } });
+  return openModal({
+    iconName: 'pencil', title, message, dismissValue: null, focus: '#dlgPromptInput',
+    html: `<input class="inp" id="dlgPromptInput" type="text" maxlength="120" value="${esc(value || '')}" placeholder="${esc(placeholder || '')}" style="margin:4px 0 18px;padding:12px 14px;">`,
+    actions: [
+      { label: cancelLabel, value: null },
+      { label: confirmLabel, cls: 'btn-accent', value: (m)=> m.querySelector('#dlgPromptInput').value },
+    ],
+    onMount: (m)=>{
+      const input = m.querySelector('#dlgPromptInput');
+      input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); m.querySelector('[data-i="1"]').click(); } });
+      requestAnimationFrame(()=> input.select());
+    },
   });
 }
 function parseAmount(raw){
@@ -907,71 +1163,72 @@ function parseAmount(raw){
   if(!Number.isFinite(n)) return NaN;
   return n;
 }
+function dupKey(r){ return normalizeText(r.name) + '|' + r.month + '|' + r.year; }
 function findDuplicateRecord(name, month, year, excludeId){
   const n = normalizeText(name);
   return state.records.find(r => r.id!==excludeId && normalizeText(r.name)===n && r.month===month && r.year===year);
 }
 function importModeDialog(){
-  return new Promise(resolve=>{
-    let el = document.getElementById('dialogBackdrop');
-    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
-    const myGen = ++dialogGen;
-    el.innerHTML = `
-      <div class="dialog-modal">
-        <div class="dialog-title">${icon('layers',18)} ${esc(t('import_modeTitle'))}</div>
-        <p class="dialog-msg">${esc(t('import_modeMsg'))}</p>
-        <div class="dialog-actions" style="flex-wrap:wrap;">
-          <button class="btn-ghost" id="imCancel">${esc(t('cloud_cancelBtn'))}</button>
-          <button class="btn-ghost btn-danger" id="imReplace">${esc(t('import_modeReplace'))}</button>
-          <button class="btn-ghost btn-accent" id="imAppend">${esc(t('import_modeAppend'))}</button>
-        </div>
-      </div>`;
-    requestAnimationFrame(()=> el.classList.add('open'));
-    function close(result){
-      el.classList.remove('open');
-      document.removeEventListener('keydown', onKey);
-      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
-      resolve(result);
-    }
-    function onKey(e){ if(e.key==='Escape') close('cancel'); }
-    document.addEventListener('keydown', onKey);
-    el.onclick = (e)=>{ if(e.target===el) close('cancel'); };
-    el.querySelector('#imCancel').addEventListener('click', ()=> close('cancel'));
-    el.querySelector('#imReplace').addEventListener('click', ()=> close('replace'));
-    el.querySelector('#imAppend').addEventListener('click', ()=> close('append'));
+  return openModal({
+    iconName: 'layers', title: t('import_modeTitle'), message: t('import_modeMsg'), dismissValue: 'cancel',
+    actions: [
+      { label: t('cloud_cancelBtn'), value: 'cancel' },
+      { label: t('import_modeReplace'), value: 'replace', cls: 'btn-danger' },
+      { label: t('import_modeAppend'), value: 'append', cls: 'btn-accent', primary: true },
+    ],
   });
 }
-async function commitImportedRecords(chosen){
-  const mode = await importModeDialog();
-  if(mode === 'cancel' || !mode) return 0;
 
-  const say = (n)=>{
-    if(chosen.length > n) toast(t('import_importedBreakdown',{n, t:chosen.length, s:chosen.length-n}));
-    else toast(t('import_imported',{n}));
-  };
+let undoSnapshot = null;
+function rememberUndo(){ undoSnapshot = state.records.slice(); }
+function undoLast(){
+  if(!undoSnapshot) return;
+  state.records = undoSnapshot;
+  undoSnapshot = null;
+  afterRecordsChanged();
+  renderTabbar();
+  renderMain();
+  toast(t('undo_done'));
+}
+const undoAction = () => ({ label: t('undo'), run: undoLast });
 
+async function applyIncoming(records, mode){
+  const incoming = sanitizeRecords(records);
   if(mode === 'replace'){
-    state.records = [...chosen];
-    say(chosen.length);
+    rememberUndo();
+    state.records = incoming;
     afterRecordsChanged();
-    return chosen.length;
+    return incoming.length;
   }
-
-  const dupes = chosen.filter(r => findDuplicateRecord(r.name, r.month, r.year, null));
-  let toAdd = chosen;
+  const existingIds = new Set(state.records.map(r => r.id));
+  const fresh = incoming.map(r => existingIds.has(r.id) ? { ...r, id: uid() } : r);
+  const existingKeys = new Set(state.records.map(dupKey));
+  const dupes = fresh.filter(r => existingKeys.has(dupKey(r)));
+  let toAdd = fresh;
   if(dupes.length){
     const ok = await confirmDialog({
       title: t('import_dupTitle'),
-      message: t('import_dupMsg', {n:dupes.length, t:chosen.length}),
+      message: t('import_dupMsg', {n:dupes.length, t:fresh.length}),
       confirmLabel: t('import_dupAddAll'),
       cancelLabel: t('import_dupSkip'),
     });
-    if(!ok) toAdd = chosen.filter(r => !dupes.includes(r));
+    if(!ok){ const skip = new Set(dupes); toAdd = fresh.filter(r => !skip.has(r)); }
   }
+  rememberUndo();
   state.records = [...toAdd, ...state.records];
-  say(toAdd.length);
   afterRecordsChanged();
   return toAdd.length;
+}
+
+async function commitImportedRecords(chosen){
+  const mode = await importModeDialog();
+  if(mode === 'cancel') return 0;
+  const n = await applyIncoming(chosen, mode);
+  const message = chosen.length > n
+    ? t('import_importedBreakdown', {n, t:chosen.length, s:chosen.length-n})
+    : t('import_imported', {n});
+  toast(message, 'ok', undoAction());
+  return n;
 }
 
 function normalizeText(s){
@@ -986,16 +1243,7 @@ function normalizeText(s){
 
 let state = {
   tab: "dashboard",
-  records: [
-    {id:"r1",name:"مستشفى الملك فهد",category:"مستشفى عام",budgetType:"newborns",month:0,year:2026,before:185000,after:172500},
-    {id:"r2",name:"مستشفى الأمل",category:"مركز صحي",budgetType:"students",month:0,year:2026,before:96000,after:91200},
-    {id:"r3",name:"مستشفى الرحمة التخصصي",category:"مستشفى تخصصي",budgetType:"workforce",month:1,year:2026,before:240000,after:233800},
-    {id:"r4",name:"مستشفى النور",category:"مستشفى عام",budgetType:"newborns",month:1,year:2026,before:205000,after:198000},
-    {id:"r5",name:"المجمع الطبي التخصصي",category:"مستشفى خاص",budgetType:"students",month:2,year:2026,before:132000,after:129500},
-    {id:"r6",name:"مستشفى الشفاء",category:"مركز صحي",budgetType:"workforce",month:2,year:2026,before:178000,after:186400},
-    {id:"r7",name:"مستشفى دار الشفاء",category:"مستشفى عام",budgetType:"newborns",month:3,year:2026,before:221000,after:210300},
-    {id:"r8",name:"عيادات الوفاء التخصصية",category:"عيادة",budgetType:"students",month:3,year:2026,before:87000,after:89600},
-  ],
+  records: [],
 };
 
 const cselRegistry = {};
@@ -1062,6 +1310,9 @@ function closeCsel(){
   document.querySelectorAll('.csel-trigger[aria-expanded="true"]').forEach(b=>{ b.setAttribute('aria-expanded','false'); b.classList.remove('csel-active'); });
   cselOpenId = null; cselHighlightIdx = -1;
 }
+function clearCselPrefix(prefix){
+  Object.keys(cselRegistry).forEach(k=>{ if(k.startsWith(prefix)) delete cselRegistry[k]; });
+}
 function setCselDisplay(id, val){
   const reg = cselRegistry[id];
   if(!reg) return;
@@ -1124,11 +1375,19 @@ document.addEventListener('focusin', (e)=>{
   closeCsel();
 });
 
-function toast(text, kind="ok"){
+let toastTimer = null;
+function toast(text, kind="ok", action){
   const host = document.getElementById('toastHost');
-  host.innerHTML = `<div class="toast ${kind}">${icon(kind==='err'?'alert':'check',16)}${esc(text)}</div>`;
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(()=>{ host.innerHTML=''; }, 2800);
+  host.innerHTML = `<div class="toast ${kind}">${icon(kind==='err'?'alert':'check',16)}<span>${esc(text)}</span>${action ? `<button type="button" class="toast-action">${esc(action.label)}</button>` : ''}</div>`;
+  if(action){
+    host.querySelector('.toast-action').addEventListener('click', ()=>{
+      clearTimeout(toastTimer);
+      host.innerHTML = '';
+      action.run();
+    });
+  }
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ host.innerHTML = ''; }, action ? 7000 : 2800);
 }
 
 function budgetTag(key){
@@ -1137,18 +1396,29 @@ function budgetTag(key){
 }
 function categoryBadge(cat){ return `<span class="badge">${esc(cat||'—')}</span>`; }
 function varianceTag(before, after){
-  const diff = before - after, pct = before ? (diff/before)*100 : 0, down = diff >= 0;
+  if(!before){
+    const label = after ? t('variance_fromZero') : '—';
+    return `<span class="var-tag row-tag-new">${label}</span>`;
+  }
+  const diff = before - after, pct = (diff/before)*100, down = diff >= 0;
   return `<span class="var-tag" style="background:${down?'var(--good-soft)':'var(--bad-soft)'};color:${down?'var(--good)':'var(--bad)'}">${icon(down?'trenddown':'trendup',12)}${Math.abs(pct).toFixed(1)}%</span>`;
 }
 
+const systemDark = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : { matches:true, addEventListener(){} };
 let theme = 'system';
-function applyTheme(){ document.documentElement.setAttribute('data-theme', theme); }
+function resolvedTheme(){ return theme === 'system' ? (systemDark.matches ? 'dark' : 'light') : theme; }
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', resolvedTheme());
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#0a0d0d');
+}
+systemDark.addEventListener('change', ()=>{ if(theme === 'system') applyTheme(); });
 
 function renderHeader(){
   const el = document.getElementById('headerBar');
   el.innerHTML = `
     <div class="brand">
-      <div class="brand-icon">${icon('sparkle',18)}</div>
+      <div class="brand-icon">${icon('building',20)}</div>
       <div style="min-width:0;">
         <h1>${esc(t('appName'))}</h1>
       </div>
@@ -1157,9 +1427,9 @@ function renderHeader(){
       <button class="spotlight-trigger-btn" id="spotlightTriggerBtn" type="button">${icon('search',14)} <span class="spotlight-kbd">${/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent)?'⌘K':'Ctrl+K'}</span></button>
       <button class="fb-status connecting" id="fbStatusBtn" type="button" title="${esc(t('cloud_notLinked'))}" aria-label="${esc(t('cloud_notLinked'))}">${icon('cloud',15)}</button>
       <div class="theme-group" id="themeSeg">
-        <button class="theme-icon ${theme==='system'?'active':''}" data-theme="system" title="${esc(t('theme_system'))}" aria-label="${esc(t('theme_system'))}">${icon('monitor',14)}</button>
-        <button class="theme-icon ${theme==='light'?'active':''}" data-theme="light" title="${esc(t('theme_light'))}" aria-label="${esc(t('theme_light'))}">${icon('sun',14)}</button>
-        <button class="theme-icon ${theme==='dark'?'active':''}" data-theme="dark" title="${esc(t('theme_dark'))}" aria-label="${esc(t('theme_dark'))}">${icon('moon',14)}</button>
+        <button class="theme-icon ${theme==='system'?'active':''}" data-theme="system" aria-pressed="${theme==='system'}" title="${esc(t('theme_system'))}" aria-label="${esc(t('theme_system'))}">${icon('monitor',14)}</button>
+        <button class="theme-icon ${theme==='light'?'active':''}" data-theme="light" aria-pressed="${theme==='light'}" title="${esc(t('theme_light'))}" aria-label="${esc(t('theme_light'))}">${icon('sun',14)}</button>
+        <button class="theme-icon ${theme==='dark'?'active':''}" data-theme="dark" aria-pressed="${theme==='dark'}" title="${esc(t('theme_dark'))}" aria-label="${esc(t('theme_dark'))}">${icon('moon',14)}</button>
       </div>
       <button class="lang-toggle" id="langToggleBtn">${icon('globe',14)} ${lang==='ar'?'EN':'العربية'}</button>
     </div>`;
@@ -1184,8 +1454,11 @@ function renderHeader(){
 }
 
 let appSettings = { currencyUnit: '' };
-function currencyUnit(){ return appSettings.currencyUnit ? ' ' + appSettings.currencyUnit : ''; }
+function currencyUnitRaw(){ return appSettings.currencyUnit ? ' ' + appSettings.currencyUnit : ''; }
+function currencyUnit(){ return esc(currencyUnitRaw()); }
 
+const FIREBASE_VERSION = '12.16.0';
+const XLSX_URL = 'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';
 const firebaseConfig = {
   apiKey: "AIzaSyA04U-mi_6hb9VbPFWFqRhjRtZiAB0jLRY",
   authDomain: "entity-tracker-556a9.firebaseapp.com",
@@ -1198,23 +1471,60 @@ const RECORD_SOFT_LIMIT = 3000;
 const FIRESTORE_DOC_SOFT_LIMIT = 900 * 1024;
 const FIRESTORE_DOC_HARD_LIMIT = 990 * 1024;
 let recordCeilingWarned = false;
-let fbApp = null, fbAuth = null, fbDb = null, fbUid = null, fbAuthReadyPromise = null;
-let cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:false, remoteNewer:false };
+let fbApp = null, fbAuth = null, fbDb = null, fbReady = null;
+let accountWatchStarted = false, cloudUsed = false, lastFreshnessCheck = 0;
+let cloudSync = { linked:false, hash:'', baseRev:0, dirty:false, status:'idle', lastSyncAt:null, lastError:'', panelOpen:false, remoteNewer:false };
+
+const scriptLoads = {};
+function loadScript(src){
+  if(!scriptLoads[src]){
+    scriptLoads[src] = new Promise((resolve, reject)=>{
+      const el = document.createElement('script');
+      el.src = src;
+      el.async = true;
+      el.onload = () => resolve();
+      el.onerror = () => { delete scriptLoads[src]; el.remove(); reject(new Error('load-failed')); };
+      document.head.appendChild(el);
+    });
+  }
+  return scriptLoads[src];
+}
+async function loadXLSX(){
+  if(window.XLSX) return window.XLSX;
+  await loadScript(XLSX_URL);
+  return window.XLSX;
+}
+async function loadFirebase(){
+  if(fbDb) return;
+  if(!fbReady){
+    fbReady = (async () => {
+      const base = `https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/`;
+      await loadScript(base + 'firebase-app-compat.js');
+      await Promise.all([loadScript(base + 'firebase-auth-compat.js'), loadScript(base + 'firebase-firestore-compat.js')]);
+      fbApp = firebase.initializeApp(firebaseConfig);
+      fbAuth = firebase.auth();
+      fbDb = firebase.firestore();
+    })().catch(e => { fbReady = null; throw e; });
+  }
+  return fbReady;
+}
 
 function hideBootProgress(){
   const bar = document.getElementById('bootProgress');
   if(bar) bar.classList.add('done');
 }
-
-function isOffline(){ return typeof navigator!=='undefined' && navigator.onLine===false; }
+function isOffline(){ return typeof navigator !== 'undefined' && navigator.onLine === false; }
+const toDateSafe = (v) => (v && typeof v.toDate === 'function') ? v.toDate() : null;
 
 function firestoreErrorMessage(e){
   const code = e && e.code ? String(e.code) : '';
-  if(code==='permission-denied') return t('cloud_errPermission');
-  if(code==='unavailable' || code==='internal') return t('cloud_errUnavailable');
-  if(code==='not-found') return t('cloud_errNotFound');
-  if(code==='resource-exhausted') return t('cloud_errQuota');
-  if(code==='deadline-exceeded' || code==='cancelled') return t('cloud_errTimeout');
+  if(code === 'sync/conflict') return t('cloud_conflict');
+  if(code === 'permission-denied') return t('cloud_errPermission');
+  if(code === 'unavailable' || code === 'internal') return t('cloud_errUnavailable');
+  if(code === 'not-found') return t('cloud_errNotFound');
+  if(code === 'resource-exhausted') return t('cloud_errQuota');
+  if(code === 'deadline-exceeded' || code === 'cancelled') return t('cloud_errTimeout');
+  if(e && e.message === 'load-failed') return t('cloud_errUnavailable');
   return (e && e.message) ? e.message : t('cloud_errGeneric');
 }
 
@@ -1231,29 +1541,19 @@ function checkDocSizeOk(records){
   return true;
 }
 
-function ensureFirebaseApp(){
-  if(fbApp) return;
-  fbApp = firebase.initializeApp(firebaseConfig);
-  fbAuth = firebase.auth();
-  fbDb = firebase.firestore();
+function authReady(){
+  return new Promise(resolve=>{
+    const unsub = fbAuth.onAuthStateChanged(user=>{ unsub(); resolve(user); });
+  });
 }
-function waitForAuthRestore(){
-  if(!fbAuthReadyPromise){
-    fbAuthReadyPromise = new Promise(resolve=>{
-      const unsub = fbAuth.onAuthStateChanged(user=>{ unsub(); resolve(user); });
-    });
-  }
-  return fbAuthReadyPromise;
-}
-async function ensureAnonAuth(){
+async function ensureAuth(){
   if(!window.crypto || !crypto.subtle) throw new Error(t('cloud_needsHttps'));
-  ensureFirebaseApp();
-  if(fbUid) return fbUid;
-  const restored = await waitForAuthRestore();
-  if(restored){ fbUid = restored.uid; return fbUid; }
+  await loadFirebase();
+  if(fbAuth.currentUser) return fbAuth.currentUser.uid;
+  const restored = await authReady();
+  if(restored) return restored.uid;
   const cred = await fbAuth.signInAnonymously();
-  fbUid = cred.user.uid;
-  return fbUid;
+  return cred.user.uid;
 }
 async function sha256Hex(text){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
@@ -1263,252 +1563,317 @@ function generateSyncCode(){
   const bytes = crypto.getRandomValues(new Uint8Array(10));
   return [...bytes].map(b=>b.toString(16).padStart(2,'0')).join('').match(/.{1,4}/g).join('-');
 }
+function normalizeSyncCode(code){ return String(code || '').replace(/\s+/g, '').toLowerCase(); }
 function cloudDocRef(hash){ return fbDb.collection('syncedRecords').doc(hash); }
 
+async function pushRecords(ref, extra, baseRev){
+  let nextRev = 0;
+  await fbDb.runTransaction(async (tx)=>{
+    const snap = await tx.get(ref);
+    const remoteRev = snap.exists ? (Number(snap.data().rev) || 0) : 0;
+    if(baseRev !== null && snap.exists && remoteRev !== baseRev){
+      const err = new Error('conflict');
+      err.code = 'sync/conflict';
+      throw err;
+    }
+    nextRev = remoteRev + 1;
+    tx.set(ref, { ...extra, records: state.records, rev: nextRev, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
+  });
+  return nextRev;
+}
+
+function syncStatusModel(){
+  const time = (d) => d ? d.toLocaleTimeString(lang === 'ar' ? 'ar-EG' : 'en-US', { hour:'2-digit', minute:'2-digit' }) : '';
+  if(cloudSync.status === 'busy') return { cls:'syncing', dot:'var(--accent)', text:t('cloud_syncingMsg') };
+  if(cloudSync.status === 'error') return { cls:'error', dot:'var(--bad)', text:t('cloud_errorPrefix') + cloudSync.lastError };
+  if(cloudSync.remoteNewer) return { cls:'syncing', dot:'var(--gold)', text:t('cloud_remoteNewer') };
+  if(cloudSync.linked && cloudSync.dirty) return { cls:'syncing', dot:'var(--gold)', text:t('cloud_unsynced') };
+  if(account.authed && account.activeDocId){
+    return account.dirty
+      ? { cls:'syncing', dot:'var(--gold)', text:t('acc_signedInAs') + ': ' + account.email + ' · ' + t('cloud_unsynced') }
+      : { cls:'connected', dot:'var(--good)', text:t('acc_signedInAs') + ': ' + account.email };
+  }
+  if(cloudSync.linked) return { cls:'connected', dot:'var(--good)', text:t('cloud_linked') + time(cloudSync.lastSyncAt) };
+  if(account.authed) return { cls:'connecting', dot:'var(--accent-light)', text:t('acc_signedInAs') + ': ' + account.email };
+  return { cls:'connecting', dot:'var(--muted2)', text:t('cloud_notLinked') };
+}
 function renderFbStatus(){
   const btn = document.getElementById('fbStatusBtn');
   if(!btn) return;
-  const connected = cloudSync.linked || (account.authed && account.activeDocId);
-  const cls = cloudSync.status==='error' ? 'error' : cloudSync.status==='busy' ? 'syncing' : cloudSync.remoteNewer ? 'syncing' : connected ? 'connected' : 'connecting';
-  btn.className = 'fb-status ' + cls;
-  const label = cloudSync.status==='error' ? t('cloud_errorPrefix')+cloudSync.lastError
-    : cloudSync.status==='busy' ? t('cloud_syncingMsg')
-    : cloudSync.remoteNewer ? t('cloud_remoteNewer')
-    : account.authed ? t('acc_signedInAs') + ': ' + account.email
-    : cloudSync.linked ? t('cloud_linked') + (cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}) : '')
-    : t('cloud_notLinked');
-  btn.title = label; btn.setAttribute('aria-label', label);
+  const m = syncStatusModel();
+  btn.className = 'fb-status ' + m.cls;
+  btn.title = m.text;
+  btn.setAttribute('aria-label', m.text);
+}
+function updateSyncStatus(){
+  const dot = document.getElementById('syncDot'), text = document.getElementById('syncText');
+  if(!dot || !text) return;
+  const m = syncStatusModel();
+  dot.style.background = m.dot;
+  text.textContent = m.text;
+}
+function refreshSyncUI(){
+  renderFbStatus();
+  updateSyncStatus();
+  if(state.tab === 'account' && deviceSectionOpen){
+    const body = document.getElementById('deviceSectionBody');
+    if(body) renderDeviceSection(body);
+  }
+}
+function setCloudStatus(status){ cloudSync.status = status; refreshSyncUI(); }
+function endBusy(){ cloudSync.status = 'idle'; refreshSyncUI(); }
+function failCloud(e, prefixKey){
+  cloudSync.status = 'error';
+  cloudSync.lastError = firestoreErrorMessage(e);
+  toast(t(prefixKey) + cloudSync.lastError, 'err');
+  refreshSyncUI();
 }
 
 function syncChoiceDialog({cloudCount, cloudUpdated, localCount}){
-  return new Promise(resolve=>{
-    let el = document.getElementById('dialogBackdrop');
-    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
-    const myGen = ++dialogGen;
-    const cloudWhen = cloudUpdated ? ' · ' + cloudUpdated.toLocaleString(lang==='ar'?'ar-EG':'en-US') : '';
-    el.innerHTML = `
-      <div class="dialog-modal">
-        <div class="dialog-title">${icon('cloud',18)} ${esc(t('cloud_previewTitle'))}</div>
-        <p class="dialog-msg">${esc(t('cloud_previewCloud',{n:cloudCount,u:cloudWhen}))}<br>${esc(t('cloud_previewLocal',{n:localCount}))}</p>
-        <div class="dialog-actions" style="flex-wrap:wrap;">
-          <button class="btn-ghost" id="scCancel">${esc(t('cloud_cancelBtn'))}</button>
-          <button class="btn-ghost" id="scLocal">${esc(t('cloud_useLocal'))}</button>
-          <button class="btn-ghost btn-accent" id="scCloud">${esc(t('cloud_useCloud'))}</button>
-        </div>
-      </div>`;
-    requestAnimationFrame(()=> el.classList.add('open'));
-    function close(result){
-      el.classList.remove('open');
-      document.removeEventListener('keydown', onKey);
-      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
-      resolve(result);
-    }
-    function onKey(e){ if(e.key==='Escape') close('cancel'); }
-    document.addEventListener('keydown', onKey);
-    el.onclick = (e)=>{ if(e.target===el) close('cancel'); };
-    el.querySelector('#scCancel').addEventListener('click', ()=> close('cancel'));
-    el.querySelector('#scLocal').addEventListener('click', ()=> close('local'));
-    el.querySelector('#scCloud').addEventListener('click', ()=> close('cloud'));
+  const when = cloudUpdated ? ' · ' + cloudUpdated.toLocaleString(lang === 'ar' ? 'ar-EG' : 'en-US') : '';
+  return openModal({
+    iconName: 'cloud', title: t('cloud_previewTitle'), dismissValue: 'cancel',
+    message: t('cloud_previewCloud', {n:cloudCount, u:when}) + '\n' + t('cloud_previewLocal', {n:localCount}),
+    actions: [
+      { label: t('cloud_cancelBtn'), value: 'cancel' },
+      { label: t('cloud_useLocal'), value: 'local' },
+      { label: t('cloud_useCloud'), value: 'cloud', cls: 'btn-accent', primary: true },
+    ],
   });
 }
 
 function saveCodeDialog(code){
-  return new Promise(resolve=>{
-    let el = document.getElementById('dialogBackdrop');
-    if(!el){ el = document.createElement('div'); el.id = 'dialogBackdrop'; el.className = 'dialog-backdrop'; document.body.appendChild(el); }
-    const myGen = ++dialogGen;
-    el.innerHTML = `
-      <div class="dialog-modal">
-        <div class="dialog-title">${icon('alert',18)} ${esc(t('cloud_saveTitle'))}</div>
-        <p class="dialog-msg">${esc(t('cloud_saveMsg'))}</p>
-        <div style="display:flex;align-items:center;gap:8px;border:1px solid var(--input-border);background:var(--input-bg);border-radius:var(--r-md);padding:12px 14px;margin-bottom:16px;">
-          <code style="flex:1;font-size:15px;letter-spacing:.03em;color:var(--fg);user-select:all;">${esc(code)}</code>
-          <button class="icon-btn" id="scCopyBtn" type="button" title="${esc(t('cloud_copyBtn'))}">${icon('filesheet',15)}</button>
-        </div>
-        <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:18px;">
-          <input type="checkbox" id="scConfirmChk"> ${esc(t('cloud_savedConfirm'))}
-        </label>
-        <div class="dialog-actions">
-          <button class="btn-ghost btn-accent" id="scContinueBtn" disabled>${esc(t('cloud_continueBtn'))}</button>
-        </div>
-      </div>`;
-    requestAnimationFrame(()=> el.classList.add('open'));
-    const chk = el.querySelector('#scConfirmChk');
-    const continueBtn = el.querySelector('#scContinueBtn');
-    chk.addEventListener('change', ()=>{ continueBtn.disabled = !chk.checked; });
-    el.querySelector('#scCopyBtn').addEventListener('click', ()=>{
-      navigator.clipboard?.writeText(code).then(()=> toast(t('cloud_copied')));
-    });
-    function close(){
-      el.classList.remove('open');
-      setTimeout(()=>{ if(dialogGen === myGen) el.innerHTML=''; }, 200);
-      resolve();
-    }
-    continueBtn.addEventListener('click', ()=>{ if(!chk.checked) return; close(); });
+  return openModal({
+    iconName: 'alert', title: t('cloud_saveTitle'), message: t('cloud_saveMsg'), dismissible: false, focus: '#scConfirmChk',
+    html: `<div style="display:flex;align-items:center;gap:8px;border:1px solid var(--input-border);background:var(--input-bg);border-radius:var(--r-md);padding:12px 14px;margin-bottom:16px;">
+        <code style="flex:1;font-size:15px;letter-spacing:.03em;color:var(--fg);user-select:all;direction:ltr;text-align:start;">${esc(code)}</code>
+        <button class="icon-btn" id="scCopyBtn" type="button" title="${esc(t('cloud_copyBtn'))}" aria-label="${esc(t('cloud_copyBtn'))}">${icon('filesheet',15)}</button>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:18px;">
+        <input type="checkbox" id="scConfirmChk"> ${esc(t('cloud_savedConfirm'))}
+      </label>`,
+    actions: [{ label: t('cloud_continueBtn'), value: true, cls: 'btn-accent', disabled: true }],
+    onMount: (m)=>{
+      const chk = m.querySelector('#scConfirmChk'), go = m.querySelector('[data-i="0"]');
+      chk.addEventListener('change', ()=>{ go.disabled = !chk.checked; });
+      m.querySelector('#scCopyBtn').addEventListener('click', ()=>{
+        if(navigator.clipboard) navigator.clipboard.writeText(code).then(()=> toast(t('cloud_copied'))).catch(()=>{});
+      });
+    },
   });
 }
 
 async function cloudCreateNew(){
-  if(cloudSync.status==='busy') return;
+  if(cloudSync.status === 'busy') return;
   const code = generateSyncCode();
   await saveCodeDialog(code);
   if(isOffline()){ toast(t('cloud_offline'), 'err'); return; }
   if(!checkDocSizeOk(state.records)) return;
-  cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
+  setCloudStatus('busy');
   try{
-    await ensureAnonAuth();
+    await ensureAuth();
     const hash = await sha256Hex(code);
-    await cloudDocRef(hash).set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-    cloudSync.linked = true; cloudSync.code = code; cloudSync.hash = hash; cloudSync.remoteNewer = false;
-    cloudSync.lastSyncAt = new Date(); cloudSync.lastError=''; cloudSync.status='idle';
+    await cloudDocRef(hash).set({ records: state.records, rev: 1, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    Object.assign(cloudSync, { linked:true, hash, baseRev:1, dirty:false, remoteNewer:false, lastSyncAt:new Date(), lastError:'', status:'idle' });
+    cloudUsed = true;
     saveCache();
     toast(t('cloud_linkSuccess'));
   }catch(e){
-    cloudSync.status='error'; cloudSync.lastError = firestoreErrorMessage(e);
-    toast(t('cloud_pushFail') + cloudSync.lastError, 'err');
+    failCloud(e, 'cloud_pushFail');
+    return;
   }
-  renderFbStatus(); renderSyncBar();
+  refreshSyncUI();
 }
 
-async function cloudLinkExisting(code){
-  if(cloudSync.status==='busy') return;
-  if(!code || !code.trim()) return;
+async function cloudLinkExisting(rawCode){
+  if(cloudSync.status === 'busy') return;
+  const code = normalizeSyncCode(rawCode);
+  if(!code) return;
   if(isOffline()){ toast(t('cloud_offline'), 'err'); return; }
-  cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
+  setCloudStatus('busy');
   try{
-    await ensureAnonAuth();
-    const hash = await sha256Hex(code.trim());
-    const snap = await cloudDocRef(hash).get();
+    await ensureAuth();
+    const hash = await sha256Hex(code);
+    const ref = cloudDocRef(hash);
+    const snap = await ref.get();
     if(!snap.exists){
       toast(t('cloud_codeInvalid'), 'err');
-      cloudSync.status='idle'; renderFbStatus(); renderSyncBar();
+      endBusy();
       return;
     }
     const data = snap.data();
-    const cloudRecords = Array.isArray(data.records) ? data.records : [];
-    const cloudUpdated = data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null;
-    const choice = await syncChoiceDialog({ cloudCount: cloudRecords.length, cloudUpdated, localCount: state.records.length });
-    if(choice === 'cancel'){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
-    if(choice === 'local' && !checkDocSizeOk(state.records)){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
-    cloudSync.code = code.trim(); cloudSync.hash = hash; cloudSync.linked = true; cloudSync.remoteNewer = false;
-    if(choice === 'cloud'){ state.records = cloudRecords; renderTabbar(); renderMain(); }
-    else { await cloudDocRef(hash).set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); }
-    cloudSync.lastSyncAt = new Date(); cloudSync.lastError=''; cloudSync.status='idle';
+    const remoteRev = Number(data.rev) || 0;
+    const choice = await syncChoiceDialog({
+      cloudCount: Array.isArray(data.records) ? data.records.length : 0,
+      cloudUpdated: toDateSafe(data.updatedAt),
+      localCount: state.records.length,
+    });
+    if(choice === 'cancel'){ endBusy(); return; }
+    if(choice === 'local'){
+      if(!checkDocSizeOk(state.records)){ endBusy(); return; }
+      const rev = await pushRecords(ref, {}, remoteRev);
+      Object.assign(cloudSync, { linked:true, hash, baseRev:rev, dirty:false });
+    } else {
+      rememberUndo();
+      state.records = sanitizeRecords(data.records);
+      Object.assign(cloudSync, { linked:true, hash, baseRev:remoteRev, dirty:false });
+      renderTabbar();
+      renderMain();
+    }
+    Object.assign(cloudSync, { remoteNewer:false, lastSyncAt:new Date(), lastError:'', status:'idle' });
+    cloudUsed = true;
     saveCache();
-    toast(t('cloud_linkSuccess'));
+    toast(t('cloud_linkSuccess'), 'ok', choice === 'cloud' ? undoAction() : undefined);
   }catch(e){
-    cloudSync.status='error'; cloudSync.lastError = firestoreErrorMessage(e);
-    toast(t('cloud_pullFail') + cloudSync.lastError, 'err');
+    failCloud(e, 'cloud_pullFail');
+    return;
   }
-  renderFbStatus(); renderSyncBar();
+  refreshSyncUI();
 }
 
 async function cloudSyncNow(){
-  if(cloudSync.status==='busy') return;
-  if(!cloudSync.linked){ deviceSectionOpen = true; switchTab('account'); return; }
+  if(cloudSync.status === 'busy') return;
+  if(!cloudSync.linked){ deviceSectionOpen = true; switchTab('account', true); return; }
   if(isOffline()){ toast(t('cloud_offline'), 'err'); return; }
-  cloudSync.status = 'busy'; renderFbStatus(); renderSyncBar();
+  setCloudStatus('busy');
   try{
-    await ensureAnonAuth();
-    const snap = await cloudDocRef(cloudSync.hash).get();
-    const data = snap.exists ? snap.data() : { records: [] };
-    const cloudRecords = Array.isArray(data.records) ? data.records : [];
-    const cloudUpdated = data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null;
-    const choice = await syncChoiceDialog({ cloudCount: cloudRecords.length, cloudUpdated, localCount: state.records.length });
-    if(choice === 'cancel'){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
-    if(choice === 'local' && !checkDocSizeOk(state.records)){ cloudSync.status='idle'; renderFbStatus(); renderSyncBar(); return; }
-    cloudSync.remoteNewer = false;
-    if(choice === 'cloud'){ state.records = cloudRecords; renderTabbar(); renderMain(); }
-    else { await cloudDocRef(cloudSync.hash).set({ records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }); }
-    cloudSync.lastSyncAt = new Date(); cloudSync.lastError=''; cloudSync.status='idle';
+    await ensureAuth();
+    const ref = cloudDocRef(cloudSync.hash);
+    const snap = await ref.get();
+    const data = snap.exists ? snap.data() : null;
+    const remoteRev = data ? (Number(data.rev) || 0) : 0;
+    const remoteChanged = !!data && remoteRev !== cloudSync.baseRev;
+    let action;
+    if(!data) action = 'push-new';
+    else if(!remoteChanged) action = cloudSync.dirty ? 'push' : 'none';
+    else if(!cloudSync.dirty) action = 'pull';
+    else {
+      const choice = await syncChoiceDialog({
+        cloudCount: Array.isArray(data.records) ? data.records.length : 0,
+        cloudUpdated: toDateSafe(data.updatedAt),
+        localCount: state.records.length,
+      });
+      if(choice === 'cancel'){ endBusy(); return; }
+      action = choice === 'cloud' ? 'pull' : 'push-over';
+    }
+    if(action === 'push' || action === 'push-over' || action === 'push-new'){
+      if(!checkDocSizeOk(state.records)){ endBusy(); return; }
+      const base = action === 'push' ? cloudSync.baseRev : action === 'push-over' ? remoteRev : null;
+      cloudSync.baseRev = await pushRecords(ref, {}, base);
+      cloudSync.dirty = false;
+      toast(t('cloud_pushed'));
+    } else if(action === 'pull'){
+      rememberUndo();
+      state.records = sanitizeRecords(data.records);
+      cloudSync.baseRev = remoteRev;
+      cloudSync.dirty = false;
+      renderTabbar();
+      renderMain();
+      toast(t('cloud_pulled'), 'ok', undoAction());
+    } else {
+      toast(t('cloud_upToDate'));
+    }
+    Object.assign(cloudSync, { remoteNewer:false, lastSyncAt:new Date(), lastError:'', status:'idle' });
     saveCache();
-    toast(t('cloud_linkSuccess'));
   }catch(e){
-    cloudSync.status='error'; cloudSync.lastError = firestoreErrorMessage(e);
-    toast(t('cloud_pullFail') + cloudSync.lastError, 'err');
+    if(e && e.code === 'sync/conflict'){
+      Object.assign(cloudSync, { remoteNewer:true, status:'idle' });
+      toast(t('cloud_conflict'), 'err');
+      refreshSyncUI();
+      return;
+    }
+    failCloud(e, 'cloud_pullFail');
+    return;
   }
-  renderFbStatus(); renderSyncBar();
+  refreshSyncUI();
 }
 
 function cloudUnlink(){
-  if(cloudSync.status==='busy') return;
-  cloudSync = { linked:false, code:'', hash:'', status:'idle', lastSyncAt:null, lastError:'', panelOpen:false, remoteNewer:false };
+  if(cloudSync.status === 'busy') return;
+  cloudSync = { linked:false, hash:'', baseRev:0, dirty:false, status:'idle', lastSyncAt:null, lastError:'', panelOpen:cloudSync.panelOpen, remoteNewer:false };
   saveCache();
   toast(t('cloud_unlinked'));
-  renderFbStatus(); renderSyncBar();
-  if(state.tab==='account' && deviceSectionOpen){ const b = document.getElementById('deviceSectionBody'); if(b) renderDeviceSection(b); }
+  refreshSyncUI();
 }
 
 async function checkCloudFreshness(){
-  if(!cloudSync.linked || !cloudSync.hash || isOffline()) return;
+  if(!cloudSync.linked || !cloudSync.hash || isOffline() || cloudSync.status === 'busy') return;
+  const now = Date.now();
+  if(now - lastFreshnessCheck < 20000) return;
+  lastFreshnessCheck = now;
   try{
-    await ensureAnonAuth();
+    await ensureAuth();
     const snap = await cloudDocRef(cloudSync.hash).get();
     if(!snap.exists) return;
-    const data = snap.data();
-    const cloudUpdated = data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null;
-    if(cloudUpdated && (!cloudSync.lastSyncAt || cloudUpdated.getTime() > cloudSync.lastSyncAt.getTime() + 2000)){
-      cloudSync.remoteNewer = true;
-      renderFbStatus(); renderSyncBar();
+    const newer = (Number(snap.data().rev) || 0) !== cloudSync.baseRev;
+    if(newer !== cloudSync.remoteNewer){
+      cloudSync.remoteNewer = newer;
+      refreshSyncUI();
     }
-  }catch(e){}
+  }catch(e){
+    return;
+  }
 }
 
-let account = { authed:false, email:'', uid:null, status:'idle', lastError:'', documents:[], activeDocId:null, activeLabel:'', docsLoaded:false };
+const freshAccount = () => ({ authed:false, email:'', uid:null, status:'idle', lastError:'', documents:[], activeDocId:null, activeLabel:'', activeRev:0, dirty:false, docsLoaded:false });
+let account = freshAccount();
 
 function userDocsCollection(uid){
-  ensureFirebaseApp();
   return fbDb.collection('users').doc(uid).collection('documents');
 }
-function watchAccountAuthState(){
-  ensureFirebaseApp();
+async function startAccountWatch(){
+  if(accountWatchStarted) return;
+  accountWatchStarted = true;
+  try{ await loadFirebase(); }catch(e){ accountWatchStarted = false; return; }
   fbAuth.onAuthStateChanged(user=>{
     if(user && !user.isAnonymous){
       account.authed = true; account.uid = user.uid; account.email = user.email || '';
-      accountRefreshDocuments().then(()=>{ if(state.tab==='account') renderMain(); });
-    } else if(user && user.isAnonymous){
+      cloudUsed = true;
+      accountRefreshDocuments().then(()=>{ refreshSyncUI(); if(state.tab === 'account') renderMain(); });
     } else {
       account.authed = false; account.uid = null; account.email = '';
+      account.documents = []; account.docsLoaded = false;
+      if(state.tab === 'account') renderMain();
     }
-    if(state.tab==='account') renderMain();
+    refreshSyncUI();
   });
 }
 function authErrorMessage(e){
   const code = e && e.code ? String(e.code) : '';
-  if(code==='auth/email-already-in-use') return lang==='ar' ? 'هذا البريد الإلكتروني مستخدم بالفعل' : 'This email is already in use';
-  if(code==='auth/invalid-email') return lang==='ar' ? 'صيغة البريد الإلكتروني غير صحيحة' : 'Invalid email address';
-  if(code==='auth/weak-password') return lang==='ar' ? 'كلمة المرور ضعيفة جدًا (٦ أحرف على الأقل)' : 'Password is too weak (6+ characters)';
-  if(code==='auth/user-not-found' || code==='auth/wrong-password' || code==='auth/invalid-credential') return lang==='ar' ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة' : 'Incorrect email or password';
-  if(code==='auth/too-many-requests') return lang==='ar' ? 'محاولات كثيرة جدًا — حاول لاحقًا' : 'Too many attempts — try again later';
-  if(code==='auth/network-request-failed') return t('cloud_offline');
-  if(code==='auth/popup-blocked') return lang==='ar' ? 'المتصفح منع النافذة المنبثقة — يرجى السماح بالنوافذ المنبثقة والمحاولة مجددًا' : 'Your browser blocked the popup — allow popups for this site and try again';
-  if(code==='auth/account-exists-with-different-credential') return lang==='ar' ? 'هذا البريد مرتبط بطريقة تسجيل دخول أخرى' : 'This email is already linked to a different sign-in method';
-  if(code==='auth/unauthorized-domain') return lang==='ar' ? 'هذا النطاق غير مصرّح له بتسجيل الدخول عبر Google في إعدادات Firebase' : 'This domain is not authorized for Google sign-in in the Firebase settings';
+  if(code === 'auth/network-request-failed') return t('cloud_offline');
+  if(code === 'auth/too-many-requests') return lang === 'ar' ? 'محاولات كثيرة جدًا — حاول لاحقًا' : 'Too many attempts — try again later';
+  if(code === 'auth/popup-blocked') return lang === 'ar' ? 'المتصفح منع النافذة المنبثقة — يرجى السماح بالنوافذ المنبثقة والمحاولة مجددًا' : 'Your browser blocked the popup — allow popups for this site and try again';
+  if(code === 'auth/account-exists-with-different-credential') return lang === 'ar' ? 'هذا البريد مرتبط بطريقة تسجيل دخول أخرى' : 'This email is already linked to a different sign-in method';
+  if(code === 'auth/unauthorized-domain') return lang === 'ar' ? 'هذا النطاق غير مصرّح له بتسجيل الدخول عبر Google في إعدادات Firebase' : 'This domain is not authorized for Google sign-in in the Firebase settings';
   return t('acc_authErrorGeneric');
 }
 async function accountSignInWithGoogle(){
-  ensureFirebaseApp();
-  account.status='busy'; account.lastError='';
+  if(!fbAuth) return { ok:false, cancelled:false };
+  account.status = 'busy';
+  account.lastError = '';
   try{
     const provider = new firebase.auth.GoogleAuthProvider();
     const cred = await fbAuth.signInWithPopup(provider);
     account.authed = true; account.uid = cred.user.uid; account.email = cred.user.email || '';
-    account.status='idle';
+    account.status = 'idle';
+    cloudUsed = true;
+    saveCache();
     await accountRefreshDocuments();
     return { ok:true };
   }catch(e){
-    account.status='idle';
+    account.status = 'idle';
     const code = e && e.code ? String(e.code) : '';
-    if(code==='auth/popup-closed-by-user' || code==='auth/cancelled-popup-request') return { ok:false, cancelled:true };
+    if(code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') return { ok:false, cancelled:true };
     account.lastError = authErrorMessage(e);
     return { ok:false, cancelled:false };
   }
 }
 async function accountLogOut(){
-  ensureFirebaseApp();
+  await loadFirebase();
   await fbAuth.signOut();
-  account = { authed:false, email:'', uid:null, status:'idle', lastError:'', documents:[], activeDocId:null, activeLabel:'', docsLoaded:false };
+  account = freshAccount();
   saveCache();
+  refreshSyncUI();
 }
 async function accountRefreshDocuments(){
   if(!account.uid) return;
@@ -1520,38 +1885,53 @@ async function accountRefreshDocuments(){
         id: d.id,
         label: data.label || '',
         count: Array.isArray(data.records) ? data.records.length : 0,
-        updatedAt: data.updatedAt && data.updatedAt.toDate ? data.updatedAt.toDate() : null,
+        updatedAt: toDateSafe(data.updatedAt),
       };
-    }).sort((a,b)=> (b.updatedAt?b.updatedAt.getTime():0) - (a.updatedAt?a.updatedAt.getTime():0));
+    }).sort((a,b)=> (b.updatedAt ? b.updatedAt.getTime() : 0) - (a.updatedAt ? a.updatedAt.getTime() : 0));
     account.docsLoaded = true;
   }catch(e){ account.lastError = firestoreErrorMessage(e); }
 }
 async function accountCreateDocument(label){
   if(!checkDocSizeOk(state.records)) return null;
   const ref = userDocsCollection(account.uid).doc();
-  await ref.set({ label: label || (lang==='ar'?'مستند بدون اسم':'Untitled document'), records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-  account.activeDocId = ref.id; account.activeLabel = label;
+  const finalLabel = label || (lang === 'ar' ? 'مستند بدون اسم' : 'Untitled document');
+  await ref.set({ label: finalLabel, records: state.records, rev: 1, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+  account.activeDocId = ref.id; account.activeLabel = finalLabel; account.activeRev = 1; account.dirty = false;
   saveCache();
   await accountRefreshDocuments();
+  refreshSyncUI();
   return ref.id;
 }
 async function accountSaveActive(){
   if(!account.activeDocId) return false;
   if(!checkDocSizeOk(state.records)) return false;
-  await userDocsCollection(account.uid).doc(account.activeDocId).set({ label: account.activeLabel, records: state.records, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, {merge:true});
+  const ref = userDocsCollection(account.uid).doc(account.activeDocId);
+  account.activeRev = await pushRecords(ref, { label: account.activeLabel }, account.activeRev);
+  account.dirty = false;
+  saveCache();
   await accountRefreshDocuments();
+  refreshSyncUI();
   return true;
 }
 async function accountLoadDocument(docId, mode){
   const snap = await userDocsCollection(account.uid).doc(docId).get();
   if(!snap.exists) return false;
   const data = snap.data();
-  const cloudRecords = Array.isArray(data.records) ? data.records : [];
-  if(mode === 'replace') state.records = cloudRecords;
-  else state.records = [...cloudRecords, ...state.records];
-  account.activeDocId = docId; account.activeLabel = data.label || '';
-  saveCache(); afterRecordsChanged();
-  renderTabbar(); renderMain();
+  account.activeDocId = docId;
+  account.activeLabel = data.label || '';
+  account.activeRev = Number(data.rev) || 0;
+  if(mode === 'replace'){
+    rememberUndo();
+    state.records = sanitizeRecords(data.records);
+    afterRecordsChanged();
+    account.dirty = false;
+  } else {
+    await applyIncoming(data.records, 'append');
+  }
+  saveCache();
+  refreshSyncUI();
+  renderTabbar();
+  renderMain();
   return true;
 }
 async function accountRenameDocument(docId, label){
@@ -1561,8 +1941,10 @@ async function accountRenameDocument(docId, label){
 }
 async function accountDeleteDocument(docId){
   await userDocsCollection(account.uid).doc(docId).delete();
-  if(account.activeDocId === docId){ account.activeDocId = null; account.activeLabel=''; }
+  if(account.activeDocId === docId){ account.activeDocId = null; account.activeLabel = ''; account.activeRev = 0; account.dirty = false; }
   await accountRefreshDocuments();
+  saveCache();
+  refreshSyncUI();
 }
 
 function afterRecordsChanged(){
@@ -1570,32 +1952,26 @@ function afterRecordsChanged(){
     recordCeilingWarned = true;
     toast(t('records_approachingLimit',{n:state.records.length}), 'err');
   }
+  if(cloudSync.linked) cloudSync.dirty = true;
+  if(account.activeDocId) account.dirty = true;
   saveCache();
+  refreshSyncUI();
 }
 
 function renderSyncBar(){
   const bar = document.getElementById('syncBar');
-  const busy = cloudSync.status==='busy';
-  let dotColor = 'var(--muted2)', text = t('cloud_notLinked');
-  if(account.authed && account.activeDocId){ dotColor='var(--good)'; text = t('acc_signedInAs') + ': ' + account.email; }
-  else if(busy){ dotColor='var(--accent)'; text=t('cloud_syncingMsg'); }
-  else if(cloudSync.status==='error'){ dotColor='var(--bad)'; text=t('cloud_errorPrefix')+esc(cloudSync.lastError); }
-  else if(cloudSync.remoteNewer){ dotColor='var(--gold)'; text=t('cloud_remoteNewer'); }
-  else if(cloudSync.linked){ dotColor='var(--good)'; text = t('cloud_linked') + (cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toLocaleTimeString(lang==='ar'?'ar-EG':'en-US',{hour:'2-digit',minute:'2-digit'}) : ''); }
-  else if(account.authed){ dotColor='var(--accent-light)'; text = t('acc_signedInAs') + ': ' + account.email; }
-
   bar.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;width:100%;">
-      <div class="sync-left" style="cursor:pointer;" id="syncBarGoAccount"><span class="sync-dot" style="background:${dotColor};"></span><span class="sync-text">${text}</span></div>
+      <div class="sync-left" style="cursor:pointer;" id="syncBarGoAccount" role="link" tabindex="0"><span class="sync-dot" id="syncDot"></span><span class="sync-text" id="syncText"></span></div>
       <div class="sync-actions">
         <button class="btn-ghost" id="syncBarAccountBtn">${icon('user',14)} ${t('tab_account')}</button>
-        <button class="icon-btn" id="syncGearBtn" title="${esc(t('settings_title'))}">${icon('gear',17)}</button>
+        <button class="icon-btn" id="syncGearBtn" title="${esc(t('settings_title'))}" aria-label="${esc(t('settings_title'))}" aria-expanded="${cloudSync.panelOpen}">${icon('gear',17)}</button>
       </div>
     </div>
     <div class="sync-panel ${cloudSync.panelOpen?'open':''}" id="syncPanel">
       <h3 class="card-title" style="margin-bottom:12px;">${t('settings_generalTitle')}</h3>
       <div class="sync-grid" style="margin-bottom:18px;">
-        <label class="field"><span>${t('settings_currencyUnit')}</span><input class="inp" id="cfgCurrency" placeholder="${t('settings_currencyUnitPh')}" value="${esc(appSettings.currencyUnit)}"></label>
+        <label class="field"><span>${t('settings_currencyUnit')}</span><input class="inp" id="cfgCurrency" maxlength="12" placeholder="${esc(t('settings_currencyUnitPh'))}" value="${esc(appSettings.currencyUnit)}"></label>
       </div>
       <h3 class="card-title" style="margin-bottom:12px;">${t('settings_backupTitle')}</h3>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -1606,7 +1982,9 @@ function renderSyncBar(){
     </div>`;
 
   const goAccount = ()=> switchTab('account');
-  document.getElementById('syncBarGoAccount').addEventListener('click', goAccount);
+  const goEl = document.getElementById('syncBarGoAccount');
+  goEl.addEventListener('click', goAccount);
+  goEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); goAccount(); } });
   document.getElementById('syncBarAccountBtn').addEventListener('click', goAccount);
   document.getElementById('syncGearBtn').addEventListener('click', ()=>{ cloudSync.panelOpen = !cloudSync.panelOpen; renderSyncBar(); });
   document.getElementById('exportBackupBtn').addEventListener('click', exportBackup);
@@ -1619,104 +1997,131 @@ function renderSyncBar(){
   document.getElementById('cfgCurrency').addEventListener('change', (e)=>{
     appSettings.currencyUnit = e.target.value.trim();
     saveCache();
-    if(state.tab!=='import') renderMain();
+    if(state.tab !== 'import') renderMain();
   });
-
-  if(state.tab==='account' && deviceSectionOpen){
-    const devBody = document.getElementById('deviceSectionBody');
-    if(devBody) renderDeviceSection(devBody);
-  }
+  updateSyncStatus();
 }
 
 const CACHE_KEY = 'entitiesStatementApp:cache:v1';
+let saveTimer = null, saveErrorShown = false;
 function saveCache(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(writeCache, 250);
+}
+function flushSave(){
+  if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; writeCache(); }
+}
+function writeCache(){
+  saveTimer = null;
   try{
-    const payload = {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+      schema: 2,
       records: state.records,
       appSettings,
-      cloudSync: { linked: cloudSync.linked, code: cloudSync.code, hash: cloudSync.hash, lastSyncAt: cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toISOString() : null },
-      account: { activeDocId: account.activeDocId, activeLabel: account.activeLabel },
+      cloudSync: { linked: cloudSync.linked, hash: cloudSync.hash, baseRev: cloudSync.baseRev, dirty: cloudSync.dirty, lastSyncAt: cloudSync.lastSyncAt ? cloudSync.lastSyncAt.toISOString() : null },
+      account: { activeDocId: account.activeDocId, activeLabel: account.activeLabel, activeRev: account.activeRev, dirty: account.dirty },
+      usesCloud: cloudUsed,
       theme, lang,
-    };
-    localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
-  }catch(e){}
+    }));
+    saveErrorShown = false;
+  }catch(e){
+    if(!saveErrorShown){ saveErrorShown = true; toast(t('cache_saveFailed'), 'err'); }
+  }
 }
 function loadCache(){
-  try{
-    const raw = localStorage.getItem(CACHE_KEY);
-    if(!raw) return;
-    const data = JSON.parse(raw);
-    if(data && Array.isArray(data.records)) state.records = data.records;
-    if(data && data.appSettings) appSettings = { ...appSettings, ...data.appSettings };
-    if(data && data.cloudSync){
-      cloudSync.linked = !!data.cloudSync.linked;
-      cloudSync.code = data.cloudSync.code || '';
-      cloudSync.hash = data.cloudSync.hash || '';
-      cloudSync.lastSyncAt = data.cloudSync.lastSyncAt ? new Date(data.cloudSync.lastSyncAt) : null;
-    }
-    if(data && data.account){
-      account.activeDocId = data.account.activeDocId || null;
-      account.activeLabel = data.account.activeLabel || '';
-    }
-    if(data && data.theme) theme = data.theme;
-    if(data && data.lang) lang = data.lang;
-  }catch(e){}
+  let data = null;
+  try{ data = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); }catch(e){ data = null; }
+  if(!data || typeof data !== 'object') return;
+  const legacy = data.schema !== 2;
+  state.records = sanitizeRecords(data.records);
+  if(data.appSettings && typeof data.appSettings === 'object'){
+    appSettings = { ...appSettings, currencyUnit: String(data.appSettings.currencyUnit ?? '').slice(0, 12) };
+  }
+  const c = data.cloudSync;
+  if(c && c.linked && typeof c.hash === 'string' && /^[0-9a-f]{64}$/.test(c.hash)){
+    cloudSync.linked = true;
+    cloudSync.hash = c.hash;
+    cloudSync.baseRev = legacy ? -1 : (Number(c.baseRev) || 0);
+    cloudSync.dirty = legacy ? true : !!c.dirty;
+    const when = c.lastSyncAt ? new Date(c.lastSyncAt) : null;
+    cloudSync.lastSyncAt = when && !Number.isNaN(when.getTime()) ? when : null;
+  }
+  const a = data.account;
+  if(a && typeof a === 'object'){
+    account.activeDocId = typeof a.activeDocId === 'string' ? a.activeDocId : null;
+    account.activeLabel = typeof a.activeLabel === 'string' ? a.activeLabel : '';
+    account.activeRev = Number(a.activeRev) || 0;
+    account.dirty = !!a.dirty;
+  }
+  cloudUsed = !!data.usesCloud || cloudSync.linked || !!account.activeDocId;
+  if(['system','light','dark'].includes(data.theme)) theme = data.theme;
+  if(data.lang === 'ar' || data.lang === 'en') lang = data.lang;
 }
 
-function exportBackup(){
-  const payload = {
-    app:'entitiesStatementApp', version:1, exportedAt:new Date().toISOString(),
-    records: state.records,
-    appSettings,
-    cloudSync: { linked: cloudSync.linked, code: cloudSync.code, hash: cloudSync.hash },
-    theme, lang,
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+function saveBlob(blob, filename){
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = (lang==='ar' ? 'نسخة_احتياطية_' : 'backup_') + new Date().toISOString().slice(0,10) + '.json';
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=> URL.revokeObjectURL(url), 1500);
+}
+function exportBackup(){
+  const payload = {
+    app: 'entitiesStatementApp', version: 2, exportedAt: new Date().toISOString(),
+    records: state.records,
+    appSettings,
+  };
+  saveBlob(new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'}),
+    (lang === 'ar' ? 'نسخة_احتياطية_' : 'backup_') + new Date().toISOString().slice(0,10) + '.json');
   toast(t('backup_exported'));
 }
-function importBackupFile(file){
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    try{
-      const data = JSON.parse(reader.result);
-      if(!data || !Array.isArray(data.records)) throw new Error('invalid');
-      state.records = data.records;
-      if(data.appSettings) appSettings = { ...appSettings, ...data.appSettings };
-      if(data.cloudSync){
-        cloudSync.linked = !!data.cloudSync.linked;
-        cloudSync.code = data.cloudSync.code || '';
-        cloudSync.hash = data.cloudSync.hash || '';
-      }
-      if(data.theme){ theme = data.theme; applyTheme(); }
-      if(data.lang && data.lang !== lang){
-        lang = data.lang;
-        document.documentElement.lang = lang;
-        document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
-        document.title = t('appName');
-      }
-      saveCache();
-      renderHeader(); renderSyncBar(); renderTabbar(); renderMain();
-      toast(t('backup_imported', {n: state.records.length}));
-    }catch(e){
-      toast(t('backup_importError'), 'err');
-    }
-  };
-  reader.readAsText(file, 'utf-8');
+async function importBackupFile(file){
+  let data;
+  try{
+    data = JSON.parse(await file.text());
+    if(!data || !Array.isArray(data.records)) throw new Error('invalid');
+  }catch(e){
+    toast(t('backup_importError'), 'err');
+    return;
+  }
+  const records = sanitizeRecords(data.records);
+  const ok = await confirmDialog({
+    title: t('backup_confirmTitle'),
+    message: t('backup_confirmMsg', {n: records.length, c: state.records.length}),
+    confirmLabel: t('backup_confirmBtn'),
+    cancelLabel: t('cloud_cancelBtn'),
+    danger: true,
+  });
+  if(!ok) return;
+  rememberUndo();
+  state.records = records;
+  if(data.appSettings && typeof data.appSettings === 'object'){
+    appSettings = { ...appSettings, currencyUnit: String(data.appSettings.currencyUnit ?? '').slice(0, 12) };
+  }
+  afterRecordsChanged();
+  renderSyncBar();
+  renderTabbar();
+  renderMain();
+  toast(t('backup_imported', {n: records.length}), 'ok', undoAction());
 }
 
-function switchTab(key){
-  if(state.tab === key) return;
+function switchTab(key, force){
+  if(state.tab === key && !force) return;
   closeCsel();
   state.tab = key;
-  const el = document.getElementById('tabbar');
-  el.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===key));
+  document.querySelectorAll('#tabbar .tab-btn').forEach(b=>{
+    const on = b.dataset.tab === key;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+    b.tabIndex = on ? 0 : -1;
+  });
   positionIndicator();
   renderMain();
 }
+let tabObserver = null;
 function renderTabbar(){
   const el = document.getElementById('tabbar');
   const TABS = [
@@ -1726,24 +2131,47 @@ function renderTabbar(){
     {key:"hospitals", label:t('tab_hospitals'), ic:"building"},
     {key:"account", label:t('tab_account'), ic:"user"},
   ];
-  el.innerHTML = `<div id="tabIndicator"></div>` + TABS.map(tb => `<button class="tab-btn ${state.tab===tb.key?'active':''}" data-tab="${tb.key}">${icon(tb.ic,15)}${tb.label}</button>`).join('');
-  el.querySelectorAll('.tab-btn').forEach(btn=>{
+  el.innerHTML = `<div id="tabIndicator" aria-hidden="true"></div>` + TABS.map(tb => `<button type="button" role="tab" aria-selected="${state.tab===tb.key}" tabindex="${state.tab===tb.key?0:-1}" class="tab-btn ${state.tab===tb.key?'active':''}" data-tab="${tb.key}">${icon(tb.ic,15)}${esc(tb.label)}</button>`).join('');
+  const buttons = [...el.querySelectorAll('.tab-btn')];
+  buttons.forEach((btn, i)=>{
     btn.addEventListener('click', ()=> switchTab(btn.dataset.tab));
+    btn.addEventListener('keydown', (e)=>{
+      const rtl = document.documentElement.dir === 'rtl';
+      let next = -1;
+      if(e.key === 'ArrowRight') next = rtl ? i - 1 : i + 1;
+      else if(e.key === 'ArrowLeft') next = rtl ? i + 1 : i - 1;
+      else if(e.key === 'Home') next = 0;
+      else if(e.key === 'End') next = buttons.length - 1;
+      if(next < 0 || next >= buttons.length) return;
+      e.preventDefault();
+      buttons[next].focus();
+      switchTab(buttons[next].dataset.tab);
+    });
   });
+  if(!tabObserver && window.ResizeObserver){
+    tabObserver = new ResizeObserver(()=> positionIndicator());
+    tabObserver.observe(el);
+  }
   positionIndicator();
 }
 function positionIndicator(){
   const el = document.getElementById('tabbar');
-  const active = el.querySelector('.tab-btn.active');
+  const active = el && el.querySelector('.tab-btn.active');
   const ind = document.getElementById('tabIndicator');
   if(!active || !ind) return;
-  ind.style.transform = `translateX(${active.offsetLeft}px)`;
+  ind.style.top = active.offsetTop + 'px';
+  ind.style.height = active.offsetHeight + 'px';
   ind.style.width = active.offsetWidth + 'px';
+  ind.style.transform = `translateX(${active.offsetLeft}px)`;
+  const left = active.offsetLeft - el.scrollLeft;
+  if(left < 0 || left + active.offsetWidth > el.clientWidth) active.scrollIntoView({ block:'nearest', inline:'nearest' });
 }
 window.addEventListener('resize', positionIndicator);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=> positionIndicator());
 
 function renderMain(){
   closeCsel();
+  Object.keys(cselRegistry).forEach(k=> delete cselRegistry[k]);
   const main = document.getElementById('mainContent');
   main.style.animation = 'none'; void main.offsetWidth; main.style.animation = 'rise .35s ease both';
   if(state.tab==='entry') renderEntryTab(main);
@@ -1783,7 +2211,7 @@ function renderEntryTab(main){
           <label class="field"><span>${t('field_month')}</span>
             ${csel('f-month', (lang==='ar'?MONTHS_AR:MONTHS_EN).map((m,i)=>({value:i,label:m})), new Date().getMonth(), (v)=>{ selectedMonth = Number(v); })}
           </label>
-          <label class="field"><span>${t('field_year')}</span><input class="inp" type="number" id="f-year" value="${new Date().getFullYear()}"></label>
+          <label class="field"><span>${t('field_year')}</span><input class="inp" type="number" id="f-year" min="2000" max="2100" value="${new Date().getFullYear()}"></label>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <label class="field"><span>${t('field_before')}</span><input class="inp" type="number" inputmode="decimal" id="f-before" placeholder="0"></label>
@@ -1864,7 +2292,9 @@ function renderEntryTab(main){
     if(Number.isNaN(before) || Number.isNaN(after)){ toast(t('entry_invalidNumber'), 'err'); (Number.isNaN(before)?beforeI:afterI).focus(); return; }
     if(before < 0 || after < 0){ toast(t('entry_negativeNumber'), 'err'); (before<0?beforeI:afterI).focus(); return; }
     const name = nameI.value.trim();
-    const year = Number(main.querySelector('#f-year').value) || new Date().getFullYear();
+    const yearInput = main.querySelector('#f-year');
+    const year = Number(yearInput.value) || new Date().getFullYear();
+    if(!Number.isInteger(year) || year < YEAR_MIN || year > YEAR_MAX){ toast(t('entry_invalidYear'), 'err'); yearInput.focus(); return; }
     if(findDuplicateRecord(name, selectedMonth, year, null)){
       const ok = await confirmDialog({ title:t('dup_title'), message:t('dup_msg'), confirmLabel:t('dup_confirmBtn'), cancelLabel:t('dup_cancelBtn') });
       if(!ok) return;
@@ -1875,7 +2305,7 @@ function renderEntryTab(main){
       budgetType: selectedKey, month: selectedMonth, year, before, after,
       createdAt: now, updatedAt: now,
     };
-    state.records.unshift(rec);
+    state.records = [rec, ...state.records];
     toast(t('entry_added'));
     nameI.value = ''; main.querySelector('#f-category').value = '';
     beforeI.value = ''; afterI.value = ''; varBox.innerHTML='';
@@ -1885,80 +2315,46 @@ function renderEntryTab(main){
   });
 }
 
+async function writeWorkbook(rows, sheetName, filename){
+  try{
+    const XLSX = await loadXLSX();
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws['!cols'] = rows[0].map(h=>({wch: Math.max(18, String(h).length + 4)}));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    wb.Workbook = { Views: [{ RTL: lang === 'ar' }] };
+    const out = XLSX.write(wb, {bookType:'xlsx', type:'array'});
+    saveBlob(new Blob([out], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}), filename);
+  }catch(e){
+    toast(t('xlsx_loadFailed'), 'err');
+  }
+}
 function downloadTemplate(){
-  const wb = XLSX.utils.book_new();
-  const headers = currentHeaders();
-  const sampleType = lang==='ar' ? 'مواليد' : 'Newborns';
-  const sampleMonth = monthName(0);
-  const rows = [headers, [lang==='ar'?'مستشفى المثال':'Example Hospital', CATEGORY_SUGGESTIONS[lang][0], sampleType, sampleMonth, 2026, 100000, 95000]];
-  const ws = XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols'] = headers.map(h=>({wch: Math.max(18, h.length+4)}));
-  XLSX.utils.book_append_sheet(wb, ws, lang==='ar'?'قالب البيانات':'Data Template');
-  const out = XLSX.write(wb, {bookType:'xlsx', type:'array'});
-  const blob = new Blob([out], {type:'application/octet-stream'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = lang==='ar' ? 'قالب_بيانات.xlsx' : 'data_template.xlsx';
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  const sampleType = lang === 'ar' ? 'مواليد' : 'Newborns';
+  const rows = [currentHeaders(), [lang==='ar'?'مستشفى المثال':'Example Hospital', CATEGORY_SUGGESTIONS[lang][0], sampleType, monthName(0), 2026, 100000, 95000]];
+  return writeWorkbook(rows, lang==='ar'?'قالب البيانات':'Data Template', lang==='ar' ? 'قالب_بيانات.xlsx' : 'data_template.xlsx');
 }
 function exportRecords(records, filenameHint){
-  const headers = currentHeaders();
-  const rows = [headers, ...records.map(r=>[r.name,r.category,budgetLabel(r.budgetType),monthName(r.month),r.year,r.before,r.after])];
-  const ws = XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols'] = headers.map(h=>({wch: Math.max(18, h.length+4)}));
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, lang==='ar'?'البيانات':'Data');
-  const out = XLSX.write(wb, {bookType:'xlsx', type:'array'});
-  const blob = new Blob([out], {type:'application/octet-stream'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const rows = [currentHeaders(), ...records.map(r=>[r.name, r.category, budgetLabel(r.budgetType), monthName(r.month), r.year, r.before, r.after])];
   const base = filenameHint || (lang==='ar' ? 'بيانات_الجهات' : 'entities_data');
-  a.href = url; a.download = base + '.xlsx';
-  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  return writeWorkbook(rows, lang==='ar'?'البيانات':'Data', base + '.xlsx');
 }
-function normalizeRow(row){
-  const budgetType = budgetKeyFromLabel(getColumnValue(row,'budgetType'));
-  const month = monthIndexFromLabel(getColumnValue(row,'month'));
-  const now = new Date().toISOString();
-  return {
-    id: uid(),
-    name: String(getColumnValue(row,'name')||'').trim(),
-    category: String(getColumnValue(row,'category')||'').trim(),
-    budgetType, month,
-    year: Number(getColumnValue(row,'year')) || new Date().getFullYear(),
-    before: Number(getColumnValue(row,'before')) || 0,
-    after: Number(getColumnValue(row,'after')) || 0,
-    createdAt: now, updatedAt: now,
-  };
+function decodeText(buf){
+  const bytes = new Uint8Array(buf);
+  try{ return new TextDecoder('utf-8', {fatal:true}).decode(bytes); }
+  catch(e){ return new TextDecoder('windows-1256').decode(bytes); }
 }
-function readWorkbookGrid(file){
-  return new Promise((resolve, reject)=>{
-    const isCsv = /\.csv$/i.test(file.name);
-    const reader = new FileReader();
-    reader.onload = (e)=>{
-      try{
-        const wb = isCsv ? XLSX.read(e.target.result, {type:'string'}) : XLSX.read(e.target.result, {type:'array'});
-        const sheet = wb.Sheets[wb.SheetNames[0]];
-        resolve(XLSX.utils.sheet_to_json(sheet, {header:1, defval:"", raw:false}));
-      }catch(err){ reject(err); }
-    };
-    reader.onerror = reject;
-    if(isCsv) reader.readAsText(file, 'UTF-8'); else reader.readAsArrayBuffer(file);
-  });
-}
-function readWorkbookObjects(file){
-  return new Promise((resolve, reject)=>{
-    const isCsv = /\.csv$/i.test(file.name);
-    const reader = new FileReader();
-    reader.onload = (e)=>{
-      try{
-        const wb = isCsv ? XLSX.read(e.target.result, {type:'string'}) : XLSX.read(e.target.result, {type:'array'});
-        const sheet = wb.Sheets[wb.SheetNames[0]];
-        resolve(XLSX.utils.sheet_to_json(sheet, {defval:""}));
-      }catch(err){ reject(err); }
-    };
-    reader.onerror = reject;
-    if(isCsv) reader.readAsText(file, 'UTF-8'); else reader.readAsArrayBuffer(file);
-  });
+async function readWorkbookGrid(file){
+  const XLSX = await loadXLSX();
+  const buf = await file.arrayBuffer();
+  const isCsv = /\.(csv|txt)$/i.test(file.name) || file.type === 'text/csv';
+  const wb = isCsv ? XLSX.read(decodeText(buf), {type:'string'}) : XLSX.read(buf, {type:'array', cellDates:true});
+  const toGrid = (name) => XLSX.utils.sheet_to_json(wb.Sheets[name], {header:1, defval:"", raw:true});
+  for(const name of wb.SheetNames){
+    const grid = toGrid(name);
+    if(grid.length > 1) return grid;
+  }
+  return wb.SheetNames.length ? toGrid(wb.SheetNames[0]) : [];
 }
 
 let importMode = 'tabular';
@@ -1971,6 +2367,10 @@ let freeIncluded = null;
 let freeColsOn = null;
 let freeErrors = [];
 
+function cappedNote(total){
+  if(total <= PREVIEW_CAP) return '';
+  return `<div class="helper-note" style="margin-top:12px;">${esc(t('import_previewCapped',{n:PREVIEW_CAP,t:total}))}</div>`;
+}
 function errPanelHtml(errors, idPrefix){
   if(!errors.length) return '';
   return `<div class="err-panel" id="${idPrefix}ErrPanel">
@@ -2028,10 +2428,10 @@ function wireColChips(root, colsOnSet, rerender){
   });
 }
 function applyColumnMask(rec, colsOnSet){
-  const out = { id: rec.id };
+  const out = { id: rec.id, createdAt: rec.createdAt, updatedAt: rec.updatedAt };
   out.name = colsOnSet.has('name') ? rec.name : '';
   out.category = colsOnSet.has('category') ? rec.category : '';
-  out.budgetType = colsOnSet.has('budgetType') ? rec.budgetType : BUDGET_KEYS[0];
+  out.budgetType = colsOnSet.has('budgetType') ? rec.budgetType : 'total';
   out.month = colsOnSet.has('month') ? rec.month : new Date().getMonth();
   out.year = colsOnSet.has('year') ? rec.year : new Date().getFullYear();
   out.before = colsOnSet.has('before') ? rec.before : 0;
@@ -2098,11 +2498,12 @@ function renderTabularImport(root){
       </div>
       <div style="overflow:auto;max-height:460px;"><table>
       <thead><tr><th></th>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-      <tbody>${pendingPreview.map((r,i)=>`<tr style="animation:rise .3s ease ${Math.min(i,12)*0.02}s both;">
+      <tbody>${pendingPreview.slice(0,PREVIEW_CAP).map((r,i)=>`<tr style="animation:rise .3s ease ${Math.min(i,12)*0.02}s both;">
         <td><input type="checkbox" class="row-chk" data-i="${i}" ${tabularIncluded.has(i)?'checked':''}></td>
         <td style="font-weight:600;color:var(--fg);">${esc(r.name)}</td><td>${esc(r.category)}</td><td>${budgetTag(r.budgetType)}</td>
         <td>${monthName(r.month)}</td><td>${r.year}</td><td>${fmt(r.before)}</td><td>${fmt(r.after)}</td></tr>`).join('')}</tbody>
     </table></div>
+    ${cappedNote(pendingPreview.length)}
     ${errPanelHtml(tabularErrors, 'tab')}`;
 
     previewArea.querySelectorAll('.row-chk').forEach(chk=>{
@@ -2127,24 +2528,25 @@ function renderTabularImport(root){
   async function handleFile(file){
     if(!file) return;
     fileStatus.innerHTML = '';
+    const fail = (msg)=>{
+      fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${msg}</span>`;
+      pendingPreview = null; tabularErrors = [];
+      renderPreview();
+    };
     try{
-      const rows = await readWorkbookObjects(file);
-      if(!rows.length){ fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_fileEmpty')}</span>`; pendingPreview=null; tabularErrors=[]; renderPreview(); return; }
-      const allNormalized = rows.map((row,i)=>({ rec: normalizeRow(row), i, row }));
-      const normalized = allNormalized.filter(x=>x.rec.name).map(x=>x.rec);
-      tabularErrors = allNormalized.filter(x=>!x.rec.name).map(x=>({
-        rowNum: x.i + 2,
-        reason: t('import_reasonNoName'),
-        preview: Object.values(x.row).filter(v=>String(v||'').trim()).slice(0,4).join(' · '),
-      }));
-      if(!normalized.length){ fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_noColumns')}</span>`; pendingPreview=null; renderPreview(); return; }
-      pendingPreview = normalized;
-      tabularIncluded = new Set(normalized.map((_,i)=>i));
+      const grid = await readWorkbookGrid(file);
+      if(grid.length < 2) return fail(t('import_fileEmpty'));
+      const mapping = guessMapping(grid[0]);
+      if(!mapping.includes('name')) return fail(t('import_noColumns'));
+      const { records, errors } = recordsFromGrid(grid, 1, mapping);
+      tabularErrors = errors;
+      pendingPreview = records;
+      tabularIncluded = new Set(records.map((_,i)=>i));
       tabularColsOn = new Set(HEADER_KEYS);
-      fileStatus.innerHTML = `<span style="color:var(--good);display:flex;align-items:center;gap:6px;">${icon('check',14)}${esc(file.name)} — ${t('import_readSummary',{n:rows.length,v:normalized.length,s:tabularErrors.length})}</span>`;
+      fileStatus.innerHTML = `<span style="color:var(--good);display:flex;align-items:center;gap:6px;">${icon('check',14)}${esc(file.name)} — ${t('import_readSummary',{n:records.length + errors.length,v:records.length,s:errors.length})}</span>`;
       renderPreview();
     }catch(err){
-      fileStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_readError')}</span>`;
+      fail(err && err.message === 'load-failed' ? t('xlsx_loadFailed') : t('import_readError'));
     }
   }
   dz.addEventListener('click', ()=> fileInput.click());
@@ -2156,12 +2558,14 @@ function renderTabularImport(root){
 }
 
 function guessMapping(headerRow){
+  const table = HEADER_KEYS.map((k,i)=>[k, stripArticle(HEADERS_BY_LANG.ar[i]), stripArticle(HEADERS_BY_LANG.en[i])]);
+  const used = new Set();
   return headerRow.map(cell=>{
-    const c = String(cell||"").trim();
-    let idx = HEADERS_BY_LANG.ar.indexOf(c);
-    if(idx===-1) idx = HEADERS_BY_LANG.en.findIndex(h=>h.toLowerCase()===c.toLowerCase());
-    if(idx===-1) return '';
-    return HEADER_KEYS[idx];
+    const c = stripArticle(cell);
+    const hit = table.find(([k, ar, en]) => !used.has(k) && (c === ar || c === en));
+    if(!hit) return '';
+    used.add(hit[0]);
+    return hit[0];
   });
 }
 
@@ -2190,16 +2594,17 @@ function renderFreeformImport(root){
   async function handleFile(file){
     if(!file) return;
     freeStatus.innerHTML = '';
+    const fail = (msg)=>{ freeStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${msg}</span>`; };
     try{
       const grid = await readWorkbookGrid(file);
-      if(!grid.length){ freeStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_fileEmpty')}</span>`; return; }
-      freeGrid = grid; freeHeaderRow = 1;
+      if(!grid.length) return fail(t('import_fileEmpty'));
+      freeGrid = grid; freeHeaderRow = 1; freeIncluded = null;
       freeMapping = guessMapping(grid[0] || []);
       freeColsOn = new Set(HEADER_KEYS);
       freeStatus.innerHTML = `<span style="color:var(--good);display:flex;align-items:center;gap:6px;">${icon('check',14)}${esc(file.name)} — ${grid.length}</span>`;
       renderMapUI();
     }catch(err){
-      freeStatus.innerHTML = `<span style="color:var(--bad);display:flex;align-items:center;gap:6px;">${icon('alert',14)}${t('import_readError')}</span>`;
+      fail(err && err.message === 'load-failed' ? t('xlsx_loadFailed') : t('import_readError'));
     }
   }
   dz.addEventListener('click', ()=> fileInput.click());
@@ -2209,41 +2614,15 @@ function renderFreeformImport(root){
   dz.addEventListener('drop', (e)=>{ e.preventDefault(); dz.classList.remove('drag'); handleFile(e.dataTransfer.files[0]); });
 
   function computeMapped(){
-    const headerIdx = freeHeaderRow - 1;
-    const dataRows = freeGrid.slice(headerIdx+1);
-    const out = [];
-    freeErrors = [];
-    dataRows.forEach((row, di)=>{
-      const rec = { id: uid(), name:'', category:'', budgetType: BUDGET_KEYS[0], month:new Date().getMonth(), year:new Date().getFullYear(), before:0, after:0 };
-      let hasName = false, hasAnyValue = false;
-      freeMapping.forEach((field, colIdx)=>{
-        if(!field) return;
-        const val = row[colIdx];
-        if(val===undefined || val==="") return;
-        hasAnyValue = true;
-        if(field==='name'){ rec.name = String(val).trim(); hasName = !!rec.name; }
-        else if(field==='category') rec.category = String(val).trim();
-        else if(field==='budgetType') rec.budgetType = budgetKeyFromLabel(val);
-        else if(field==='month') rec.month = monthIndexFromLabel(val);
-        else if(field==='year') rec.year = Number(val) || new Date().getFullYear();
-        else if(field==='before') rec.before = Number(val) || 0;
-        else if(field==='after') rec.after = Number(val) || 0;
-      });
-      if(hasName) out.push(rec);
-      else{
-        freeErrors.push({
-          rowNum: freeHeaderRow + di + 1,
-          reason: hasAnyValue ? t('import_reasonNoName') : t('import_reasonEmptyRow'),
-          preview: row.filter(v=>String(v||'').trim()).slice(0,4).join(' · '),
-        });
-      }
-    });
-    return out;
+    const { records, errors } = recordsFromGrid(freeGrid, freeHeaderRow, freeMapping);
+    freeErrors = errors;
+    return records;
   }
 
   function renderMapUI(){
     if(!freeGrid){ mapArea.innerHTML=''; return; }
-    const previewRowsCount = Math.min(8, freeGrid.length);
+    clearCselPrefix('mapcol-');
+    const previewRowsCount = Math.min(12, freeGrid.length);
     const colCount = Math.max(...freeGrid.slice(0,previewRowsCount).map(r=>r.length), 1);
     const fieldOptions = [{key:'', label:t('import_ignoreColumn')}, ...HEADER_KEYS.map(k=>({key:k, label:t('col_'+(k==='budgetType'?'budget':k))}))];
 
@@ -2313,11 +2692,12 @@ function renderFreeformImport(root){
         </div>
         <div style="overflow:auto;max-height:400px;"><table>
         <thead><tr><th></th>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
-        <tbody>${freeRecordsCache.slice(0,300).map((r,i)=>`<tr style="animation:rise .3s ease ${Math.min(i,10)*0.02}s both;">
+        <tbody>${freeRecordsCache.slice(0,PREVIEW_CAP).map((r,i)=>`<tr style="animation:rise .3s ease ${Math.min(i,10)*0.02}s both;">
           <td><input type="checkbox" class="free-row-chk" data-i="${i}" ${freeIncluded.has(i)?'checked':''}></td>
           <td style="font-weight:600;color:var(--fg);">${esc(r.name)}</td><td>${esc(r.category)}</td><td>${budgetTag(r.budgetType)}</td>
           <td>${esc(monthName(r.month))}</td><td>${r.year}</td><td>${fmt(r.before)}</td><td>${fmt(r.after)}</td></tr>`).join('')}</tbody>
         </table></div>
+        ${cappedNote(freeRecordsCache.length)}
         ${errPanelHtml(freeErrors, 'free')}`;
       tableEl.querySelectorAll('.free-row-chk').forEach(chk=>{
         chk.addEventListener('change', ()=>{
@@ -2342,150 +2722,293 @@ function renderFreeformImport(root){
   }
 }
 
-function svgArea(data){
-  const w=640,h=220,padL=6,padR=6,padT=10,padB=26;
-  const innerW=w-padL-padR, innerH=h-padT-padB;
-  const max = Math.max(1, ...data.map(d=>Math.max(d.before,d.after)));
-  const n = Math.max(data.length-1,1);
-  const pts=(key)=>data.map((d,i)=>{ const x = padL + (i/n)*innerW; const y = padT + innerH - (d[key]/max)*innerH; return [x,y]; });
-  const toPath=(pts)=> 'M '+pts.map(p=>p.join(',')).join(' L ');
-  const toArea=(pts)=> `M ${pts[0][0]},${h-padB} L ${pts.map(p=>p.join(',')).join(' L ')} L ${pts[pts.length-1][0]},${h-padB} Z`;
-  const beforePts = pts('before'), afterPts = pts('after');
-  const gridLines = [0,0.25,0.5,0.75,1].map(f=>{ const y = padT + innerH*f; return `<line x1="${padL}" y1="${y}" x2="${w-padR}" y2="${y}" stroke="rgba(128,128,140,0.14)" stroke-dasharray="3 6"/>`; }).join('');
-  return `<svg width="100%" viewBox="0 0 ${w} ${h-padB+8}" preserveAspectRatio="none" style="overflow:visible;">
-    <defs>
-      <linearGradient id="gAfter" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2f93b0" stop-opacity="0.5"/><stop offset="100%" stop-color="#2f93b0" stop-opacity="0"/></linearGradient>
-      <linearGradient id="gBefore" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#cda15c" stop-opacity="0.28"/><stop offset="100%" stop-color="#cda15c" stop-opacity="0"/></linearGradient>
-    </defs>
-    ${gridLines}
-    <path d="${toArea(beforePts)}" fill="url(#gBefore)"/><path d="${toPath(beforePts)}" fill="none" stroke="#cda15c" stroke-width="2"/>
-    <path d="${toArea(afterPts)}" fill="url(#gAfter)"/><path d="${toPath(afterPts)}" fill="none" stroke="#2f93b0" stroke-width="2.5"/>
-  </svg>`;
-}
-function svgDonut(data){
-  const r=54, cx=90, cy=90, c=2*Math.PI*r;
-  const total = data.reduce((s,d)=>s+d.value,0) || 1;
-  let cum = 0;
-  const segs = data.map(d=>{
-    const frac = d.value/total, seg = c*frac, rotate = -90 + (cum/total)*360;
-    cum += d.value;
-    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.color}" stroke-width="16" stroke-dasharray="${seg} ${c-seg}" transform="rotate(${rotate} ${cx} ${cy})"/>`;
+function svgId(){ return 'g' + Math.random().toString(36).slice(2, 8); }
+
+function trendChart(data, ariaLabel){
+  const host = document.getElementById('mainContent');
+  const mw = (host && host.clientWidth) || 640;
+  const W = Math.round(Math.max(300, Math.min(760, window.innerWidth <= 980 ? mw - 40 : mw * 0.6 - 48)));
+  const H = W < 480 ? 220 : 250;
+  const pl = 50, pr = 14, pt = 14, pb = 32;
+  const iw = W - pl - pr, ih = H - pt - pb;
+  const n = data.length;
+  const max = Math.max(1, ...data.flatMap(d => [d.before, d.after]));
+  const x = (i) => n === 1 ? pl + iw / 2 : pl + (i / (n - 1)) * iw;
+  const y = (v) => pt + ih - (v / max) * ih;
+  const line = (key) => data.map((d, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(d[key]).toFixed(1)}`).join(' ');
+  const area = (key) => `${line(key)} L${x(n-1).toFixed(1)},${pt+ih} L${x(0).toFixed(1)},${pt+ih} Z`;
+  const gid = svgId();
+  const grid = [0,1,2,3,4].map(k => {
+    const v = max * k / 4, yy = y(v);
+    return `<line class="chart-grid" x1="${pl}" x2="${W-pr}" y1="${yy}" y2="${yy}"/><text class="chart-axis" x="${pl-8}" y="${yy+4}" text-anchor="end">${fmtCompact(v)}</text>`;
   }).join('');
-  return `<svg width="180" height="180" viewBox="0 0 180 180">${segs}</svg>`;
+  const step = Math.max(1, Math.ceil(n / Math.max(3, Math.floor(iw / 78))));
+  const lastShown = Math.floor((n - 1) / step) * step;
+  const labelAt = (i) => i % step === 0 || (i === n - 1 && (n - 1 - lastShown) >= step / 2);
+  const xl = data.map((d, i) => labelAt(i) ? `<text class="chart-axis" x="${x(i)}" y="${H-8}" text-anchor="middle">${esc(d.short)}</text>` : '').join('');
+  const dots = n <= 36 ? data.map((d, i) => `<circle cx="${x(i)}" cy="${y(d.before)}" r="3" style="fill:var(--gold)"/><circle cx="${x(i)}" cy="${y(d.after)}" r="3.4" style="fill:var(--accent)"/>`).join('') : '';
+  const areas = n > 1 ? `<path d="${area('before')}" fill="url(#b${gid})"/><path d="${area('after')}" fill="url(#a${gid})"/>` : '';
+  const lines = n > 1 ? `<path d="${line('before')}" fill="none" style="stroke:var(--gold)" stroke-width="2" stroke-linejoin="round"/><path d="${line('after')}" fill="none" style="stroke:var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>` : '';
+  const html = `
+    <div class="chart-wrap" data-chart>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(ariaLabel)}">
+        <defs>
+          <linearGradient id="a${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--accent);stop-opacity:.34"/><stop offset="1" style="stop-color:var(--accent);stop-opacity:0"/></linearGradient>
+          <linearGradient id="b${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--gold);stop-opacity:.2"/><stop offset="1" style="stop-color:var(--gold);stop-opacity:0"/></linearGradient>
+        </defs>
+        ${grid}${xl}${areas}${lines}${dots}
+        <line class="chart-guide" x1="0" x2="0" y1="${pt}" y2="${pt+ih}"/>
+        <circle class="hov-b" r="5" cy="0" cx="0" style="fill:var(--gold);opacity:0"/>
+        <circle class="hov-a" r="5.5" cy="0" cx="0" style="fill:var(--accent);opacity:0"/>
+      </svg>
+      <div class="chart-tip"></div>
+    </div>
+    <div class="chart-legend">
+      <span><span class="dot" style="background:var(--gold)"></span>${esc(t('col_before'))}</span>
+      <span><span class="dot" style="background:var(--accent)"></span>${esc(t('col_after'))}</span>
+    </div>`;
+  function wire(root){
+    const wrap = root.querySelector('[data-chart]');
+    if(!wrap) return;
+    const svg = wrap.querySelector('svg'), tip = wrap.querySelector('.chart-tip');
+    const guide = svg.querySelector('.chart-guide'), ha = svg.querySelector('.hov-a'), hb = svg.querySelector('.hov-b');
+    function show(clientX){
+      const rect = svg.getBoundingClientRect();
+      if(!rect.width) return;
+      const vx = (clientX - rect.left) / rect.width * W;
+      let i = n === 1 ? 0 : Math.round((vx - pl) / iw * (n - 1));
+      i = Math.max(0, Math.min(n - 1, i));
+      const d = data[i];
+      guide.setAttribute('x1', x(i)); guide.setAttribute('x2', x(i)); guide.style.opacity = 1;
+      ha.setAttribute('cx', x(i)); ha.setAttribute('cy', y(d.after)); ha.style.opacity = 1;
+      hb.setAttribute('cx', x(i)); hb.setAttribute('cy', y(d.before)); hb.style.opacity = 1;
+      const diff = d.before - d.after;
+      tip.innerHTML = `<b>${esc(d.label)}</b>
+        <div><span>${esc(t('col_before'))}</span><span>${fmt(d.before)}${currencyUnit()}</span></div>
+        <div><span>${esc(t('col_after'))}</span><span>${fmt(d.after)}${currencyUnit()}</span></div>
+        <div><span>${esc(t('dash_kpiDiff'))}</span><span style="color:${diff>=0?'var(--good)':'var(--bad)'}">${diff>=0?'−':'+'}${fmt(Math.abs(diff))}${currencyUnit()}</span></div>`;
+      tip.style.opacity = 1;
+      const px = x(i) / W * rect.width, tw = tip.offsetWidth || 180;
+      tip.style.left = Math.max(0, Math.min(rect.width - tw, px - tw / 2)) + 'px';
+      const peak = y(Math.max(d.before, d.after)) / H * rect.height;
+      tip.style.top = peak < tip.offsetHeight + 24 ? Math.max(6, rect.height - tip.offsetHeight - 36) + 'px' : '6px';
+    }
+    function hide(){ guide.style.opacity = 0; ha.style.opacity = 0; hb.style.opacity = 0; tip.style.opacity = 0; }
+    svg.addEventListener('pointermove', (e)=> show(e.clientX));
+    svg.addEventListener('pointerdown', (e)=> show(e.clientX));
+    svg.addEventListener('pointerleave', hide);
+  }
+  return { html, wire };
+}
+
+function donutChart(data, total){
+  const r = 54, cx = 90, cy = 90, c = 2 * Math.PI * r;
+  let cum = 0;
+  const segs = data.map(d => {
+    const seg = c * d.value / total, rotate = -90 + (cum / total) * 360;
+    cum += d.value;
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.color}" stroke-width="16" stroke-dasharray="${seg} ${c - seg}" transform="rotate(${rotate} ${cx} ${cy})"/>`;
+  }).join('');
+  return `<div class="donut-wrap">
+    <svg width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="${esc(t('dash_typeTitle'))}">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" style="stroke:var(--bar-track-bg)" stroke-width="16"/>
+      ${segs}
+    </svg>
+    <div class="donut-center"><b>${fmtCompact(total)}</b><span>${esc(t('col_after'))}</span></div>
+  </div>`;
+}
+
+function statCard(delay, ic, iconBg, iconColor, label, value, sub, valueColor){
+  return `<div class="glass stat-card" style="animation:rise .45s ease ${delay}s both;">
+    <div class="stat-icon" style="background:${iconBg};color:${iconColor};">${icon(ic, 18)}</div>
+    <div class="stat-body">
+      <div class="stat-label">${esc(label)}</div>
+      <div class="stat-value" style="${valueColor ? 'color:' + valueColor + ';' : ''}" title="${esc(value.full)}">${esc(value.text)}</div>
+      <div class="stat-sub">${esc(sub)}</div>
+    </div>
+  </div>`;
+}
+
+function loadSampleData(){
+  rememberUndo();
+  const now = new Date().toISOString();
+  state.records = sanitizeRecords(SAMPLE_RECORDS.map(r => ({ ...r, id: uid(), createdAt: now, updatedAt: now })));
+  afterRecordsChanged();
+  renderTabbar();
+  renderMain();
+  toast(t('sample_loaded'), 'ok', undoAction());
 }
 
 function renderDashboardTab(main){
-  let filterYear = 'all', filterType = 'all', filterEntity = 'all', filterCategory = 'all';
+  if(!state.records.length){
+    main.innerHTML = `
+      <div class="glass empty-hero">
+        <div class="dz-icon">${icon('building', 24)}</div>
+        <h2>${esc(t('empty_title'))}</h2>
+        <p>${esc(t('empty_sub'))}</p>
+        <div class="hero-actions">
+          <button type="button" class="btn-primary" id="heroAdd">${icon('plus', 16)} ${esc(t('tab_entry'))}</button>
+          <button type="button" class="btn-ghost btn-accent" id="heroImport">${icon('upload', 14)} ${esc(t('tab_import'))}</button>
+          <button type="button" class="btn-ghost" id="heroSample">${icon('sparkle', 14)} ${esc(t('empty_loadSample'))}</button>
+        </div>
+      </div>`;
+    main.querySelector('#heroAdd').addEventListener('click', ()=> switchTab('entry'));
+    main.querySelector('#heroImport').addEventListener('click', ()=> switchTab('import'));
+    main.querySelector('#heroSample').addEventListener('click', loadSampleData);
+    return;
+  }
+
+  let filterYear = 'all', filterType = 'all', filterCategory = 'all', filterEntity = '';
   const allYears = [...new Set(state.records.map(r=>r.year))].sort((a,b)=>b-a);
-  const allEntities = [...new Set(state.records.map(r=>r.name))].sort((a,b)=>a.localeCompare(b, lang==='ar'?'ar':'en'));
-  const allCategories = [...new Set(state.records.map(r=>r.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b, lang==='ar'?'ar':'en'));
+  const allCategories = [...new Set(state.records.map(r=>r.category).filter(Boolean))].sort(collate);
 
   main.innerHTML = `
     <div class="toolbar" style="margin-bottom:18px;">
       ${csel('filterYear', [{value:'all',label:t('dash_year')+': '+t('dash_all')}, ...allYears.map(y=>({value:y,label:t('dash_year')+': '+y}))], 'all', (v)=>{ filterYear=v; render(); }, {width:'150px'})}
-      ${csel('filterType', [{value:'all',label:t('dash_type')+': '+t('dash_all')}, ...BUDGET_KEYS.map(k=>({value:k,label:t('dash_type')+': '+budgetLabel(k)}))], 'all', (v)=>{ filterType=v; render(); }, {width:'180px'})}
+      ${csel('filterType', [{value:'all',label:t('dash_type')+': '+t('dash_all')}, ...BUDGET_KEYS_ALL.map(k=>({value:k,label:t('dash_type')+': '+budgetLabel(k)}))], 'all', (v)=>{ filterType=v; render(); }, {width:'180px'})}
       ${csel('filterCategory', [{value:'all',label:t('dash_category')+': '+t('dash_all')}, ...allCategories.map(c=>({value:c,label:t('dash_category')+': '+c}))], 'all', (v)=>{ filterCategory=v; render(); }, {width:'190px'})}
-      ${csel('filterEntity', [{value:'all',label:t('dash_entity')+': '+t('dash_all')}, ...allEntities.map(n=>({value:n,label:n}))], 'all', (v)=>{ filterEntity=v; render(); }, {width:'220px'})}
-      <button class="btn-ghost btn-accent" id="dashExportBtn">${icon('download',14)} ${t('dash_exportFiltered')}</button>
-      <button class="link-btn" id="resetFiltersBtn">${icon('x',13)} ${t('dash_resetFilters')}</button>
+      <div class="search-wrap">${icon('search',15)}<input class="inp" id="dashEntity" type="search" autocomplete="off" aria-label="${esc(t('dash_entity'))}" placeholder="${esc(t('dash_entityPh'))}"></div>
+      <button type="button" class="btn-ghost btn-accent" id="dashExportBtn">${icon('download',14)} ${t('dash_exportFiltered')}</button>
+      <button type="button" class="link-btn" id="resetFiltersBtn">${icon('x',13)} ${t('dash_resetFilters')}</button>
     </div>
     <div id="dashBody"></div>`;
 
   function compute(){
+    const tokens = queryTokens(filterEntity);
     return state.records.filter(r =>
       (filterYear==='all' || r.year===Number(filterYear)) &&
       (filterType==='all' || r.budgetType===filterType) &&
       (filterCategory==='all' || r.category===filterCategory) &&
-      (filterEntity==='all' || r.name===filterEntity)
+      (!tokens.length || tokens.every(tk => normalizeText(r.name).includes(tk)))
     );
   }
 
   function render(){
     const records = compute();
+    const body = main.querySelector('#dashBody');
+    if(!records.length){
+      body.innerHTML = `<div class="glass p"><div class="empty">${t('dash_noData')}</div></div>`;
+      return;
+    }
     const totalBefore = records.reduce((s,r)=>s+r.before,0);
     const totalAfter = records.reduce((s,r)=>s+r.after,0);
     const totalDiff = totalBefore - totalAfter;
     const diffPct = totalBefore ? (totalDiff/totalBefore)*100 : 0;
     const increasedCount = records.filter(r=>r.after > r.before).length;
     const decreasedCount = records.filter(r=>r.after < r.before).length;
+    const totalTyped = records.filter(r=>r.budgetType==='total').length;
+    const entityCount = new Set(records.map(r=>normalizeText(r.name))).size;
 
-    const byType = BUDGET_KEYS.map(k=>({ name:budgetLabel(k), value: records.filter(r=>r.budgetType===k).reduce((s,r)=>s+r.after,0), color: BUDGET_HEX[k] })).filter(d=>d.value>0);
+    const byType = BUDGET_KEYS_ALL
+      .map(k=>({ key:k, name:budgetLabel(k), value: records.filter(r=>r.budgetType===k).reduce((s,r)=>s+r.after,0), color: BUDGET_HEX[k] }))
+      .filter(d=>d.value>0);
+    const typeTotal = byType.reduce((s,d)=>s+d.value,0);
 
-    const monthMap = {};
+    const monthMap = new Map();
     records.forEach(r=>{
-      const key = `${r.year}-${r.month}`;
-      if(!monthMap[key]) monthMap[key] = {label:`${monthName(r.month)} ${r.year}`, before:0, after:0, order:r.year*12+r.month};
-      monthMap[key].before += r.before; monthMap[key].after += r.after;
+      const key = r.year * 12 + r.month;
+      let m = monthMap.get(key);
+      if(!m){
+        const mn = monthName(r.month);
+        m = { order:key, label:`${mn} ${r.year}`, short:`${lang==='ar' ? mn : mn.slice(0,3)} ${String(r.year).slice(2)}`, before:0, after:0 };
+        monthMap.set(key, m);
+      }
+      m.before += r.before; m.after += r.after;
     });
-    const byMonth = Object.values(monthMap).sort((a,b)=>a.order-b.order);
-    const trendChips = [];
-    if(filterYear!=='all') trendChips.push(String(filterYear));
-    if(filterType!=='all') trendChips.push(budgetLabel(filterType));
-    if(filterCategory!=='all') trendChips.push(filterCategory);
-    if(filterEntity!=='all') trendChips.push(filterEntity);
-    const trendRange = byMonth.length ? `${byMonth[0].label} – ${byMonth[byMonth.length-1].label}` : '';
-    const trendSubText = [trendChips.join(' · '), trendRange].filter(Boolean).join(' — ') || t('dash_trendSub');
+    const byMonth = [...monthMap.values()].sort((a,b)=>a.order-b.order);
+    const chips = [];
+    if(filterYear!=='all') chips.push(String(filterYear));
+    if(filterType!=='all') chips.push(budgetLabel(filterType));
+    if(filterCategory!=='all') chips.push(filterCategory);
+    if(filterEntity.trim()) chips.push(filterEntity.trim());
+    const range = byMonth.length ? `${byMonth[0].label} – ${byMonth[byMonth.length-1].label}` : '';
+    const trendSub = [chips.join(' · '), range].filter(Boolean).join(' — ') || t('dash_trendSub');
 
-    const hMap = {};
-    records.forEach(r=>{ if(!hMap[r.name]) hMap[r.name] = {name:r.name, total:0}; hMap[r.name].total += r.after; });
-    const top = Object.values(hMap).sort((a,b)=>b.total-a.total).slice(0,6);
-    const maxTop = top[0] ? top[0].total : 1;
+    const entityMap = new Map();
+    records.forEach(r=>{
+      const k = normalizeText(r.name);
+      const e = entityMap.get(k) || { name:r.name, total:0 };
+      e.total += r.after;
+      entityMap.set(k, e);
+    });
+    const top = [...entityMap.values()].sort((a,b)=>b.total-a.total).slice(0,6);
+    const maxTop = top[0] && top[0].total > 0 ? top[0].total : 1;
 
-    const body = main.querySelector('#dashBody');
+    const movers = records
+      .filter(r=>r.after !== r.before)
+      .map(r=>({ r, d:r.after - r.before }))
+      .sort((a,b)=>Math.abs(b.d) - Math.abs(a.d))
+      .slice(0,5);
+
+    const chart = trendChart(byMonth, `${t('dash_trendTitle')}. ${trendSub}`);
+    const unit = currencyUnit(), rawUnit = currencyUnitRaw();
+    const good = totalDiff >= 0;
+    const diffText = `${good?'−':'+'}${fmtStat(Math.abs(totalDiff))}${rawUnit}`;
+    const diffFull = `${good?'−':'+'}${fmt(Math.abs(totalDiff))}${rawUnit}`;
+    const notice = (filterType==='all' && totalTyped)
+      ? `<div class="helper-note stat-note">${esc(totalTyped === 1 ? t('dash_totalNoticeOne') : t('dash_totalNotice', {n:totalTyped}))}</div>` : '';
+
     body.innerHTML = `
       <div class="stats-row">
-        <div class="glass stat-card" style="animation:rise .45s ease both;"><div class="stat-icon" style="background:var(--divider-soft);color:var(--ink-6);">${icon('filesheet',18)}</div>
-          <div class="stat-body"><div class="stat-label">${t('dash_kpiBefore')}</div><div class="stat-value" title="${fmt(totalBefore)}${currencyUnit()}">${fmt(totalBefore)}${currencyUnit()}</div><div class="stat-sub">${records.length} ${t('entry_recordsSuffix')}</div></div></div>
-        <div class="glass stat-card" style="animation:rise .45s ease .06s both;"><div class="stat-icon" style="background:var(--accent-soft);color:var(--accent-light);">${icon('arrowup',19)}</div>
-          <div class="stat-body"><div class="stat-label">${t('dash_kpiAfter')}</div><div class="stat-value" title="${fmt(totalAfter)}${currencyUnit()}">${fmt(totalAfter)}${currencyUnit()}</div><div class="stat-sub">${new Set(records.map(r=>r.name)).size} ${t('dash_kpiEntitiesSuffix')}</div></div></div>
-        <div class="glass stat-card" style="animation:rise .45s ease .12s both;"><div class="stat-icon" style="background:${totalDiff>=0?'var(--good-soft)':'var(--bad-soft)'};color:${totalDiff>=0?'var(--good)':'var(--bad)'};">${icon(totalDiff>=0?'trenddown':'trendup',18)}</div>
-          <div class="stat-body"><div class="stat-label">${t('dash_kpiDiff')}</div><div class="stat-value" style="color:${totalDiff>=0?'var(--good)':'var(--bad)'};" title="${totalDiff>=0?'−':'+'}${fmt(Math.abs(totalDiff))}${currencyUnit()}">${totalDiff>=0?'−':'+'}${fmt(Math.abs(totalDiff))}${currencyUnit()}</div><div class="stat-sub">${Math.abs(diffPct).toFixed(1)}%</div></div></div>
-        <div class="glass stat-card" style="animation:rise .45s ease .18s both;"><div class="stat-icon" style="background:var(--divider-soft);color:var(--ink-6);">${icon('trendup',18)}</div>
-          <div class="stat-body"><div class="stat-label">${t('dash_kpiIncreased')}</div><div class="stat-value">${increasedCount}</div><div class="stat-sub">${t('dash_kpiChangeSub')}</div></div></div>
-        <div class="glass stat-card" style="animation:rise .45s ease .24s both;"><div class="stat-icon" style="background:var(--divider-soft);color:var(--ink-6);">${icon('trenddown',18)}</div>
-          <div class="stat-body"><div class="stat-label">${t('dash_kpiDecreased')}</div><div class="stat-value">${decreasedCount}</div><div class="stat-sub">${t('dash_kpiChangeSub')}</div></div></div>
+        ${statCard(0, 'filesheet', 'var(--divider-soft)', 'var(--ink-6)', t('dash_kpiBefore'), { text: fmtStat(totalBefore)+rawUnit, full: fmt(totalBefore)+rawUnit }, `${records.length} ${t('entry_recordsSuffix')}`)}
+        ${statCard(.06, 'arrowup', 'var(--accent-soft)', 'var(--accent-light)', t('dash_kpiAfter'), { text: fmtStat(totalAfter)+rawUnit, full: fmt(totalAfter)+rawUnit }, `${entityCount} ${t('dash_kpiEntitiesSuffix')}`)}
+        ${statCard(.12, good ? 'trenddown' : 'trendup', good ? 'var(--good-soft)' : 'var(--bad-soft)', good ? 'var(--good)' : 'var(--bad)', t('dash_kpiDiff'), { text: diffText, full: diffFull }, `${Math.abs(diffPct).toFixed(1)}% · ${t('dash_kpiChangeSub')}`, good ? 'var(--good)' : 'var(--bad)')}
+        ${statCard(.18, 'trendup', 'var(--bad-soft)', 'var(--bad)', t('dash_kpiIncreased'), { text: String(increasedCount), full: String(increasedCount) }, t('dash_kpiChangeSub'))}
+        ${statCard(.24, 'trenddown', 'var(--good-soft)', 'var(--good)', t('dash_kpiDecreased'), { text: String(decreasedCount), full: String(decreasedCount) }, t('dash_kpiChangeSub'))}
       </div>
-
+      ${notice}
       <div class="grid grid-5">
         <div class="glass p col-3">
           <h3 class="card-title">${t('dash_trendTitle')}</h3>
-          <p style="font-size:12.5px;color:var(--muted2);margin:5px 0 16px;">${esc(trendSubText)}</p>
-          ${byMonth.length ? svgArea(byMonth) : `<div class="empty">${t('dash_noData')}</div>`}
+          <p style="font-size:12.5px;color:var(--muted2);margin:5px 0 16px;">${esc(trendSub)}</p>
+          ${chart.html}
         </div>
         <div class="glass p col-2" style="display:flex;flex-direction:column;">
           <h3 class="card-title">${t('dash_typeTitle')}</h3>
           <p style="font-size:12.5px;color:var(--muted2);margin:5px 0 10px;">${t('dash_typeSub')}</p>
-          <div style="display:flex;justify-content:center;">${byType.length?svgDonut(byType):''}</div>
-          <div style="margin-top:12px;">${byType.map(d=>`<div class="legend-row"><span><span class="dot" style="background:${d.color}"></span>${d.name}</span><span style="color:var(--ink-85);font-weight:700;">${fmt(d.value)}${currencyUnit()}</span></div>`).join('') || `<div class="empty">${t('dash_noData')}</div>`}</div>
+          ${byType.length ? donutChart(byType, typeTotal) : `<div class="empty">${t('dash_noData')}</div>`}
+          <div style="margin-top:12px;">${byType.map(d=>`<div class="legend-row"><span><span class="dot" style="background:${d.color}"></span>${esc(d.name)}</span><span class="legend-val"><span>${fmt(d.value)}${unit}</span><span class="pct">${(d.value/typeTotal*100).toFixed(1)}%</span></span></div>`).join('')}</div>
         </div>
       </div>
-
       <div class="grid grid-5" style="margin-top:20px;">
-        <div class="glass p col-5">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <div class="glass p col-3">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:10px;flex-wrap:wrap;">
             <h3 class="card-title">${t('dash_topTitle')}</h3>
             <span style="font-size:11.5px;color:var(--muted2);">${t('dash_topHint')}</span>
           </div>
-          ${top.length ? top.map((h,i)=>`
+          ${top.map((h,i)=>`
             <div class="bar-item" style="animation:rise .4s ease ${i*0.05}s both;">
               <div class="bar-rank">${String(i+1).padStart(2,'0')}</div>
               <div style="flex:1;min-width:0;">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
                   <span style="font-size:13px;font-weight:600;color:var(--ink-8);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(h.name)}</span>
-                  <span style="font-size:13px;font-weight:800;color:var(--fg);flex-shrink:0;margin-inline-start:8px;">${fmt(h.total)}${currencyUnit()}</span>
+                  <span style="font-size:13px;font-weight:800;color:var(--fg);flex-shrink:0;margin-inline-start:8px;">${fmt(h.total)}${unit}</span>
                 </div>
                 <div class="bar-track"><div class="bar-fill" style="width:${(h.total/maxTop)*100}%;"></div></div>
               </div>
+            </div>`).join('')}
+        </div>
+        <div class="glass p col-2">
+          <h3 class="card-title">${t('dash_moversTitle')}</h3>
+          <p style="font-size:12.5px;color:var(--muted2);margin:5px 0 12px;">${t('dash_moversSub')}</p>
+          ${movers.length ? movers.map(({r,d})=>`
+            <div class="mover-item">
+              <div style="min-width:0;">
+                <div class="mover-name">${esc(r.name)}</div>
+                <div class="mover-meta">${esc(budgetLabel(r.budgetType))} · ${esc(monthName(r.month))} ${r.year}</div>
+              </div>
+              <div class="mover-val" style="color:${d>0?'var(--bad)':'var(--good)'};">${d>0?'+':'−'}${fmt(Math.abs(d))}${unit}</div>
             </div>`).join('') : `<div class="empty">${t('dash_noData')}</div>`}
         </div>
       </div>`;
-    fitStatValues(body);
+    chart.wire(body);
   }
 
+  main.querySelector('#dashEntity').addEventListener('input', (e)=>{ filterEntity = e.target.value; render(); });
   main.querySelector('#resetFiltersBtn').addEventListener('click', ()=>{
-    filterYear='all'; filterType='all'; filterEntity='all'; filterCategory='all';
-    setCselDisplay('filterYear','all'); setCselDisplay('filterType','all');
-    setCselDisplay('filterCategory','all'); setCselDisplay('filterEntity','all');
+    filterYear = 'all'; filterType = 'all'; filterCategory = 'all'; filterEntity = '';
+    setCselDisplay('filterYear','all'); setCselDisplay('filterType','all'); setCselDisplay('filterCategory','all');
+    main.querySelector('#dashEntity').value = '';
     render();
   });
   main.querySelector('#dashExportBtn').addEventListener('click', ()=>{
@@ -2498,7 +3021,7 @@ function renderDashboardTab(main){
 
 function renderHospitalsTab(main){
   let query = pendingHospitalSearch || ''; pendingHospitalSearch = null;
-  let sortKey='name', sortDir=1, editingId=null, groupBy='none', trendFilter='all';
+  let sortKey='name', sortDir=1, editingId=null, groupBy='none', trendFilter='all', limit=TABLE_PAGE;
   const collapsedGroups = new Set();
   const selectedIds = new Set();
 
@@ -2510,7 +3033,7 @@ function renderHospitalsTab(main){
         <p class="card-sub" id="countLabel"></p>
       </div>
       <div class="toolbar">
-        <div class="search-wrap">${icon('search',15)}<input class="inp" id="searchInput" placeholder="${t('hosp_searchPh')}" value="${esc(query)}"></div>
+        <div class="search-wrap">${icon('search',15)}<input class="inp" id="searchInput" type="search" autocomplete="off" aria-label="${esc(t('hosp_searchPh'))}" placeholder="${t('hosp_searchPh')}" value="${esc(query)}"></div>
         <button class="btn-ghost" id="exportBtn">${icon('download',14)} ${t('hosp_export')}</button>
         <button class="btn-ghost btn-accent" id="importShortcut">${icon('upload',14)} ${t('hosp_import')}</button>
       </div>
@@ -2537,10 +3060,11 @@ function renderHospitalsTab(main){
         <button class="seg-btn" data-tr="down">${icon('trenddown',12)} ${t('hosp_trendDown')}</button>
       </div>
     </div>
-    <div style="overflow-x:auto;">
+    <div class="tbl-wrap">
       <table><thead><tr id="theadRow"></tr></thead><tbody id="tbody"></tbody></table>
-      <div id="emptyMsg"></div>
     </div>
+    <div id="emptyMsg"></div>
+    <div class="pager" id="pager"></div>
   </div>`;
 
   const cols = [
@@ -2549,17 +3073,25 @@ function renderHospitalsTab(main){
   ];
 
   function renderHead(){
-    main.querySelector('#theadRow').innerHTML = `<th style="width:32px;"><input type="checkbox" id="selectAllChk"></th>` +
-      cols.map(c=>`<th data-key="${c.key}">${c.label} ${sortKey===c.key?icon('chevron',12,''):''}</th>`).join('') + `<th></th>`;
-    main.querySelectorAll('#theadRow th[data-key]').forEach(th=>{
-      const svgEl = th.querySelector('svg');
-      if(svgEl && sortKey===th.dataset.key) svgEl.style.transform = sortDir===1?'rotate(0deg)':'rotate(180deg)';
-      th.addEventListener('click', ()=>{
-        if(sortKey===th.dataset.key) sortDir*=-1; else { sortKey=th.dataset.key; sortDir=1; }
-        renderHead(); updateTable();
-      });
+    const thead = main.querySelector('#theadRow');
+    const numeric = new Set(['year','before','after']);
+    thead.innerHTML = `<th style="width:32px;cursor:default;"><input type="checkbox" id="selectAllChk" aria-label="${esc(t('import_selectAll'))}"></th>` +
+      cols.map(c=>{
+        const active = sortKey === c.key;
+        const ind = active ? `<span class="sort-ind" style="transform:rotate(${sortDir===1?0:180}deg)">${icon('chevron',12)}</span>` : '';
+        return `<th data-key="${c.key}" tabindex="0" class="${numeric.has(c.key)?'num':''}" aria-sort="${active?(sortDir===1?'ascending':'descending'):'none'}">${esc(c.label)}${ind}</th>`;
+      }).join('') + `<th style="cursor:default;"></th>`;
+    const activate = (th)=>{
+      if(sortKey === th.dataset.key) sortDir *= -1; else { sortKey = th.dataset.key; sortDir = 1; }
+      limit = TABLE_PAGE;
+      renderHead();
+      updateTable();
+    };
+    thead.querySelectorAll('th[data-key]').forEach(th=>{
+      th.addEventListener('click', ()=> activate(th));
+      th.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(th); } });
     });
-    main.querySelector('#selectAllChk').addEventListener('change', (e)=>{
+    thead.querySelector('#selectAllChk').addEventListener('change', (e)=>{
       const filtered = getFiltered();
       if(e.target.checked) filtered.forEach(r=>selectedIds.add(r.id));
       else filtered.forEach(r=>selectedIds.delete(r.id));
@@ -2568,49 +3100,48 @@ function renderHospitalsTab(main){
   }
 
   function getFiltered(){
-    let rows = state.records.filter(r => !query.trim() ||
-      Math.max(fuzzyScore(query, r.name), fuzzyScore(query, r.category), fuzzyScore(query, budgetLabel(r.budgetType))) > -Infinity);
-    if(trendFilter==='up') rows = rows.filter(r=>r.after > r.before);
-    else if(trendFilter==='down') rows = rows.filter(r=>r.after < r.before);
+    const tokens = queryTokens(query);
+    let rows = state.records.filter(r => matchesTokens(r, tokens));
+    if(trendFilter === 'up') rows = rows.filter(r=>r.after > r.before);
+    else if(trendFilter === 'down') rows = rows.filter(r=>r.after < r.before);
+    const keyOf = (r)=> sortKey === 'budgetType' ? budgetLabel(r.budgetType) : r[sortKey];
     rows.sort((a,b)=>{
-      let av=a[sortKey], bv=b[sortKey];
-      if(sortKey==='budgetType'){ av = budgetLabel(av); bv = budgetLabel(bv); }
-      if(sortKey==='month'){ av = monthName(av); bv = monthName(bv); }
-      if(typeof av === 'string'){ return sortDir*(av||'').localeCompare(bv||'', lang==='ar'?'ar':'en'); }
-      return sortDir*((av||0)-(bv||0));
+      const av = keyOf(a), bv = keyOf(b);
+      const c = (typeof av === 'string' || typeof bv === 'string') ? collate(String(av ?? ''), String(bv ?? '')) : (av || 0) - (bv || 0);
+      return c ? sortDir * c : 0;
     });
     return rows;
   }
 
   function editRowHtml(r){
-    return `<tr data-id="${r.id}" class="edit-row">
+    return `<tr data-id="${esc(r.id)}" class="edit-row">
       <td></td>
-      <td><input class="mini-inp e-name" value="${esc(r.name)}"></td>
-      <td><input class="mini-inp e-category" value="${esc(r.category)}"></td>
-      <td>${csel('editBudget-'+r.id, BUDGET_KEYS.map(k=>({value:k,label:budgetLabel(k)})), r.budgetType, null, {mini:true})}</td>
+      <td><input class="mini-inp e-name" maxlength="200" aria-label="${esc(t('col_name'))}" value="${esc(r.name)}"></td>
+      <td><input class="mini-inp e-category" maxlength="100" aria-label="${esc(t('col_category'))}" value="${esc(r.category)}"></td>
+      <td>${csel('editBudget-'+r.id, BUDGET_KEYS_ALL.map(k=>({value:k,label:budgetLabel(k)})), r.budgetType, null, {mini:true})}</td>
       <td>${csel('editMonth-'+r.id, (lang==='ar'?MONTHS_AR:MONTHS_EN).map((m,i)=>({value:i,label:m})), r.month, null, {mini:true})}</td>
-      <td><input class="mini-inp e-year" type="number" value="${r.year}" style="width:70px;"></td>
-      <td><input class="mini-inp e-before" type="number" value="${r.before}" style="width:90px;"></td>
-      <td><input class="mini-inp e-after" type="number" value="${r.after}" style="width:90px;"></td>
-      <td><div class="tbl-actions">
-        <button class="icon-btn ok" data-action="save">${icon('check',14)}</button>
-        <button class="icon-btn cancel" data-action="cancel">${icon('x',14)}</button>
+      <td><input class="mini-inp e-year" type="number" min="2000" max="2100" aria-label="${esc(t('col_year'))}" value="${r.year}" style="width:76px;"></td>
+      <td><input class="mini-inp e-before" type="number" min="0" step="any" aria-label="${esc(t('col_before'))}" value="${r.before}" style="width:100px;"></td>
+      <td><input class="mini-inp e-after" type="number" min="0" step="any" aria-label="${esc(t('col_after'))}" value="${r.after}" style="width:100px;"></td>
+      <td><div class="tbl-actions" style="opacity:1;">
+        <button type="button" class="icon-btn ok" data-action="save" title="${esc(t('action_save'))}" aria-label="${esc(t('action_save'))}">${icon('check',14)}</button>
+        <button type="button" class="icon-btn cancel" data-action="cancel" title="${esc(t('action_cancel'))}" aria-label="${esc(t('action_cancel'))}">${icon('x',14)}</button>
       </div></td>
     </tr>`;
   }
   function viewRowHtml(r, i){
-    return `<tr data-id="${r.id}" style="animation:rise .3s ease ${Math.min(i,10)*0.02}s both;">
-      <td><input type="checkbox" class="row-select-chk" data-id="${r.id}" ${selectedIds.has(r.id)?'checked':''}></td>
+    return `<tr data-id="${esc(r.id)}" style="animation:rise .3s ease ${Math.min(i,10)*0.02}s both;">
+      <td><input type="checkbox" class="row-select-chk" data-id="${esc(r.id)}" aria-label="${esc(t('bulk_select'))}" ${selectedIds.has(r.id)?'checked':''}></td>
       <td style="font-weight:600;color:var(--fg);">${esc(r.name)}</td>
       <td>${esc(r.category)||'—'}</td>
       <td>${budgetTag(r.budgetType)}</td>
-      <td>${monthName(r.month)}</td>
-      <td>${r.year}</td>
-      <td style="color:var(--ink-85);font-weight:600;">${fmt(r.before)}${currencyUnit()}</td>
-      <td><span style="color:var(--fg);font-weight:700;">${fmt(r.after)}${currencyUnit()}</span> <span style="margin-inline-start:8px;">${varianceTag(r.before, r.after)}</span></td>
+      <td>${esc(monthName(r.month))}</td>
+      <td class="num">${r.year}</td>
+      <td class="num" style="color:var(--ink-85);font-weight:600;">${fmt(r.before)}${currencyUnit()}</td>
+      <td class="num"><span style="color:var(--fg);font-weight:700;">${fmt(r.after)}${currencyUnit()}</span> <span style="margin-inline-start:8px;">${varianceTag(r.before, r.after)}</span></td>
       <td><div class="tbl-actions">
-        <button class="icon-btn" data-action="edit">${icon('pencil',13)}</button>
-        <button class="icon-btn danger" data-action="delete">${icon('trash',13)}</button>
+        <button type="button" class="icon-btn" data-action="edit" title="${esc(t('action_edit'))}" aria-label="${esc(t('action_edit'))}">${icon('pencil',13)}</button>
+        <button type="button" class="icon-btn danger" data-action="delete" title="${esc(t('acc_delete'))}" aria-label="${esc(t('acc_delete'))}">${icon('trash',13)}</button>
       </div></td>
     </tr>`;
   }
@@ -2640,40 +3171,64 @@ function renderHospitalsTab(main){
     main.querySelector('#countLabel').textContent = t('hosp_countSuffix',{n:filtered.length,t:state.records.length});
     const tbody = main.querySelector('#tbody');
     const emptyMsg = main.querySelector('#emptyMsg');
+    const pager = main.querySelector('#pager');
     refreshBulkBar();
     const selectAllChk = main.querySelector('#selectAllChk');
-    if(selectAllChk) selectAllChk.checked = filtered.length>0 && filtered.every(r=>selectedIds.has(r.id));
-    if(filtered.length===0){ tbody.innerHTML=''; emptyMsg.innerHTML = `<div class="empty">${t('hosp_noMatch')}</div>`; return; }
-    emptyMsg.innerHTML = '';
-
-    if(groupBy==='none'){
-      tbody.innerHTML = filtered.map((r,i)=> r.id===editingId ? editRowHtml(r) : viewRowHtml(r,i)).join('');
-      bindRowSelectChks();
+    if(selectAllChk) selectAllChk.checked = filtered.length > 0 && filtered.every(r=>selectedIds.has(r.id));
+    if(filtered.length === 0){
+      tbody.innerHTML = ''; pager.innerHTML = '';
+      emptyMsg.innerHTML = `<div class="empty">${t('hosp_noMatch')}</div>`;
       return;
     }
-    const groups = {};
-    filtered.forEach(r=>{ const k = groupKeyOf(r); if(!groups[k]) groups[k]=[]; groups[k].push(r); });
-    let html = '';
-    Object.keys(groups).forEach(k=>{
-      const rows = groups[k];
-      const subtotal = rows.reduce((s,r)=>s+r.after,0);
-      const collapsed = collapsedGroups.has(k);
-      html += `<tr class="group-header" data-group="${esc(k)}"><td colspan="9">
-        <span style="display:inline-flex;align-items:center;gap:8px;">
-          <span style="transform:rotate(${collapsed?'-90deg':'0deg'});transition:transform .2s;display:inline-flex;">${icon('chevron',13)}</span>
-          ${esc(groupLabelOf(k))} · ${rows.length} ${t('hosp_groupRecords')} · ${t('hosp_groupTotal')}: ${fmt(subtotal)}${currencyUnit()}
-        </span>
-      </td></tr>`;
-      if(!collapsed) html += rows.map((r,i)=> r.id===editingId ? editRowHtml(r) : viewRowHtml(r,i)).join('');
-    });
+    emptyMsg.innerHTML = '';
+
+    let shown = 0, html = '', visibleTotal = 0;
+    const renderRows = (rows)=>{
+      let out = '';
+      for(const r of rows){
+        if(shown >= limit) break;
+        out += r.id === editingId ? editRowHtml(r) : viewRowHtml(r, shown);
+        shown++;
+      }
+      return out;
+    };
+
+    if(groupBy === 'none'){
+      visibleTotal = filtered.length;
+      html = renderRows(filtered);
+    } else {
+      const groups = new Map();
+      filtered.forEach(r=>{ const k = groupKeyOf(r); if(!groups.has(k)) groups.set(k, []); groups.get(k).push(r); });
+      groups.forEach((rows, k)=>{
+        const subtotal = rows.reduce((sum,r)=>sum+r.after,0);
+        const collapsed = collapsedGroups.has(k);
+        if(!collapsed) visibleTotal += rows.length;
+        html += `<tr class="group-header" data-group="${esc(k)}" tabindex="0" role="button" aria-expanded="${!collapsed}"><td colspan="9">
+          <span style="display:inline-flex;align-items:center;gap:8px;">
+            <span style="transform:rotate(${collapsed?'-90deg':'0deg'});transition:transform .2s;display:inline-flex;">${icon('chevron',13)}</span>
+            ${esc(groupLabelOf(k))} · ${rows.length} ${t('hosp_groupRecords')} · ${t('hosp_groupTotal')}: ${fmt(subtotal)}${currencyUnit()}
+          </span>
+        </td></tr>`;
+        if(!collapsed) html += renderRows(rows);
+      });
+    }
     tbody.innerHTML = html;
     bindRowSelectChks();
+
+    const remaining = visibleTotal - shown;
+    pager.innerHTML = remaining > 0
+      ? `<button type="button" class="btn-ghost btn-accent" id="showMoreBtn">${esc(t('hosp_showMore',{n:remaining}))}</button>` : '';
+    const more = pager.querySelector('#showMoreBtn');
+    if(more) more.addEventListener('click', ()=>{ limit += TABLE_PAGE; updateTable(); });
+
     tbody.querySelectorAll('tr.group-header').forEach(tr=>{
-      tr.addEventListener('click', ()=>{
+      const toggle = ()=>{
         const k = tr.dataset.group;
         if(collapsedGroups.has(k)) collapsedGroups.delete(k); else collapsedGroups.add(k);
         updateTable();
-      });
+      };
+      tr.addEventListener('click', toggle);
+      tr.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); } });
     });
   }
   function bindRowSelectChks(){
@@ -2684,65 +3239,87 @@ function renderHospitalsTab(main){
         refreshBulkBar();
         const selectAllChk = main.querySelector('#selectAllChk');
         const filtered = getFiltered();
-        if(selectAllChk) selectAllChk.checked = filtered.length>0 && filtered.every(r=>selectedIds.has(r.id));
+        if(selectAllChk) selectAllChk.checked = filtered.length > 0 && filtered.every(r=>selectedIds.has(r.id));
       });
     });
   }
+
   main.querySelector('#bulkDeleteBtn').addEventListener('click', async ()=>{
     const ok = await confirmDialog({ title:t('bulk_deleteTitle',{n:selectedIds.size}), message:t('del_msg'), confirmLabel:t('del_confirmBtn'), cancelLabel:t('del_cancelBtn'), danger:true });
     if(!ok) return;
+    rememberUndo();
     state.records = state.records.filter(r=>!selectedIds.has(r.id));
     selectedIds.clear();
-    toast(t('bulk_deleted'),'err');
-    updateTable();
     afterRecordsChanged();
+    updateTable();
+    toast(t('bulk_deleted'), 'ok', undoAction());
   });
   main.querySelector('#bulkClearBtn').addEventListener('click', ()=>{ selectedIds.clear(); updateTable(); });
 
-  main.querySelector('#tbody').addEventListener('click', async (e)=>{
+  const tbodyEl = main.querySelector('#tbody');
+  tbodyEl.addEventListener('keydown', (e)=>{
+    const tr = e.target.closest('tr.edit-row');
+    if(!tr) return;
+    if(e.key === 'Escape'){ e.preventDefault(); e.stopPropagation(); editingId = null; updateTable(); }
+    else if(e.key === 'Enter' && e.target.matches('input')){ e.preventDefault(); tr.querySelector('[data-action="save"]').click(); }
+  });
+  tbodyEl.addEventListener('click', async (e)=>{
     const btn = e.target.closest('[data-action]');
     if(!btn) return;
     const tr = btn.closest('tr');
     const id = tr.dataset.id;
     const action = btn.dataset.action;
-    if(action==='edit'){ editingId = id; updateTable(); }
-    else if(action==='cancel'){ editingId = null; updateTable(); }
-    else if(action==='delete'){
+    if(action === 'edit'){ editingId = id; updateTable(); }
+    else if(action === 'cancel'){ editingId = null; updateTable(); }
+    else if(action === 'delete'){
       const ok = await confirmDialog({ title:t('del_title'), message:t('del_msg'), confirmLabel:t('del_confirmBtn'), cancelLabel:t('del_cancelBtn'), danger:true });
       if(!ok) return;
-      state.records = state.records.filter(r=>r.id!==id); toast(t('hosp_deleted'),'err'); updateTable(); afterRecordsChanged();
+      rememberUndo();
+      state.records = state.records.filter(r=>r.id !== id);
+      selectedIds.delete(id);
+      afterRecordsChanged();
+      updateTable();
+      toast(t('hosp_deleted'), 'ok', undoAction());
     }
-    else if(action==='save'){
-      const idx = state.records.findIndex(r=>r.id===id);
+    else if(action === 'save'){
+      const idx = state.records.findIndex(r=>r.id === id);
+      if(idx < 0) return;
       const name = tr.querySelector('.e-name').value.trim();
-      if(!name){ toast(t('entry_nameRequired'), 'err'); return; }
+      if(!name){ toast(t('entry_nameRequired'), 'err'); tr.querySelector('.e-name').focus(); return; }
       const before = parseAmount(tr.querySelector('.e-before').value);
       const after = parseAmount(tr.querySelector('.e-after').value);
       if(Number.isNaN(before) || Number.isNaN(after)){ toast(t('entry_invalidNumber'), 'err'); return; }
       if(before < 0 || after < 0){ toast(t('entry_negativeNumber'), 'err'); return; }
-      const month = Number((cselRegistry['editMonth-'+id] && cselRegistry['editMonth-'+id].value) ?? state.records[idx].month);
-      const year = Number(tr.querySelector('.e-year').value)||state.records[idx].year;
+      const reg = (k)=> cselRegistry[k + id];
+      const month = Number(reg('editMonth-') ? reg('editMonth-').value : state.records[idx].month);
+      const year = Number(tr.querySelector('.e-year').value) || state.records[idx].year;
+      if(!Number.isInteger(year) || year < YEAR_MIN || year > YEAR_MAX){ toast(t('entry_invalidYear'), 'err'); return; }
       if(findDuplicateRecord(name, month, year, id)){
         const ok = await confirmDialog({ title:t('dup_title'), message:t('dup_msg'), confirmLabel:t('dup_confirmBtn'), cancelLabel:t('dup_cancelBtn') });
         if(!ok) return;
       }
+      rememberUndo();
       state.records[idx] = {
         ...state.records[idx],
         name, category: tr.querySelector('.e-category').value.trim(),
-        budgetType: (cselRegistry['editBudget-'+id] && cselRegistry['editBudget-'+id].value) || state.records[idx].budgetType,
+        budgetType: (reg('editBudget-') && reg('editBudget-').value) || state.records[idx].budgetType,
         month, year, before, after,
         updatedAt: new Date().toISOString(),
       };
-      editingId = null; toast(t('hosp_updated')); updateTable(); afterRecordsChanged();
+      editingId = null;
+      afterRecordsChanged();
+      updateTable();
+      toast(t('hosp_updated'), 'ok', undoAction());
     }
   });
 
-  main.querySelector('#searchInput').addEventListener('input', (e)=>{ query = e.target.value; updateTable(); });
+  main.querySelector('#searchInput').addEventListener('input', (e)=>{ query = e.target.value; limit = TABLE_PAGE; updateTable(); });
   main.querySelector('#exportBtn').addEventListener('click', ()=> exportRecords(getFiltered()));
   main.querySelector('#importShortcut').addEventListener('click', ()=> switchTab('import'));
   main.querySelectorAll('#groupSeg .seg-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       groupBy = btn.dataset.g;
+      limit = TABLE_PAGE;
       main.querySelectorAll('#groupSeg .seg-btn').forEach(b=>b.classList.toggle('active', b===btn));
       updateTable();
     });
@@ -2750,6 +3327,7 @@ function renderHospitalsTab(main){
   main.querySelectorAll('#trendSeg .seg-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       trendFilter = btn.dataset.tr;
+      limit = TABLE_PAGE;
       main.querySelectorAll('#trendSeg .seg-btn').forEach(b=>b.classList.toggle('active', b===btn));
       updateTable();
     });
@@ -2763,6 +3341,7 @@ let deviceSectionOpen = false;
 let accountAuthMode = 'signin';
 
 function renderAccountTab(main){
+  startAccountWatch();
   main.innerHTML = `
     <div class="glass p" style="margin-bottom:20px;">
       <h2 class="card-title"><span style="height:32px;width:32px;border-radius:var(--r-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent-light);">${icon('user',16)}</span>${t('acc_emailSection')}</h2>
@@ -2802,6 +3381,10 @@ function renderEmailAccountBody(body){
         </button>
       </div>`;
     const btn = body.querySelector('#accGoogleBtn');
+    if(!fbAuth){
+      btn.disabled = true;
+      loadFirebase().then(()=>{ btn.disabled = false; }).catch(()=>{ toast(t('cloud_errUnavailable'), 'err'); });
+    }
     btn.addEventListener('click', async ()=>{
       btn.disabled = true;
       const res = await accountSignInWithGoogle();
@@ -2869,7 +3452,7 @@ function renderEmailAccountBody(body){
       const id = card.dataset.id;
       const doc = docs.find(d=>d.id===id);
       card.querySelector('[data-act="replace"]').addEventListener('click', async ()=>{
-        const ok = await confirmDialog({ title:t('cloud_previewTitle'), message:t('import_modeMsg'), confirmLabel:t('acc_loadReplace'), cancelLabel:t('cloud_cancelBtn'), danger:true });
+        const ok = await confirmDialog({ title:t('acc_loadReplace'), message:t('acc_replaceConfirmMsg'), confirmLabel:t('acc_loadReplace'), cancelLabel:t('cloud_cancelBtn'), danger:true });
         if(!ok) return;
         try{ await accountLoadDocument(id, 'replace'); toast(t('acc_docLoaded')); }
         catch(e){ toast(firestoreErrorMessage(e), 'err'); }
@@ -2931,7 +3514,7 @@ function renderDeviceSection(body){
         <button class="btn-ghost btn-accent" id="devCreateBtn" ${busy?'disabled':''}>${icon('sparkle',14)} ${t('cloud_createBtn')}</button>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <input class="inp" id="devCodeInput" placeholder="${t('cloud_codePh')}" style="max-width:260px;" ${busy?'disabled':''}>
+        <input class="inp" id="devCodeInput" dir="ltr" autocomplete="off" spellcheck="false" placeholder="${t('cloud_codePh')}" style="max-width:260px;" ${busy?'disabled':''}>
         <button class="btn-ghost" id="devLinkBtn" ${busy?'disabled':''}>${icon('link',14)} ${t('cloud_codeSubmit')}</button>
       </div>`}`;
   if(cloudSync.linked){
@@ -2943,6 +3526,14 @@ function renderDeviceSection(body){
   }
 }
 
+function recordScore(r, q, tokens){
+  if(!tokens.length) return -Infinity;
+  if(matchesTokens(r, tokens)){
+    const pos = normalizeText(r.name).indexOf(tokens[0]);
+    return 1000 - (pos === -1 ? 400 : pos);
+  }
+  return fuzzyScore(q, r.name);
+}
 function fuzzyScore(query, target){
   const q = normalizeText(query), t = normalizeText(target);
   if(!q) return 0;
@@ -2992,13 +3583,13 @@ function ensureSpotlight(){
     el.id = 'spotlightBackdrop';
     el.className = 'spotlight-backdrop';
     el.innerHTML = `
-      <div class="spotlight-modal">
+      <div class="spotlight-modal" role="dialog" aria-modal="true">
         <div class="spotlight-input-wrap">
           ${icon('search',17)}
           <input class="spotlight-input" id="spotlightInput" placeholder="" autocomplete="off">
           <span class="spotlight-kbd">Esc</span>
         </div>
-        <div class="spotlight-results" id="spotlightResults"></div>
+        <div class="spotlight-results" id="spotlightResults" role="listbox"></div>
         <div class="spotlight-footer">
           <span class="spotlight-footer-hint"><span class="spotlight-kbd">↑↓</span><span id="spotlightHintNav"></span></span>
           <span class="spotlight-footer-hint"><span class="spotlight-kbd">↵</span><span id="spotlightHintSelect"></span></span>
@@ -3019,6 +3610,8 @@ function openSpotlight(){
   closeCsel();
   const el = ensureSpotlight();
   el.querySelector('#spotlightInput').placeholder = t('spotlight_placeholder');
+  el.querySelector('#spotlightInput').setAttribute('aria-label', t('spotlight_placeholder'));
+  el.querySelector('.spotlight-modal').setAttribute('aria-label', t('spotlight_placeholder'));
   el.querySelector('#spotlightHintNav').textContent = t('spotlight_hintNav');
   el.querySelector('#spotlightHintSelect').textContent = t('spotlight_hintSelect');
   el.querySelector('#spotlightHintClose').textContent = t('spotlight_hintClose');
@@ -3048,8 +3641,9 @@ function renderSpotlightResults(query, animate=false){
     .sort((a,b)=>b.score-a.score)
     .slice(0,6);
 
+  const tokens = queryTokens(q);
   const recMatches = !q ? [] : state.records
-    .map(r=>({ r, score: Math.max(fuzzyScore(q, r.name), fuzzyScore(q, r.category), fuzzyScore(q, budgetLabel(r.budgetType)) - 200) }))
+    .map(r=>({ r, score: recordScore(r, q, tokens) }))
     .filter(x=>x.score > -Infinity)
     .sort((a,b)=>b.score-a.score)
     .slice(0,7);
@@ -3063,7 +3657,7 @@ function renderSpotlightResults(query, animate=false){
     cmdMatches.forEach(c=>{
       const i = spotlightItems.length;
       spotlightItems.push({ run: c.action });
-      html += `<div class="spotlight-item${enterCls}" data-i="${i}"${enterStyle(i)}>
+      html += `<div class="spotlight-item${enterCls}" role="option" data-i="${i}"${enterStyle(i)}>
         <span class="spotlight-item-icon">${icon(c.icon,16)}</span>
         <span class="spotlight-item-title">${esc(c.title)}</span>
       </div>`;
@@ -3074,7 +3668,7 @@ function renderSpotlightResults(query, animate=false){
     recMatches.forEach(({r})=>{
       const i = spotlightItems.length;
       spotlightItems.push({ run: ()=>{ pendingHospitalSearch = r.name; switchTab('hospitals'); } });
-      html += `<div class="spotlight-item${enterCls}" data-i="${i}"${enterStyle(i)}>
+      html += `<div class="spotlight-item${enterCls}" role="option" data-i="${i}"${enterStyle(i)}>
         <span class="spotlight-item-icon">${icon('building',15)}</span>
         <span style="min-width:0;flex:1;">
           <div class="spotlight-item-title">${esc(r.name)}</div>
@@ -3103,6 +3697,7 @@ function spotlightHighlight(){
 document.addEventListener('keydown', (e)=>{
   if(e.code === 'KeyK' && (e.ctrlKey || e.metaKey)){
     e.preventDefault();
+    if(activeModal) return;
     const el = document.getElementById('spotlightBackdrop');
     if(el && el.classList.contains('open')) closeSpotlight(); else openSpotlight();
     return;
@@ -3125,13 +3720,19 @@ renderSyncBar();
 renderTabbar();
 renderMain();
 hideBootProgress();
-watchAccountAuthState();
+if(cloudUsed) startAccountWatch();
 if(cloudSync.linked) checkCloudFreshness();
 window.addEventListener('online', ()=>{
-  if(cloudSync.status==='error'){ cloudSync.status='idle'; cloudSync.lastError=''; renderFbStatus(); renderSyncBar(); }
-  if(cloudSync.linked) checkCloudFreshness();
+  if(cloudSync.status==='error'){ cloudSync.status='idle'; cloudSync.lastError=''; }
+  refreshSyncUI();
+  checkCloudFreshness();
 });
-window.addEventListener('offline', ()=>{ renderFbStatus(); renderSyncBar(); });
+window.addEventListener('offline', refreshSyncUI);
+window.addEventListener('pagehide', flushSave);
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState === 'hidden') flushSave();
+  else checkCloudFreshness();
+});
 
 </script>
 </body>
